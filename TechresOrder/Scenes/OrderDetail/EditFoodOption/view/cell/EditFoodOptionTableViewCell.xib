@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="108" id="KGk-i7-Jjw" customClass="EditFoodOptionTableViewCell" customModule="TECHRES_ORDER" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="108"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="108"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="1OP-sl-eLc">
+                        <rect key="frame" x="8" y="8" width="304" height="92"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vpd-v9-WLD">
+                                <rect key="frame" x="0.0" y="0.0" width="20" height="92"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-radio-uncheck" translatesAutoresizingMaskIntoConstraints="NO" id="41i-4k-e2m">
+                                        <rect key="frame" x="0.0" y="36" width="20" height="20"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="20" id="gk3-wr-7uG"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="41i-4k-e2m" firstAttribute="centerY" secondItem="vpd-v9-WLD" secondAttribute="centerY" id="B7y-KP-Xxi"/>
+                                    <constraint firstAttribute="trailing" secondItem="41i-4k-e2m" secondAttribute="trailing" id="SXG-Kb-5Ny"/>
+                                    <constraint firstItem="41i-4k-e2m" firstAttribute="leading" secondItem="vpd-v9-WLD" secondAttribute="leading" id="cSt-ti-p6V"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tJZ-yF-s27">
+                                <rect key="frame" x="28" y="0.0" width="276" height="92"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                    </stackView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="1OP-sl-eLc" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="8" id="1oY-Fs-d0w"/>
+                    <constraint firstAttribute="trailing" secondItem="1OP-sl-eLc" secondAttribute="trailing" constant="8" id="9pV-Rl-0s5"/>
+                    <constraint firstAttribute="bottom" secondItem="1OP-sl-eLc" secondAttribute="bottom" constant="8" id="AJC-fP-bL1"/>
+                    <constraint firstItem="1OP-sl-eLc" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="DtJ-ga-R0J"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="icon_check" destination="41i-4k-e2m" id="EP5-oC-ccz"/>
+                <outlet property="lbl_name" destination="tJZ-yF-s27" id="oz5-7R-GKc"/>
+            </connections>
+            <point key="canvasLocation" x="129.7709923664122" y="-9.8591549295774659"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="icon-radio-uncheck" width="20" height="20"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

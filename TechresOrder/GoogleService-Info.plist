@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>507549433713-4lk0iff2a97e44vff5gptjm448b6fsk0.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.507549433713-4lk0iff2a97e44vff5gptjm448b6fsk0</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>507549433713-2kugv65n2ap40r7b078qqqp5f9cdtaa9.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyC0qYpPoR_Dkx32k-zGop10NwfP3NY5_W4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>507549433713</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>vn.techres.sale</string>
+	<key>PROJECT_ID</key>
+	<string>techres-tms</string>
+	<key>STORAGE_BUCKET</key>
+	<string>techres-tms.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:507549433713:ios:2f2eaaa4722ef5cb5540d0</string>
+	<key>DATABASE_URL</key>
+	<string>https://techres-tms.firebaseio.com</string>
+</dict>
+</plist>
