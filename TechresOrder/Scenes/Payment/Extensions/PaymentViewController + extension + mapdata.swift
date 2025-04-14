@@ -37,8 +37,31 @@ extension PaymentRebuildViewController {
         
         lbl_customer_name.text = order.customer_name
         lbl_customer_phone.text = order.customer_phone
-        view_customer_phone.isHidden = order.customer_name.count > 0 ? false : true
-        view_customer_name.isHidden =  order.customer_phone.count > 0 ? false : true
+        lbl_customer_address.text =  order.customer_address
+        
+        view_of_customer_phone.isHidden = order.customer_name.count > 0 ? false : true
+        view_of_customer_name.isHidden =  order.customer_phone.count > 0 ? false : true
+        view_of_customer_address.isHidden =  order.customer_address.count > 0 ? false : true
+        
+        // when table is take way. we have to make sure that customer information always present
+        if order.table_id == 0  {
+            view_of_customer_phone.isHidden = false
+            view_of_customer_name.isHidden =  false
+            view_of_customer_address.isHidden =  false
+            
+            lbl_customer_name.text = order.shipping_receiver_name
+            lbl_customer_phone.text =  order.shipping_phone
+            lbl_customer_address.text =  order.shipping_address
+            if order.customer_id > 0{
+                lbl_customer_name.text = order.customer_name
+                lbl_customer_phone.text =  order.customer_phone
+                lbl_customer_address.text =  order.customer_address
+            }
+                
+        }
+        
+        
+
         
         //========================================= map dữ liệu cho tổng ước tính==================================
         if(ManageCacheObject.getSetting().is_hide_total_amount_before_complete_bill == ACTIVE && !Utils.checkRoleOwnerAndGeneralManager(permission: ManageCacheObject.getCurrentUser().permissions)){

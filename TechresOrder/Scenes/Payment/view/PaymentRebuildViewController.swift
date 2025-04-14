@@ -23,12 +23,14 @@ class PaymentRebuildViewController: BaseViewController {
     @IBOutlet weak var lbl_customer_slot: UILabel!
     @IBOutlet weak var lbl_customer_name: UILabel!
     @IBOutlet weak var lbl_customer_phone: UILabel!
+    @IBOutlet weak var lbl_customer_address: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var height_of_table: NSLayoutConstraint!
     
-    @IBOutlet weak var view_customer_phone: UIView!
-    @IBOutlet weak var view_customer_name: UIView!
+    @IBOutlet weak var view_of_customer_phone: UIView!
+    @IBOutlet weak var view_of_customer_name: UIView!
+    @IBOutlet weak var view_of_customer_address: UIView!
     
     //===================tổng ước tính==================
     @IBOutlet weak var lbl_total_temp_payment: UILabel!

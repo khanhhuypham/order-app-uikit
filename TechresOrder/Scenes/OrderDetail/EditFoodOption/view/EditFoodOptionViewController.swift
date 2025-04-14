@@ -27,8 +27,8 @@ class EditFoodOptionViewController:BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.bind(view: self)
-        setupTableView()
-        firstSetup()
+        registerCellAndBindTableView()
+        firstSetup(item: item)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -59,8 +59,12 @@ class EditFoodOptionViewController:BaseViewController {
                 break
         }
         
-        textfield_quantity.text = item.quantity.toString
+      
         viewModel.orderItem.accept(item)
+        textfield_quantity.text = calculateTotalAmount(
+            item:item,
+            list: viewModel.sectionArray.value.flatMap{$0.items}
+        ).toString
         
     }
     
@@ -80,13 +84,10 @@ class EditFoodOptionViewController:BaseViewController {
         
         updateItem.note = item.note
                 
-        for option in item.order_detail_options{
-            
-            for optItem in option.food_option_foods {
-                var option = OptionUpdate.init(id: optItem.id, status: optItem.status)
-                updateItem.order_detail_food_options.append(option)
-            }
-        
+
+        for optItem in viewModel.sectionArray.value.flatMap{$0.items}{
+            let option = OptionUpdate.init(id: optItem.id, quantity: optItem.quantity,status: optItem.status)
+            updateItem.order_detail_food_options.append(option)
         }
         
         array.append(updateItem)

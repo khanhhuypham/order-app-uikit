@@ -12,6 +12,7 @@ struct OptionOfDetailItem: Mappable {
     var id = 0
     var name = ""
     var max_items_allowed = 0
+    var min_items_allowed = 0
     var food_option_foods:[OptionItem] = []
    
     
@@ -20,22 +21,13 @@ struct OptionOfDetailItem: Mappable {
     
     init(){}
     
-//    init(id:Int,name:String,quantity:Float,price:Int,total_price:Int,discountAmount:Int = 0,discountPercent:Int = 0, discountPrice:Int = 0){
-//        self.id = id
-//        self.name = name
-//        self.quantity = quantity
-//        self.price = price
-//        self.total_price = total_price
-//        self.discountAmount = discountAmount
-//        self.discountPercent = discountPercent
-//        self.discountPrice = discountPrice
-//    }
-//    
+  
     mutating func mapping(map: Map) {
         id                      <- map["id"]
-        name                                    <- map["name"]
-        max_items_allowed                                   <- map["max_items_allowed"]
-        food_option_foods                              <- map["food_option_foods"]
+        name                    <- map["name"]
+        max_items_allowed       <- map["max_items_allowed"]
+        min_items_allowed       <- map["min_items_allowed"]
+        food_option_foods       <- map["food_option_foods"]
     }
     
 }
@@ -47,6 +39,7 @@ struct OptionItem: Mappable {
     var food_name = ""
     var price = 0
     var status = DEACTIVE
+    var quantity:Float = 0
    
     
     init?(map: Map) {}
@@ -61,6 +54,7 @@ struct OptionItem: Mappable {
         food_name               <- map["food_name"]
         price                   <- map["price"]
         status                  <- map["status"]
+        quantity                <- map["quantity"]
     }
     
 }

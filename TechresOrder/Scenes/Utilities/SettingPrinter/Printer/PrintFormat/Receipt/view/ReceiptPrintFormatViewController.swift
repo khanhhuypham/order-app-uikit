@@ -38,8 +38,15 @@ class ReceiptPrintFormatViewController: UIViewController,UITableViewDataSource {
     @IBOutlet weak var view_of_accumulative_point: UIView!
     @IBOutlet weak var lbl_accumulative_point: UILabel!
     
-    @IBOutlet weak var lbl_date: UILabel!
+    //===================Thông tin người nhận==================
     
+    @IBOutlet weak var stackview_of_receiver_info: UIStackView!
+    @IBOutlet weak var lbl_receiver_name: UILabel!
+    @IBOutlet weak var lbl_receiver_phone: UILabel!
+    @IBOutlet weak var lbl_receiver_address: UILabel!
+    
+    @IBOutlet weak var lbl_date: UILabel!
+    //=========================================
     @IBOutlet weak var lbl_title_SL: UILabel!
     @IBOutlet weak var lbl_title_DG: UILabel!
     

@@ -28,10 +28,10 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tFG-U7-Xz9">
-                    <rect key="frame" x="0.0" y="59" width="393" height="793"/>
+                    <rect key="frame" x="0.0" y="59" width="393" height="759"/>
                     <subviews>
                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sct-za-TzC">
-                            <rect key="frame" x="0.0" y="0.0" width="393" height="693"/>
+                            <rect key="frame" x="0.0" y="0.0" width="393" height="659"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Oad-8z-u1Q">
                                     <rect key="frame" x="0.0" y="0.0" width="393" height="497"/>
@@ -286,7 +286,7 @@
                             <viewLayoutGuide key="frameLayoutGuide" id="RH4-Xv-5De"/>
                         </scrollView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CvV-mB-zpa" userLabel="btn-view">
-                            <rect key="frame" x="0.0" y="693" width="393" height="100"/>
+                            <rect key="frame" x="0.0" y="659" width="393" height="100"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t7j-Qe-cHj">
                                     <rect key="frame" x="20" y="30" width="353" height="40"/>
@@ -335,7 +335,7 @@
             <keyboardLayoutGuide key="keyboard" id="chj-sb-AIO"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="tFG-U7-Xz9" secondAttribute="bottom" id="BQd-BI-TE8"/>
+                <constraint firstItem="chj-sb-AIO" firstAttribute="top" secondItem="tFG-U7-Xz9" secondAttribute="bottom" id="BQd-BI-TE8"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="tFG-U7-Xz9" secondAttribute="trailing" id="JKD-D9-npp"/>
                 <constraint firstItem="tFG-U7-Xz9" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="wRx-vD-gQt"/>
                 <constraint firstItem="tFG-U7-Xz9" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="wk6-zm-ZBz"/>
@@ -353,10 +353,10 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGray5Color">
-            <color red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.89803921568627454" green="0.89803921568627454" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemOrangeColor">
-            <color red="1" green="0.58431372550000005" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

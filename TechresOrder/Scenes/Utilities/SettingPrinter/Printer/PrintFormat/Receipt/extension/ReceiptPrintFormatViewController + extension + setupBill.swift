@@ -22,13 +22,25 @@ extension ReceiptPrintFormatViewController {
         lbl_employee_name.text = order.employee_name
         lbl_saler.text = String(format: "NVKD: %@", order.employee_name)
         lbl_accumulative_point.text = String(format: "NV tích điểm: %@", order.employee_name)
+        
+        
+        
+        lbl_receiver_name.text = String(format: "Người nhận: %@", order.shipping_receiver_name)
+        lbl_receiver_phone.text = String(format: "Số điện thoại: %@", order.shipping_phone)
+        lbl_receiver_address.text =  order.shipping_address
+        if order.customer_id > 0{
+            lbl_receiver_name.text = String(format: "Người nhận: %@", order.customer_name)
+            lbl_receiver_phone.text =  String(format: "Số điện thoại: %@", order.customer_phone)
+            lbl_receiver_address.text =  order.customer_address
+        }
         lbl_date.text = String(format: "Ngày: %@", TimeUtils.getFullCurrentDate())
         
         view_of_accumulative_point.isHidden = permissionUtils.GPBH_1 ? true : false
         view_of_saler.isHidden = permissionUtils.GPBH_1 ? true : false
+        stackview_of_receiver_info.isHidden = order.table_id == 0 ? false : true
         
         
-        
+
         
         if permissionUtils.GPBH_1{
             view_of_accumulative_point.isHidden = true

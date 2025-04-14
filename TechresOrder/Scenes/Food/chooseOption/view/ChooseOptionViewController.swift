@@ -17,12 +17,12 @@ class ChooseOptionViewController: BaseViewController {
     
     var delegate: ChooseOptionViewControllerDelegate?
     var item: Food = Food()
-
+    var viewModel = ChooseOptionViewModel()
     override func viewDidLoad() {
         super.viewDidLoad()
-      
-        setupTableView()
-        firstSetup()
+        viewModel.bind(view: self)
+        registerCellAndBindTableView()
+        firstSetup(item)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -38,6 +38,7 @@ class ChooseOptionViewController: BaseViewController {
     
     
     @IBAction func actionCalculateQuantity(_ sender: UIButton) {
+        var item = viewModel.item.value
         
         switch sender.titleLabel?.text{
             
@@ -52,6 +53,7 @@ class ChooseOptionViewController: BaseViewController {
             default:
                 break
         }
+        viewModel.item.accept(item)
         
         textfield_quantity.text = item.quantity.toString
         lbl_price.text = (item.price_with_temporary * Int(item.quantity)).toString
@@ -63,7 +65,13 @@ class ChooseOptionViewController: BaseViewController {
         
         if let delegate = self.delegate{
             self.dismiss(animated: true, completion: {
-                var item = self.item
+                var item = self.viewModel.item.value
+            
+                item.food_options = self.viewModel.sectionArray.value.map { section in
+                    var option = section.model
+                    option.addition_foods = section.items
+                    return option
+                }
                 item.select()
                 
                 delegate.callbackToGetItem(item: item)
