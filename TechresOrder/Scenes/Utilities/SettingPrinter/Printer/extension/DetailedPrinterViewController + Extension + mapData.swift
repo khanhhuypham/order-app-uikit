@@ -31,7 +31,7 @@ extension DetailedPrinterViewController{
     
     
     func mapData(printer:Printer){
-        view_of_device_type_switch.isHidden = printer.type == .stamp_of_food_app || printer.type == .cashier_of_food_app
+
         textfield_of_BLE_device_name.text = printer.name
         textfield_print_ipaddress.text = printer.printer_ip_address
         textfield_print_port.text = printer.printer_port
@@ -47,33 +47,75 @@ extension DetailedPrinterViewController{
         }else if printer.type == .chef || printer.type == .bar{
             setupInterfaceForChefBarPrinter(printer: printer)
         }
- 
+        
+        
        
         switch printer.connection_type{
             case .wifi:
                 view_of_ip_address.isHidden = false
                 view_of_port.isHidden = false
                 view_of_device_name.isHidden = true
-                device_type_switch.selectedSegmentIndex = 0
                 break
             
-            case .blueTooth:
+
+            default:
                 view_of_ip_address.isHidden = true
                 view_of_port.isHidden = true
                 view_of_device_name.isHidden = false
-                device_type_switch.selectedSegmentIndex = 1
-
-                break
-            
-            default:              
-                device_type_switch.selectedSegmentIndex = 0
-                actionSwitchDevice(device_type_switch)
-            
                 break
         }
-             
+        
+        
+        
+        var options:[UIAction] = []
+        
+        for type in CONNECTION_TYPE.allCases {
+            
+            let option = UIAction(
+                title: type.name,
+                image: nil,
+                identifier: nil,
+                state:  printer.connection_type == type ? .on : .off,
+                handler: { _ in
+                    self.btn_choose_connection_type.menu = self.handleSelection(type: type, menu:self.btn_choose_connection_type.menu!)
+                }
+            )
+            
+            if printer.connection_type == type {
+               
+                btn_choose_connection_type.setAttributedTitle(
+                    getAttribute(content: String(format: " %@", type.name)),
+                    for: .normal
+                )
+            }
+            
+            options.append(option)
+            
+        }
+        
+        btn_choose_connection_type.menu = UIMenu(title: "", children: options)
+     
+    }
     
-       
+    private func handleSelection(type: CONNECTION_TYPE, menu:UIMenu) -> UIMenu{
+
+        btn_choose_connection_type.setAttributedTitle(
+            getAttribute(content: String(format: " %@", type.name)),
+            for: .normal
+        )
+        let printer = viewModel.printer.value
+        printer.connection_type = type
+        viewModel.printer.accept(printer)
+        mapData(printer: printer)
+ 
+        menu.children.enumerated().forEach{(i, action) in
+            guard let action = action as? UIAction else {
+                return
+            }
+            action.state = action.title == type.name ? .on : .off
+        }
+    
+        return menu
     }
     
 
@@ -97,5 +139,15 @@ extension DetailedPrinterViewController{
         btn_of_option2.setTitle("  In riêng từng món", for: .normal)
         btn_of_option1.setImage(UIImage(named: printer.is_print_each_food == DEACTIVE ? "icon-radio-checked" : "icon-radio-uncheck"), for: .normal)
         btn_of_option2.setImage(UIImage(named: printer.is_print_each_food == ACTIVE ? "icon-radio-checked" : "icon-radio-uncheck"), for: .normal)
+    }
+    
+    private func getAttribute(content:String) -> NSAttributedString{
+        return NSAttributedString(
+                string: content,
+                attributes: [
+                        NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14),
+                        NSAttributedString.Key.foregroundColor: ColorUtils.black(),
+                ]
+        )
     }
 }

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="UIMenu" message="Requires Xcode 11 or later." minToolsVersion="11.0" requiredIntegratedClassName="UICommandDiff"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -16,10 +17,10 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DetailedPrinterViewController" customModule="TECHRES_ORDER" customModuleProvider="target">
             <connections>
+                <outlet property="btn_choose_connection_type" destination="Paf-3h-SCX" id="r9f-U7-f1u"/>
                 <outlet property="btn_of_option1" destination="JZH-P0-MN9" id="XGz-yl-GIN"/>
                 <outlet property="btn_of_option2" destination="JCL-94-xWm" id="zdr-lh-sle"/>
                 <outlet property="btn_show_printing_queue" destination="HaI-IP-ITX" id="j1w-jN-8aa"/>
-                <outlet property="device_type_switch" destination="qYE-Tq-LWY" id="mD0-EF-yuD"/>
                 <outlet property="lbl_header_options" destination="YdF-Ac-hC8" id="aOh-RM-S6c"/>
                 <outlet property="printerSwitch" destination="6A8-xh-mDf" id="wvk-yY-av0"/>
                 <outlet property="textfield_of_BLE_device_name" destination="Q0s-0D-2cM" id="3qn-kn-pUm"/>
@@ -28,7 +29,6 @@
                 <outlet property="textfield_print_port" destination="YXU-GE-GaW" id="CSa-oE-OAs"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="view_of_device_name" destination="Q4i-ny-jeo" id="emF-l9-Nxh"/>
-                <outlet property="view_of_device_type_switch" destination="kSI-Kk-kCO" id="rJ4-vS-5mk"/>
                 <outlet property="view_of_ip_address" destination="q8M-bd-htT" id="Tqk-zM-J8b"/>
                 <outlet property="view_of_port" destination="lBu-fq-lHh" id="yG2-PV-4al"/>
                 <outlet property="view_of_printer_number" destination="hOf-5t-pi9" id="jxn-lR-19s"/>
@@ -79,35 +79,65 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ctZ-UC-zfS">
-                            <rect key="frame" x="0.0" y="60" width="393" height="199"/>
+                            <rect key="frame" x="0.0" y="60" width="393" height="202"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="H39-05-45d">
-                                    <rect key="frame" x="30" y="20" width="333" height="179"/>
+                                    <rect key="frame" x="30" y="20" width="333" height="182"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kSI-Kk-kCO">
-                                            <rect key="frame" x="0.0" y="0.0" width="333" height="35"/>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JT7-Fn-qsB">
+                                            <rect key="frame" x="0.0" y="0.0" width="333" height="38"/>
                                             <subviews>
-                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="qYE-Tq-LWY">
-                                                    <rect key="frame" x="0.0" y="0.0" width="159" height="36"/>
-                                                    <segments>
-                                                        <segment title="WIFI"/>
-                                                        <segment title="Bluetooth"/>
-                                                    </segments>
-                                                    <connections>
-                                                        <action selector="actionSwitchDevice:" destination="-1" eventType="valueChanged" id="9mV-WV-rQm"/>
-                                                    </connections>
-                                                </segmentedControl>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loại kết nối" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NKQ-wA-SEK">
+                                                    <rect key="frame" x="0.0" y="0.0" width="80" height="38"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="80" id="gjP-fc-0Kf"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" red="0.65490196078431373" green="0.6588235294117647" blue="0.6705882352941176" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Paf-3h-SCX">
+                                                    <rect key="frame" x="90" y="0.0" width="243" height="38"/>
+                                                    <color key="tintColor" systemColor="labelColor"/>
+                                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                    <menu key="menu" id="H1y-Jt-LIn">
+                                                        <menuOptions key="menuOptions" singleSelection="YES"/>
+                                                        <children>
+                                                            <command title="Item 1" id="r2l-Jo-Ref"/>
+                                                            <command title="Item 2" id="23Y-JV-dJV"/>
+                                                        </children>
+                                                    </menu>
+                                                    <state key="normal" image="icon-dropdown"/>
+                                                    <buttonConfiguration key="configuration" style="plain" image="icon-dropdown" imagePlacement="trailing" title="Wifi">
+                                                        <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
+                                                    </buttonConfiguration>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                            <real key="value" value="5"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                            <color key="value" systemColor="systemGray5Color"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                            <real key="value" value="1"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </button>
                                             </subviews>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                             <constraints>
-                                                <constraint firstItem="qYE-Tq-LWY" firstAttribute="top" secondItem="kSI-Kk-kCO" secondAttribute="top" id="5Lu-ih-txL"/>
-                                                <constraint firstAttribute="bottom" secondItem="qYE-Tq-LWY" secondAttribute="bottom" id="Cmb-FP-x3E"/>
-                                                <constraint firstItem="qYE-Tq-LWY" firstAttribute="leading" secondItem="kSI-Kk-kCO" secondAttribute="leading" id="M42-iA-o5M"/>
-                                                <constraint firstAttribute="height" constant="35" id="mHR-mh-FaU"/>
+                                                <constraint firstItem="NKQ-wA-SEK" firstAttribute="top" secondItem="JT7-Fn-qsB" secondAttribute="top" id="APY-LO-dMq"/>
+                                                <constraint firstItem="Paf-3h-SCX" firstAttribute="leading" secondItem="NKQ-wA-SEK" secondAttribute="trailing" constant="10" id="Cdy-EX-Eij"/>
+                                                <constraint firstAttribute="trailing" secondItem="Paf-3h-SCX" secondAttribute="trailing" id="JVK-DC-iM1"/>
+                                                <constraint firstItem="Paf-3h-SCX" firstAttribute="top" secondItem="JT7-Fn-qsB" secondAttribute="top" id="QJF-1P-bMD"/>
+                                                <constraint firstItem="NKQ-wA-SEK" firstAttribute="leading" secondItem="JT7-Fn-qsB" secondAttribute="leading" id="T7u-U5-bgP"/>
+                                                <constraint firstAttribute="bottom" secondItem="NKQ-wA-SEK" secondAttribute="bottom" id="fSg-OB-U0H"/>
+                                                <constraint firstAttribute="height" constant="38" id="rPy-en-pIZ"/>
+                                                <constraint firstAttribute="bottom" secondItem="Paf-3h-SCX" secondAttribute="bottom" id="vZM-Dw-MbA"/>
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Q4i-ny-jeo">
-                                            <rect key="frame" x="0.0" y="45" width="333" height="38"/>
+                                            <rect key="frame" x="0.0" y="48" width="333" height="38"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tên thiết bị:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EM6-FD-axH">
                                                     <rect key="frame" x="0.0" y="0.0" width="80" height="38"/>
@@ -172,7 +202,7 @@
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q8M-bd-htT">
-                                            <rect key="frame" x="0.0" y="93" width="333" height="38"/>
+                                            <rect key="frame" x="0.0" y="96" width="333" height="38"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Địa chỉ: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wxM-oZ-Q88">
                                                     <rect key="frame" x="0.0" y="0.0" width="80" height="38"/>
@@ -234,7 +264,7 @@
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lBu-fq-lHh">
-                                            <rect key="frame" x="0.0" y="141" width="333" height="38"/>
+                                            <rect key="frame" x="0.0" y="144" width="333" height="38"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Port:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oCn-sk-VXp">
                                                     <rect key="frame" x="0.0" y="0.0" width="80" height="38"/>
@@ -293,7 +323,7 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B7g-1e-R9k">
-                            <rect key="frame" x="0.0" y="259" width="393" height="440"/>
+                            <rect key="frame" x="0.0" y="262" width="393" height="437"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="fyI-ej-Pzr">
                                     <rect key="frame" x="30" y="30.000000000000014" width="333" height="215.33333333333337"/>
@@ -514,6 +544,7 @@
     </objects>
     <resources>
         <image name="checkmark" width="24" height="24"/>
+        <image name="icon-dropdown" width="24" height="24"/>
         <image name="icon-prev" width="22" height="22"/>
         <image name="icon-printer-white" width="19" height="18.666666030883789"/>
         <image name="icon-radio-uncheck" width="20" height="20"/>

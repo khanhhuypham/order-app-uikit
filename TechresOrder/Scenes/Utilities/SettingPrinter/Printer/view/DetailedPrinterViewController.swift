@@ -15,12 +15,13 @@ class DetailedPrinterViewController: BaseViewController {
     var printer = Printer.init()
 
         
+    @IBOutlet weak var btn_choose_connection_type: UIButton!
+  
     
-    @IBOutlet weak var device_type_switch: UISegmentedControl!
-    @IBOutlet weak var view_of_device_type_switch: UIView!
     @IBOutlet weak var view_of_ip_address: UIView!
     @IBOutlet weak var view_of_port: UIView!
     
+
     @IBOutlet weak var textfield_print_ipaddress: UITextField!
     @IBOutlet weak var textfield_print_port: UITextField!
     
@@ -43,6 +44,7 @@ class DetailedPrinterViewController: BaseViewController {
         super.viewDidLoad()
         viewModel.bind(view: self, router: router)
         firstSetup()
+        dLog(printer.toJSON())
         viewModel.printer.accept(printer)
       
         
@@ -58,17 +60,17 @@ class DetailedPrinterViewController: BaseViewController {
 
     
     
-    @IBAction func actionSwitchDevice(_ sender: UISegmentedControl) {
-        var printer = viewModel.printer.value
-      
-        if sender.selectedSegmentIndex == 0{ // wifi
-            printer.connection_type = .wifi
-        }else if sender.selectedSegmentIndex == 1{ // bluetooth
-            printer.connection_type = .blueTooth
-        }
-        viewModel.printer.accept(printer)
-        mapData(printer: printer)
-    }
+//    @IBAction func actionSwitchDevice(_ sender: UISegmentedControl) {
+//        var printer = viewModel.printer.value
+//      
+//        if sender.selectedSegmentIndex == 0{ // wifi
+//            printer.connection_type = .wifi
+//        }else if sender.selectedSegmentIndex == 1{ // bluetooth
+//            printer.connection_type = .blueTooth
+//        }
+//        viewModel.printer.accept(printer)
+//        mapData(printer: printer)
+//    }
     
 
     @IBAction func actionSearch(_ sender: Any) {
@@ -107,9 +109,7 @@ class DetailedPrinterViewController: BaseViewController {
     @IBAction func actionTurnOnOffPrinter(_ sender: UISwitch) {
         var printer = viewModel.printer.value
         printer.is_have_printer = sender.isOn ? ACTIVE : DEACTIVE
-        if device_type_switch.selectedSegmentIndex == 1{
 
-        }
         viewModel.printer.accept(printer)
     }
     

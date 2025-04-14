@@ -207,15 +207,8 @@
 		9440788F2C217949007D861B /* CodePagePopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9440786D2C217949007D861B /* CodePagePopView.m */; };
 		944078902C217949007D861B /* libPrinterSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9440786F2C217949007D861B /* libPrinterSDK.a */; };
 		944078912C217949007D861B /* TSCPrinter.m in Sources */ = {isa = PBXBuildFile; fileRef = 944078862C217949007D861B /* TSCPrinter.m */; };
-		944078D42C217993007D861B /* DetailedPrinterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944078982C217993007D861B /* DetailedPrinterViewModel.swift */; };
-		944078D52C217993007D861B /* DetailedPrinterViewController + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9440789A2C217993007D861B /* DetailedPrinterViewController + Extension.swift */; };
-		944078D62C217993007D861B /* DetailedPrinterViewController+extension+popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9440789B2C217993007D861B /* DetailedPrinterViewController+extension+popup.swift */; };
-		944078D72C217993007D861B /* DetailedPrinterViewController + Extension + mapData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9440789C2C217993007D861B /* DetailedPrinterViewController + Extension + mapData.swift */; };
-		944078D82C217993007D861B /* DetailedPrinterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9440789E2C217993007D861B /* DetailedPrinterViewController.swift */; };
-		944078D92C217993007D861B /* DetailedPrinterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9440789F2C217993007D861B /* DetailedPrinterViewController.xib */; };
 		944078F82C217993007D861B /* BlueToothInvestigatorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944078D02C217993007D861B /* BlueToothInvestigatorViewController.xib */; };
 		944078F92C217993007D861B /* BlueToothInvestigatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944078D12C217993007D861B /* BlueToothInvestigatorViewController.swift */; };
-		944078FA2C217993007D861B /* StampPrinterRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944078D32C217993007D861B /* StampPrinterRouter.swift */; };
 		9440D63D2BCF77DF00E8574B /* Bank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9440D63C2BCF77DF00E8574B /* Bank.swift */; };
 		9444DAC72AF113F400760676 /* UtitiliesRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9444DAC62AF113F400760676 /* UtitiliesRouter.swift */; };
 		9444DAC92AF1140900760676 /* UtilitiesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9444DAC82AF1140900760676 /* UtilitiesViewModel.swift */; };
@@ -707,6 +700,13 @@
 		94BA68262DACB53500BED27B /* EditFoodOptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BA681C2DACB53500BED27B /* EditFoodOptionViewController.swift */; };
 		94BA68272DACB53500BED27B /* EditFoodOptionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94BA681D2DACB53500BED27B /* EditFoodOptionViewController.xib */; };
 		94BA68282DACB53500BED27B /* EditFoodOptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BA681F2DACB53500BED27B /* EditFoodOptionViewModel.swift */; };
+		94BA68372DACEEF100BED27B /* DetailedPrinterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BA682C2DACEEF000BED27B /* DetailedPrinterViewModel.swift */; };
+		94BA68382DACEEF100BED27B /* DetailedPrinterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BA682E2DACEEF000BED27B /* DetailedPrinterViewController.swift */; };
+		94BA68392DACEEF100BED27B /* DetailedPrinterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94BA682F2DACEEF000BED27B /* DetailedPrinterViewController.xib */; };
+		94BA683A2DACEEF100BED27B /* DetailedPrinterViewController + Extension + mapData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BA68312DACEEF000BED27B /* DetailedPrinterViewController + Extension + mapData.swift */; };
+		94BA683B2DACEEF100BED27B /* DetailedPrinterViewController + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BA68322DACEEF000BED27B /* DetailedPrinterViewController + Extension.swift */; };
+		94BA683C2DACEEF100BED27B /* DetailedPrinterViewController+extension+popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BA68332DACEEF000BED27B /* DetailedPrinterViewController+extension+popup.swift */; };
+		94BA683D2DACEEF100BED27B /* StampPrinterRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BA68352DACEEF100BED27B /* StampPrinterRouter.swift */; };
 		94BC4CC52AE6211700C38170 /* PaymentRebuildViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BC4CC32AE6211700C38170 /* PaymentRebuildViewController.swift */; };
 		94BC4CC62AE6211700C38170 /* PaymentRebuildViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94BC4CC42AE6211700C38170 /* PaymentRebuildViewController.xib */; };
 		94BED2662C09B44D008D20AC /* PopupEnterPercentForBuffetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BED2642C09B44D008D20AC /* PopupEnterPercentForBuffetViewController.swift */; };
@@ -1331,15 +1331,8 @@
 		944078822C217949007D861B /* CPCLCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPCLCommand.h; sourceTree = "<group>"; };
 		944078852C217949007D861B /* TSCPrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSCPrinter.h; sourceTree = "<group>"; };
 		944078862C217949007D861B /* TSCPrinter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSCPrinter.m; sourceTree = "<group>"; };
-		944078982C217993007D861B /* DetailedPrinterViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailedPrinterViewModel.swift; sourceTree = "<group>"; };
-		9440789A2C217993007D861B /* DetailedPrinterViewController + Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DetailedPrinterViewController + Extension.swift"; sourceTree = "<group>"; };
-		9440789B2C217993007D861B /* DetailedPrinterViewController+extension+popup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DetailedPrinterViewController+extension+popup.swift"; sourceTree = "<group>"; };
-		9440789C2C217993007D861B /* DetailedPrinterViewController + Extension + mapData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DetailedPrinterViewController + Extension + mapData.swift"; sourceTree = "<group>"; };
-		9440789E2C217993007D861B /* DetailedPrinterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailedPrinterViewController.swift; sourceTree = "<group>"; };
-		9440789F2C217993007D861B /* DetailedPrinterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailedPrinterViewController.xib; sourceTree = "<group>"; };
 		944078D02C217993007D861B /* BlueToothInvestigatorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BlueToothInvestigatorViewController.xib; sourceTree = "<group>"; };
 		944078D12C217993007D861B /* BlueToothInvestigatorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlueToothInvestigatorViewController.swift; sourceTree = "<group>"; };
-		944078D32C217993007D861B /* StampPrinterRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StampPrinterRouter.swift; sourceTree = "<group>"; };
 		9440D63C2BCF77DF00E8574B /* Bank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bank.swift; sourceTree = "<group>"; };
 		9444DAC62AF113F400760676 /* UtitiliesRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtitiliesRouter.swift; sourceTree = "<group>"; };
 		9444DAC82AF1140900760676 /* UtilitiesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilitiesViewModel.swift; sourceTree = "<group>"; };
@@ -1837,6 +1830,13 @@
 		94BA681C2DACB53500BED27B /* EditFoodOptionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditFoodOptionViewController.swift; sourceTree = "<group>"; };
 		94BA681D2DACB53500BED27B /* EditFoodOptionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditFoodOptionViewController.xib; sourceTree = "<group>"; };
 		94BA681F2DACB53500BED27B /* EditFoodOptionViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditFoodOptionViewModel.swift; sourceTree = "<group>"; };
+		94BA682C2DACEEF000BED27B /* DetailedPrinterViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailedPrinterViewModel.swift; sourceTree = "<group>"; };
+		94BA682E2DACEEF000BED27B /* DetailedPrinterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailedPrinterViewController.swift; sourceTree = "<group>"; };
+		94BA682F2DACEEF000BED27B /* DetailedPrinterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailedPrinterViewController.xib; sourceTree = "<group>"; };
+		94BA68312DACEEF000BED27B /* DetailedPrinterViewController + Extension + mapData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DetailedPrinterViewController + Extension + mapData.swift"; sourceTree = "<group>"; };
+		94BA68322DACEEF000BED27B /* DetailedPrinterViewController + Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DetailedPrinterViewController + Extension.swift"; sourceTree = "<group>"; };
+		94BA68332DACEEF000BED27B /* DetailedPrinterViewController+extension+popup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DetailedPrinterViewController+extension+popup.swift"; sourceTree = "<group>"; };
+		94BA68352DACEEF100BED27B /* StampPrinterRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StampPrinterRouter.swift; sourceTree = "<group>"; };
 		94BC4CC32AE6211700C38170 /* PaymentRebuildViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentRebuildViewController.swift; sourceTree = "<group>"; };
 		94BC4CC42AE6211700C38170 /* PaymentRebuildViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentRebuildViewController.xib; sourceTree = "<group>"; };
 		94BED2642C09B44D008D20AC /* PopupEnterPercentForBuffetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupEnterPercentForBuffetViewController.swift; sourceTree = "<group>"; };
@@ -3618,39 +3618,12 @@
 				94DA2F082C3CEF6F009FA159 /* BlueToothInvestigator */,
 				94DD4D892C2ABF4400559008 /* PrintingQueue */,
 				944078CF2C217993007D861B /* BLEInvestigatorPopup */,
-				944078992C217993007D861B /* extension */,
-				944078D22C217993007D861B /* router */,
-				944078972C217993007D861B /* viewModel */,
-				9440789D2C217993007D861B /* view */,
+				94BA68342DACEEF000BED27B /* extension */,
+				94BA68362DACEEF100BED27B /* router */,
+				94BA68302DACEEF000BED27B /* view */,
+				94BA682D2DACEEF000BED27B /* viewModel */,
 			);
 			path = Printer;
-			sourceTree = "<group>";
-		};
-		944078972C217993007D861B /* viewModel */ = {
-			isa = PBXGroup;
-			children = (
-				944078982C217993007D861B /* DetailedPrinterViewModel.swift */,
-			);
-			path = viewModel;
-			sourceTree = "<group>";
-		};
-		944078992C217993007D861B /* extension */ = {
-			isa = PBXGroup;
-			children = (
-				9440789A2C217993007D861B /* DetailedPrinterViewController + Extension.swift */,
-				9440789B2C217993007D861B /* DetailedPrinterViewController+extension+popup.swift */,
-				9440789C2C217993007D861B /* DetailedPrinterViewController + Extension + mapData.swift */,
-			);
-			path = extension;
-			sourceTree = "<group>";
-		};
-		9440789D2C217993007D861B /* view */ = {
-			isa = PBXGroup;
-			children = (
-				9440789E2C217993007D861B /* DetailedPrinterViewController.swift */,
-				9440789F2C217993007D861B /* DetailedPrinterViewController.xib */,
-			);
-			path = view;
 			sourceTree = "<group>";
 		};
 		944078CF2C217993007D861B /* BLEInvestigatorPopup */ = {
@@ -3660,14 +3633,6 @@
 				944078D12C217993007D861B /* BlueToothInvestigatorViewController.swift */,
 			);
 			path = BLEInvestigatorPopup;
-			sourceTree = "<group>";
-		};
-		944078D22C217993007D861B /* router */ = {
-			isa = PBXGroup;
-			children = (
-				944078D32C217993007D861B /* StampPrinterRouter.swift */,
-			);
-			path = router;
 			sourceTree = "<group>";
 		};
 		9444DAC22AF113C100760676 /* view */ = {
@@ -6706,6 +6671,41 @@
 			path = EditFoodOption;
 			sourceTree = "<group>";
 		};
+		94BA682D2DACEEF000BED27B /* viewModel */ = {
+			isa = PBXGroup;
+			children = (
+				94BA682C2DACEEF000BED27B /* DetailedPrinterViewModel.swift */,
+			);
+			path = viewModel;
+			sourceTree = "<group>";
+		};
+		94BA68302DACEEF000BED27B /* view */ = {
+			isa = PBXGroup;
+			children = (
+				94BA682E2DACEEF000BED27B /* DetailedPrinterViewController.swift */,
+				94BA682F2DACEEF000BED27B /* DetailedPrinterViewController.xib */,
+			);
+			path = view;
+			sourceTree = "<group>";
+		};
+		94BA68342DACEEF000BED27B /* extension */ = {
+			isa = PBXGroup;
+			children = (
+				94BA68312DACEEF000BED27B /* DetailedPrinterViewController + Extension + mapData.swift */,
+				94BA68322DACEEF000BED27B /* DetailedPrinterViewController + Extension.swift */,
+				94BA68332DACEEF000BED27B /* DetailedPrinterViewController+extension+popup.swift */,
+			);
+			path = extension;
+			sourceTree = "<group>";
+		};
+		94BA68362DACEEF100BED27B /* router */ = {
+			isa = PBXGroup;
+			children = (
+				94BA68352DACEEF100BED27B /* StampPrinterRouter.swift */,
+			);
+			path = router;
+			sourceTree = "<group>";
+		};
 		94BC4CBE2AE61C6200C38170 /* Payment */ = {
 			isa = PBXGroup;
 			children = (
@@ -9012,7 +9012,6 @@
 				946F51232B5230800014D8FE /* ReportRevenueEmployeeViewController.xib in Resources */,
 				94368B092C7DCBD4007FA713 /* Bill4TableViewCell.xib in Resources */,
 				946F50EA2B5230800014D8FE /* ReportRevenueAreaTableViewCell.xib in Resources */,
-				944078D92C217993007D861B /* DetailedPrinterViewController.xib in Resources */,
 				B63D55C22D0D8CAE00291407 /* GoogleService-Info.plist in Resources */,
 				B699E9E62986E865007B3892 /* VerifyOTPViewController.xib in Resources */,
 				946F51002B5230800014D8FE /* FoodItemReportTakeAwayFoodTableViewCell.xib in Resources */,
@@ -9191,6 +9190,7 @@
 				946F50FA2B5230800014D8FE /* ReportRevenueCommodityTableViewCell.xib in Resources */,
 				A63A2D2629700B7000B361B8 /* Roboto-Regular.ttf in Resources */,
 				946F51042B5230800014D8FE /* ReportTakeAwayFoodTableViewCell.xib in Resources */,
+				94BA68392DACEEF100BED27B /* DetailedPrinterViewController.xib in Resources */,
 				A63A2D4129700D7500B361B8 /* AreaViewController.xib in Resources */,
 				7E0339332A3D931E008054F9 /* UpdateOtherFeedCollectionViewCell.xib in Resources */,
 				944FBA022C06E17A003DF826 /* InfoChatViewController.xib in Resources */,
@@ -9358,7 +9358,6 @@
 				946F51BD2B5232180014D8FE /* ClosedWorkingSessionRouter.swift in Sources */,
 				946F4FE62B515B150014D8FE /* CreateFoodViewController+extension+popup.swift in Sources */,
 				9430D7FB2B6CECF60013E3C5 /* CreateFeeRebuilViewController + extension +registerCell.swift in Sources */,
-				944078D62C217993007D861B /* DetailedPrinterViewController+extension+popup.swift in Sources */,
 				A623E65B298A7D2100F6821A /* NoteRequest.swift in Sources */,
 				946E9B5F2AE664C4003C6749 /* PaymentRebuildTableViewCell.swift in Sources */,
 				A6ACA0FE2984C50D00732FB9 /* DateCollectionViewCell.swift in Sources */,
@@ -9372,9 +9371,9 @@
 				94B0EA072BE8BCAF0094AC00 /* MessageResponse.swift in Sources */,
 				B645743C298240A1008582B2 /* WorkingSession.swift in Sources */,
 				94630AEE2B33DB43002477FC /* Observable+Extension.swift in Sources */,
-				944078D52C217993007D861B /* DetailedPrinterViewController + Extension.swift in Sources */,
 				A603B86929729CBD00D19613 /* AreaViewModel.swift in Sources */,
 				B6E4DE12297EF7C600F20AB0 /* NoteManagementViewController.swift in Sources */,
+				94BA683A2DACEEF100BED27B /* DetailedPrinterViewController + Extension + mapData.swift in Sources */,
 				946F51C72B5232180014D8FE /* ChangePasswordViewController+Extension.swift in Sources */,
 				946F51B82B5232180014D8FE /* InformationApplicationRouter.swift in Sources */,
 				946F51C22B5232180014D8FE /* TermOfUseViewModel.swift in Sources */,
@@ -9441,7 +9440,6 @@
 				B620E8D2299C1B9700887369 /* MemberRegisterRouter.swift in Sources */,
 				946F4F7F2B5152930014D8FE /* DialogGiftDetailViewController+Extension.swift in Sources */,
 				A69D9DAA297053E1003EA294 /* InternetTouchView.swift in Sources */,
-				944078D82C217993007D861B /* DetailedPrinterViewController.swift in Sources */,
 				7E0339152A3C4EFF008054F9 /* UpdateFeedMaterialViewModel.swift in Sources */,
 				946F50302B515B8F0014D8FE /* TableManagementViewModel.swift in Sources */,
 				943805482CAA46E5006B1727 /* TokenListOfFoodAppViewModel.swift in Sources */,
@@ -9496,6 +9494,7 @@
 				94EFB5192BFB3131005FEBD7 /* WebLinkViewController.swift in Sources */,
 				94CFF5BC2B5A601A00D10903 /* PrintItem.swift in Sources */,
 				A603B86E2972E0AE00D19613 /* AreaCollectionViewCell.swift in Sources */,
+				94BA68382DACEEF100BED27B /* DetailedPrinterViewController.swift in Sources */,
 				945480D82C81B897008D53D8 /* OrderHistoryDetailOfFoodAppViewModel.swift in Sources */,
 				94ADECCF2D69C4EC001F61A4 /* FoodOptional.swift in Sources */,
 				946F50D52B5230800014D8FE /* CellReportRevenueTableTableViewCell.swift in Sources */,
@@ -9582,7 +9581,6 @@
 				94320EF92B20887000F978F8 /* OrderDetailViewController + extension + print.swift in Sources */,
 				94BA68262DACB53500BED27B /* EditFoodOptionViewController.swift in Sources */,
 				B699E9FC2986EB8E007B3892 /* VerifyPasswordViewController.swift in Sources */,
-				944078FA2C217993007D861B /* StampPrinterRouter.swift in Sources */,
 				C67BEB382AB30E4600C47F50 /* UpdateBranchViewController+Extensions.swift in Sources */,
 				94F4A5182B22DAEC00B89B3E /* AlphaTransitioning.swift in Sources */,
 				94F68C012B6CA4DD00BBD772 /* CreateFeedRebuildViewController.swift in Sources */,
@@ -9773,7 +9771,6 @@
 				5B5C6CDE2C087D8C004224D3 /* ItemImageVideoStoreCollectionViewCell.swift in Sources */,
 				946F51BB2B5232180014D8FE /* ClosedWorkingSessionViewController.swift in Sources */,
 				94320EFA2B20887000F978F8 /* OrderDetailViewController + extension + registerCell.swift in Sources */,
-				944078D42C217993007D861B /* DetailedPrinterViewModel.swift in Sources */,
 				94D6CF762C74829A00C96EB9 /* OrderManagementOfFoodAppViewController + extension + api.swift in Sources */,
 				94FFE4852C00348F001CF527 /* MessageCell + extension + CollectionCell.swift in Sources */,
 				B6CF0DF229A3EEC600709BEF /* ResetPasswordRouter.swift in Sources */,
@@ -9818,6 +9815,7 @@
 				94D6CF742C74817D00C96EB9 /* FoodAppOrder.swift in Sources */,
 				94ADD0772C22CB6C00724784 /* CustomPOSPrinter.m in Sources */,
 				B68E2D90297A7F0F00EE6891 /* SettingAccountRouter.swift in Sources */,
+				94BA683D2DACEEF100BED27B /* StampPrinterRouter.swift in Sources */,
 				94D395B12BEF72E90081AFD4 /* ChannelList.swift in Sources */,
 				946F4FDF2B5153160014D8FE /* QRCodeCashbackBillViewController.swift in Sources */,
 				949E14EA2AE22F910028A3BA /* SplitFoodViewController.swift in Sources */,
@@ -9831,6 +9829,7 @@
 				B6BA276329AA589300C9DD66 /* CategoryReportViewController.swift in Sources */,
 				B6457458298325AB008582B2 /* NextPoint.swift in Sources */,
 				946F51D12B5232350014D8FE /* ResponseListInfoApp.swift in Sources */,
+				94BA68372DACEEF100BED27B /* DetailedPrinterViewModel.swift in Sources */,
 				946F51C52B5232180014D8FE /* TermOfUseRouter.swift in Sources */,
 				946F4F4B2B5152760014D8FE /* VATCategoryTableViewCell.swift in Sources */,
 				B67B159E2977DDC0004C080C /* OtherFoodRequest.swift in Sources */,
@@ -9843,6 +9842,7 @@
 				946F51052B5230800014D8FE /* ReportTakeAwayFoodTableViewCell.swift in Sources */,
 				94AD9E582AB5A8E1009B5271 /* RevenueActivities.swift in Sources */,
 				94C1E3DD2C82B3140037B3A2 /* AssignToBranchViewModel.swift in Sources */,
+				94BA683B2DACEEF100BED27B /* DetailedPrinterViewController + Extension.swift in Sources */,
 				948E99C62B5B8809005786E8 /* CreateTableQuicklyViewController + extension + api.swift in Sources */,
 				94323A522CAAA6EA004664BF /* AssignToBranchTableViewCell.swift in Sources */,
 				946F50E12B5230800014D8FE /* ReportRevenueByFoodTableViewCell.swift in Sources */,
@@ -9888,7 +9888,6 @@
 				94320F022B20887000F978F8 /* ServicePopupViewModel.swift in Sources */,
 				944FBA032C06E17A003DF826 /* InfoChatViewController.swift in Sources */,
 				94BA68152DACB4F400BED27B /* ChooseOptionViewModel.swift in Sources */,
-				944078D72C217993007D861B /* DetailedPrinterViewController + Extension + mapData.swift in Sources */,
 				9415577A2BE4E624000E3B49 /* permissionUtils.swift in Sources */,
 				9459EE4F2C492077002D1CC3 /* BLEPrinter.m in Sources */,
 				B6293BBD2997B0BA00FA0280 /* UserInfoRequest.swift in Sources */,
@@ -10013,6 +10012,7 @@
 				7E0339172A3C4F0B008054F9 /* UpdateFeedMaterialRouter.swift in Sources */,
 				B61D4F5E2977AA65000C4213 /* InputQuantityViewController.swift in Sources */,
 				94AD9E682AB5A8E1009B5271 /* RevenueCategory.swift in Sources */,
+				94BA683C2DACEEF100BED27B /* DetailedPrinterViewController+extension+popup.swift in Sources */,
 				9450CB302A4FC39000F92398 /* AddressDialogOfAccountInforViewController.swift in Sources */,
 				94C199CD2B81D78D00821D60 /* EnvironmentModeViewController.swift in Sources */,
 				948E503E2C8956C400B64A70 /* TechresShopOrderInfoViewController.swift in Sources */,

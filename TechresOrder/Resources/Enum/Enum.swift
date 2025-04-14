@@ -211,6 +211,23 @@ enum CONNECTION_TYPE:Int,PersistableEnum{
     case sunmi = 2
     case usb = 3
     case blueTooth = 4
+    
+    
+    var name: String {
+        switch self {
+            case .wifi:
+                return "Wifi"
+            case .Imin:
+                return "Imin"
+            case .sunmi:
+                return "Sunmi"
+            case .usb:
+                return "USB"
+            case .blueTooth:
+                return "BlueTooth"
+
+        }
+    }
 }
 
 
