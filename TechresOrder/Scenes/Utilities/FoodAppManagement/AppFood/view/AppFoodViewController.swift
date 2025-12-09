@@ -63,7 +63,6 @@ extension AppFoodViewController:UITableViewDataSource,UITableViewDelegate {
         let cell = UINib(nibName: "AppFoodTableViewCell", bundle: .main)
         tableView.register(cell, forCellReuseIdentifier: "AppFoodTableViewCell")
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.isScrollEnabled = false
         tableView.dataSource = self
         tableView.delegate = self
     }

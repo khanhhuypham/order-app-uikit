@@ -63,15 +63,19 @@ class OrderManagementTableViewCell: UITableViewCell {
     
     private func mapData(data: Order){
         lbl_order_code.text = String(format: "#%d", data.id_in_branch)
-        lbl_table_name.text = data.table_id == 0 ? String(format:"MV%@",data.table_name) : data.table_name
-//        lbl_table_name.text = data.table_name
+        lbl_table_name.text = String(format: "%@%@",data.order_method.prefix ,data.table_name)
+        
         lbl_employee_name.text = data.employee.name
-        lbl_total_amount.text = Utils.stringVietnameseMoneyFormatWithNumberDouble(amount: data.total_amount)
+        lbl_total_amount.text = data.total_amount.toString
         lbl_order_time.text =  data.payment_date
-        lbl_table_merge.text = data.table_merged_names.joined(separator: ",")
+        lbl_table_merge.text = data.table_merge_list_name.joined(separator: ",")
         lbl_avg_amount_per_customer.text = Utils.stringVietnameseMoneyFormatWithNumberInt(amount: data.total_amount_avg_per_customer)
         
-        view_of_avg_amout_per_customer.isHidden = permissionUtils.GPQT_3_and_above && ManageCacheObject.getSetting().is_require_update_customer_slot_in_order == ACTIVE ? false : true
+        view_of_avg_amout_per_customer.isHidden = permissionUtils.GPQT_3_and_above && 
+        ManageCacheObject.getSetting().is_require_update_customer_slot_in_order == ACTIVE &&
+        (data.order_method == .EAT_IN || data.order_method == .TAKE_AWAY || data.order_method == .ONLINE_DELIVERY)
+        ? false
+        : true
         
         if (data.order_status == ORDER_STATUS_COMPLETE || data.order_status == ORDER_STATUS_DEBT_COMPLETE) {
             self.lbl_order_status.text = "Hoàn Thành".uppercased()
@@ -79,7 +83,24 @@ class OrderManagementTableViewCell: UITableViewCell {
             self.view_order_bg_status.backgroundColor = ColorUtils.green_000()
             self.lbl_order_status.textColor = ColorUtils.green_600()
             self.lbl_table_name.textColor = ColorUtils.green_600()
+            
+            switch data.order_method {
+
+                case .SHOPEE_FOOD:
+                    self.lbl_table_name.textColor = ColorUtils.hexStringToUIColor(hex: "#EE4E2E")
+
+                case .GRAB_FOOD:
+                    self.lbl_table_name.textColor = ColorUtils.hexStringToUIColor(hex: "#009E3A")
+
+                case .BE_FOOD:
+                    self.lbl_table_name.textColor = ColorUtils.hexStringToUIColor(hex: "#FFC418")
+
+                default:
+                    self.lbl_table_name.textColor = ColorUtils.green_600()
+            }
+            
             self.lbl_total_amount.textColor = ColorUtils.green_600()
+            
         }else{
           
             self.lbl_order_status.text = "Đã Huỷ".uppercased()

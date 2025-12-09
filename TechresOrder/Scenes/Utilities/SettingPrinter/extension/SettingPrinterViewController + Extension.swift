@@ -63,7 +63,6 @@ extension SettingPrinterViewController {
                 if let kitchens = Mapper<Printer>().mapArray(JSONObject: response.data) {
                     if(kitchens.count > 0){
                         
-                        
                         var receipt_printer:[Printer] = []
                         var stamp_printer:[Printer] = []
                         var chef_bar_printer:[Printer] = []
@@ -73,7 +72,11 @@ extension SettingPrinterViewController {
                             stamp_printer = kitchens.filter{$0.type == .stamp_of_food_app}
                         }else{
                             receipt_printer = kitchens.filter{$0.type == .cashier}
-                            stamp_printer = kitchens.filter{$0.type == .stamp}
+                            
+                            if Constants.branch.setting.is_enable_stamp == ACTIVE{
+                                stamp_printer = kitchens.filter{$0.type == .stamp}
+                            }
+                            
                             chef_bar_printer = kitchens.filter{$0.type == .bar || $0.type == .chef}
                         }
                         
@@ -88,10 +91,9 @@ extension SettingPrinterViewController {
                         
                         self.view.layoutIfNeeded()
 
+                        ManageCacheObject.setPrinters(kitchens, cache_key: KEY_PRINTERS)
                         
-                        ManageCacheObject.setPrinters(kitchens, cache_key: KEY_CHEF_BARS)
-                        
-                        LocalDataBaseUtils.updatePrinters(printersArray: kitchens)
+                        LocalDataBaseUtils.shared.updatePrinters(printersArray: kitchens)
                      
                     }else{
                         self.viewModel.printersChefBar.accept([])

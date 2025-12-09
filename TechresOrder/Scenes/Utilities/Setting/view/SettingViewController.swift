@@ -17,9 +17,11 @@ class SettingViewController: BaseViewController {
     @IBOutlet weak var takeAwaySettingView: UIView!
     @IBOutlet weak var takeAwaySwitch: UISwitch!
     @IBOutlet weak var idleTimerSwitch: UISwitch!
-    
     @IBOutlet weak var idleTimerView: UIView!
     
+    @IBOutlet weak var confirmAppFoodOrderSwitch: UISwitch!
+    
+    @IBOutlet weak var viewOfConfirmAppFoodOrder: UIView!
     @IBOutlet weak var btn_bank_account_setting: UIButton!
     
     
@@ -28,14 +30,7 @@ class SettingViewController: BaseViewController {
         super.viewDidLoad()
         viewModel.bind(view: self, router: router)
         
-        
-//        paymentMethodSwitch.setOn(
-//            ManageCacheObject.getPaymentMethod().is_apply_only_cash_amount_payment_method == ACTIVE ? false : true,
-//            animated: true
-//        )
-        
         getCashAmountApplication()
-
 
         takeAwaySwitch.setOn(
             ManageCacheObject.getOrderMethod().is_have_take_away == ACTIVE ? true : false,
@@ -44,11 +39,15 @@ class SettingViewController: BaseViewController {
         
         idleTimerSwitch.setOn(ManageCacheObject.getIdleTimerStatus(),animated: true)
         
+        confirmAppFoodOrderSwitch.setOn(Constants.branch.setting.is_enable_confirm_when_driver == ACTIVE ? true : false , animated: true)
+        
         takeAwaySettingView.isHidden = permissionUtils.GPBH_1 ? false : true
         
         idleTimerView.isHidden =  permissionUtils.GPBH_1 || permissionUtils.GPBH_2_o_1 ? false : true
         
         btn_bank_account_setting.isHidden = permissionUtils.GPBH_1 ? false : true
+        
+        viewOfConfirmAppFoodOrder.isHidden = permissionUtils.GPBH_1 || permissionUtils.GPBH_2_o_1 ? false : true
         
     }
     
@@ -63,6 +62,10 @@ class SettingViewController: BaseViewController {
     @IBAction func actionChangeStatusOfIdleTimer(_ sender: UISwitch) {
         UIApplication.shared.isIdleTimerDisabled = sender.isOn
         ManageCacheObject.setIdleTimerStatus(sender.isOn)
+    }
+    
+    @IBAction func actionConfirmAppFoodOrderWhenHavingDriver(_ sender: UISwitch) {
+        confirmChannelOrder(confirm: sender.isOn)
     }
     
     
@@ -130,6 +133,29 @@ extension SettingViewController{
                         animated: true
                     )
                 }
+            }else{
+                dLog(response.message ?? "Có lỗi xảy ra trong quá trình kết nối tới máy chủ. Vui lòng thử lại.")
+            }
+        }).disposed(by: rxbag)
+    }
+    
+    func confirmChannelOrder(confirm:Bool){
+        viewModel.confirmChannelOrder(confirm: confirm).subscribe(onNext: {(response) in
+            if(response.code == RRHTTPStatusCode.ok.rawValue){
+                
+                if let branchSetting = Mapper<BranchSetting>().map(JSONObject: response.data) {
+                    //branch-setting
+                    var branch = ManageCacheObject.getCurrentBranch()
+                    branch.setting = branchSetting
+                    ManageCacheObject.saveCurrentBranch(branch)
+                    
+                    self.confirmAppFoodOrderSwitch.setOn(
+                        Constants.branch.setting.is_enable_confirm_when_driver == ACTIVE ? true : false,
+                        animated: true
+                    )
+                    
+                }
+                
             }else{
                 dLog(response.message ?? "Có lỗi xảy ra trong quá trình kết nối tới máy chủ. Vui lòng thử lại.")
             }

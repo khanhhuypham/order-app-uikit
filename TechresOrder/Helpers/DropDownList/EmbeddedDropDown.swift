@@ -233,27 +233,6 @@ open class embeddedDropDown: UIView {
         
         addGesture()
 
-//        if isSearchEnable && handleKeyboard {
-//            NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: nil) { notification in
-//                if self.isFirstResponder {
-//                    let userInfo: NSDictionary = notification.userInfo! as NSDictionary
-//                    let keyboardFrame: NSValue = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue
-//                    let keyboardRectangle = keyboardFrame.cgRectValue
-//                    self.keyboardHeight = keyboardRectangle.height
-//
-////                    if !self.isSelected {
-//                    self.transform = CGAffineTransform(translationX: 0, y: -self.keyboardHeight)
-//                    self.showList()
-////                    }
-//                }
-//            }
-//            NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: nil) { _ in
-//                if self.isFirstResponder {
-//                    self.keyboardHeight = 0
-//                    self.transform = .identity
-//                }
-//            }
-//        }
     }
 
     deinit {

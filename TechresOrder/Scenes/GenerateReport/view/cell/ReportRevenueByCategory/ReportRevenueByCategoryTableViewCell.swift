@@ -22,17 +22,9 @@ class ReportRevenueByCategoryTableViewCell: UITableViewCell {
     
     var totalAmount = 1.0
     
-    @IBOutlet weak var btn_today: UIButton!
-    @IBOutlet weak var btn_yesterday: UIButton!
-    @IBOutlet weak var btn_this_month: UIButton!
-    @IBOutlet weak var btn_last_month: UIButton!
-    @IBOutlet weak var btn_last_three_month: UIButton!
-    @IBOutlet weak var btn_this_year: UIButton!
-    @IBOutlet weak var btn_last_year: UIButton!
-    @IBOutlet weak var btn_last_three_year: UIButton!
-    @IBOutlet weak var btn_all_year: UIButton!
-    @IBOutlet weak var btn_this_week: UIButton!
-    var btnArray:[UIButton] = []
+    // MARK: Biến của button filter
+    @IBOutlet weak var reportFilter: ReportFilter!
+    var datePicker: DatePickerUtils = DatePickerUtils()
     private(set) var disposeBag = DisposeBag()
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -57,16 +49,17 @@ class ReportRevenueByCategoryTableViewCell: UITableViewCell {
         table_view_cate.register(categoryItemRevenueTableViewCell, forCellReuseIdentifier: "CategoryItemRevenueTableViewCell")
         table_view_cate.rx.setDelegate(self).disposed(by: disposeBag)
     }
-    @IBAction func actionChooseReportType(_ sender: UIButton) {
-        
-        guard let viewModel = self.viewModel else {return}
-        var categoryReport = viewModel.categoryRevenueReport.value
-        categoryReport.revenuesData = []
-        categoryReport.reportType = sender.tag
-        categoryReport.dateString = Constants.REPORT_TYPE_DICTIONARY[sender.tag] ?? ""
-        viewModel.categoryRevenueReport.accept(categoryReport)
-        viewModel.view?.getCategoryReport()
-    }
+    
+//    @IBAction func actionChooseReportType(_ sender: UIButton) {
+//        
+//        guard let viewModel = self.viewModel else {return}
+//        var categoryReport = viewModel.categoryRevenueReport.value
+//        categoryReport.revenuesData = []
+//        categoryReport.reportType = sender.tag
+//        categoryReport.dateString = Constants.REPORT_TYPE_DICTIONARY[sender.tag] ?? ""
+//        viewModel.categoryRevenueReport.accept(categoryReport)
+//        viewModel.view?.getCategoryReport()
+//    }
 
     
     @IBAction func actionDetail(_ sender: Any) {
@@ -74,22 +67,93 @@ class ReportRevenueByCategoryTableViewCell: UITableViewCell {
         viewModel.makeToDetailRevenueByFoodCategoryViewController()
     }
     
+    private func handleChooseDate(date:Date,tag:Int){
+        guard let viewModel = self.viewModel else {return}
+        
+        
+        let dateString = TimeUtils.convertDateToString(from: date, format: .dd_mm_yyyy)
+        var report = viewModel.categoryRevenueReport.value
+     
+        if tag == -2{
+            
+            if TimeUtils.isDateValid(fromDateStr: dateString,toDateStr: report.toDate){
+                self.reportFilter.setFromDateTitle(dateString)
+                report.fromDate = dateString
+                report.reportType = 13
+                viewModel.categoryRevenueReport.accept(report)
+                viewModel.view?.getCategoryReport()
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+          
+        }else if tag == -1{
+            
+            if TimeUtils.isDateValid(fromDateStr: report.fromDate,toDateStr: dateString){
+                self.reportFilter.setToDateTitle(dateString)
+                report.toDate = dateString
+                report.reportType = 13
+                viewModel.categoryRevenueReport.accept(report)
+                viewModel.view?.getCategoryReport()
+                
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+        }
+        
+    }
+    
+    
     
     var viewModel: GenerateReportViewModel? {
        didSet {
            guard let viewModel = self.viewModel else {return}
-           btnArray = [btn_today, btn_yesterday, btn_this_week, btn_this_month, btn_last_month, btn_last_three_month, btn_this_year, btn_last_year, btn_last_three_year, btn_all_year]
-          
-           for btn in self.btnArray{
-               btn.rx.tap.asDriver().drive(onNext: { [weak self] in
-                   Utils.changeBgBtn(btn: btn, btnArray: self?.btnArray ?? [])
-               }).disposed(by: disposeBag)
-               
-               if btn.tag == viewModel.categoryRevenueReport.value.reportType {
-                   Utils.changeBgBtn(btn: btn, btnArray: btnArray)
-               }
-
+           
+           datePicker.chooseDate = { [weak self] (date,tag) in
+               self?.handleChooseDate(date: date, tag: tag)
            }
+           
+           reportFilter.defaultReportType = viewModel.categoryRevenueReport.value.reportType
+           reportFilter.chooseReportType = { [weak self] reportType in
+              var report = viewModel.categoryRevenueReport.value
+              
+              if reportType == -1{
+                  
+                  if let view = viewModel.view{
+                      
+                      self?.datePicker.showDatePicker(
+                           view,
+                           date:TimeUtils.convertStringToDate(from: report.toDate, format: .dd_mm_yyyy),
+                           tag:reportType
+                      )
+                   
+                  }
+               
+              }else if reportType == -2{
+                  
+                  if let view = viewModel.view{
+                      
+                      self?.datePicker.showDatePicker(
+                           view,
+                           date:TimeUtils.convertStringToDate(from: report.fromDate, format: .dd_mm_yyyy),
+                           tag:reportType
+                      )
+                   
+                  }
+               
+                  
+              }else if reportType > 0{
+               
+                  report.reportType = reportType
+                  report.dateString = Constants.REPORT_TYPE_DICTIONARY[reportType] ?? ""
+                  viewModel.categoryRevenueReport.accept(report)
+                  viewModel.view?.getCategoryReport()
+                  
+              }
+              
+          }
+           
+           
+           
            bindViewModel()
        }
     }

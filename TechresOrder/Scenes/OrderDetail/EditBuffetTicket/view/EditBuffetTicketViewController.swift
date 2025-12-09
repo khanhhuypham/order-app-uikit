@@ -22,7 +22,6 @@ class EditBuffetTicketViewController: BaseViewController {
     @IBOutlet weak var lbl_name: UILabel!
     @IBOutlet weak var lbl_amount: UILabel!
     @IBOutlet weak var textfield_quantity: UITextField!
-    
     @IBOutlet weak var textfield_discountPercent: UITextField!
     @IBOutlet weak var view_discount: UIView!
     

@@ -14,24 +14,7 @@ extension PrinterUtils: POSBLEManagerDelegate{
     }
     
     func poSbleUpdatePeripheralList(_ peripherals: [Any]!, rssiList: [Any]!) {
-        
         Constants.BLEPrinter = peripherals as? [CBPeripheral] ?? []
-        
-        
-        
-        
-//        for peripheral in list ?? []{
-//            
-//            if let _ = (dataSource.firstIndex{ $0.identifier != peripheral.identifier }) {
-//                dataSource.append(peripheral)
-//            }
-//         
-//            
-//        }
-        
-        
-        
-      
     }
     
     

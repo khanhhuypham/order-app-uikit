@@ -46,10 +46,10 @@ struct Config: Mappable {
     var rpk_public_key: String = ""
     
     
-     init?(map: Map) {
+    init?(map: Map) {
     }
-    init?() {
-    }
+    
+    init() {}
 
     mutating func mapping(map: Map) {
         id <- map["id"]

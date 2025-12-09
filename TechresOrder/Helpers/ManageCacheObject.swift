@@ -16,33 +16,30 @@ public class ManageCacheObject {
         UserDefaults.standard.set(Mapper<Config>().toJSON(config), forKey:Constants.KEY_DEFAULT_STORAGE.KEY_CONFIG)
     }
     
-    static func getConfig() -> Config{
-        if let config  = UserDefaults.standard.object(forKey: Constants.KEY_DEFAULT_STORAGE.KEY_CONFIG){
-            return Mapper<Config>().map(JSONObject: config)!
-        }else{
-            return Config.init()!
+    static func getConfig() -> Config {
+        guard let configObject = UserDefaults.standard.object(forKey: Constants.KEY_DEFAULT_STORAGE.KEY_CONFIG),
+              let config = Mapper<Config>().map(JSONObject: configObject) else {
+            return Config() // safe fallback
         }
+        return config
     }
     
     // MARK: - setSetting
     static func setSetting(_ setting: Setting){
-        var orderMethod = OrderMethod()
-        orderMethod.is_have_take_away = setting.is_have_take_away
-        setOrderMethod(orderMethod)
         UserDefaults.standard.set(Mapper<Setting>().toJSON(setting), forKey:Constants.KEY_DEFAULT_STORAGE.KEY_SETTING)
     }
     
-    static func getSetting() -> Setting{
-        if let setting  = UserDefaults.standard.object(forKey: Constants.KEY_DEFAULT_STORAGE.KEY_SETTING){
-            return Mapper<Setting>().map(JSONObject: setting)!
-        }else{
-            return Setting.init()!
+    static func getSetting() -> Setting {
+        guard let settingObject = UserDefaults.standard.object(forKey: Constants.KEY_DEFAULT_STORAGE.KEY_SETTING),
+              let setting = Mapper<Setting>().map(JSONObject: settingObject) else {
+            return Setting()
         }
+        return setting
     }
+
     
     
     //Mark - check setting biometris
-    
     static func setBiometric(_ biometric:String){
         UserDefaults.standard.set(biometric, forKey: Constants.KEY_DEFAULT_STORAGE.KEY_BIOMETRIC)
     }
@@ -58,19 +55,23 @@ public class ManageCacheObject {
     }
     
     
-    static func saveCurrentUser(_ user : Account) {
+    static func saveCurrentUser(_ user: Account) {
         UserDefaults.standard.set(Mapper<Account>().toJSON(user), forKey:Constants.KEY_DEFAULT_STORAGE.KEY_ACCOUNT)
         UserDefaults.standard.synchronize()
     }
     
     static func getCurrentUser() -> Account {
-        if let user  = UserDefaults.standard.object(forKey: Constants.KEY_DEFAULT_STORAGE.KEY_ACCOUNT){
-            return Mapper<Account>().map(JSONObject: user)!
-        }else{
-            return Account.init()
+        guard let user = UserDefaults.standard.object(forKey: Constants.KEY_DEFAULT_STORAGE.KEY_ACCOUNT) else {
+            return Account()
         }
         
+        if let mappedUser = Mapper<Account>().map(JSONObject: user) {
+            return mappedUser
+        } else {
+            return Account()
+        }
     }
+
     
     // MARK: - ACCESS_TOKEN
     static func setAccessToken(_ access_token:String){
@@ -88,36 +89,59 @@ public class ManageCacheObject {
     
     
     // MARK: - Username
-    static func setRestaurantName(_ restaurant_name:String){
-       UserDefaults.standard.set(restaurant_name, forKey: Constants.KEY_DEFAULT_STORAGE.KEY_RESTAURANT_NAME)
+    static func setEnvironment(_ environment:EnvironmentMode){
+        UserDefaults.standard.set(environment.value, forKey: Constants.KEY_DEFAULT_STORAGE.KEY_ENVIRONMENT_MODE)
     }
 
-    static func getRestaurantName()->String{
-        if let restaurant_name  = UserDefaults.standard.object(forKey: Constants.KEY_DEFAULT_STORAGE.KEY_RESTAURANT_NAME){
-           return String(restaurant_name as! String)
+    static func getEnvironment() -> EnvironmentMode{
+        if let environmentValue = UserDefaults.standard.object(forKey: Constants.KEY_DEFAULT_STORAGE.KEY_ENVIRONMENT_MODE){
+            
+
+            return EnvironmentMode(value: environmentValue as? Int ?? ONLINE)
+            
         }else{
-           return ""
+            
+            return EnvironmentMode.online
+            
         }
-
     }
-    
-    
     
     
     // MARK: - Username
-    static func setUsername(_ username:String){
-       UserDefaults.standard.set(username, forKey: Constants.KEY_DEFAULT_STORAGE.KEY_PHONE)
+    static func setSavedLoginInfo(_ infor:SavedLoginInfor){
+        
+        UserDefaults.standard.set(Mapper<SavedLoginInfor>().toJSON(infor), forKey:Constants.KEY_DEFAULT_STORAGE.KEY_SAVED_LOGIN_INFOR)
+        
     }
 
-    static func getUsername()->String{
-        if let username  = UserDefaults.standard.object(forKey: Constants.KEY_DEFAULT_STORAGE.KEY_PHONE){
-           
-           return String(username as! String)
+    static func getSavedLoginInfo() -> SavedLoginInfor{
+        if let infor  = UserDefaults.standard.object(forKey: Constants.KEY_DEFAULT_STORAGE.KEY_SAVED_LOGIN_INFOR){
+
+            return Mapper<SavedLoginInfor>().map(JSONObject: infor) ?? SavedLoginInfor()
+            
         }else{
-           return ""
+            
+           return SavedLoginInfor()
+            
         }
 
     }
+    
+    
+//    // MARK: - Username
+//    static func setUsername(_ username:String){
+//       UserDefaults.standard.set(username, forKey: Constants.KEY_DEFAULT_STORAGE.KEY_PHONE)
+//    }
+//
+//    static func getUsername()->String{
+//        if let username  = UserDefaults.standard.object(forKey: Constants.KEY_DEFAULT_STORAGE.KEY_PHONE){
+//           
+//           return String(username as! String)
+//        }else{
+//           return ""
+//        }
+//
+//    }
     
     // MARK: - Password
     static func setPassword(_ password:String){
@@ -156,35 +180,7 @@ public class ManageCacheObject {
         }
     }
     
-//    static func savePrinterBill(_ printer : Printer, cache_key:String) {
-//        UserDefaults.standard.set(Mapper<Printer>().toJSON(printer), forKey:cache_key)
-//    }
-//    
-//    static func getPrinterBill(cache_key:String) -> Printer {
-//        if let printer  = UserDefaults.standard.object(forKey: cache_key){
-//            return Mapper<Printer>().map(JSONObject: printer)!
-//        }else{
-//            return Printer.init()
-//        }
-//        
-//    }
-    
-//    
-//    static func getAppFoodPrinter(cache_key:String) -> [Printer] {
-//        if let printers = UserDefaults.standard.object(forKey: cache_key){
-//            return Mapper<Printer>().mapArray(JSONArray: printers as! [[String : Any]])
-//        }else{
-//            return []
-//        }
-//        
-//    }
-//    
-//    static func SaveAppFoodPrinter(_ printers : [Printer],cache_key:String){
-//        UserDefaults.standard.set(Mapper<Printer>().toJSONArray(printers), forKey:cache_key)
-//        
-//    }
-//    
-//    
+
     
     
     // MARK: - PUSH_TOKEN
@@ -290,6 +286,18 @@ public class ManageCacheObject {
         }
     }
     
+//    static func setConfirmOrderWhenHavingDriver(_ confirm: Bool) {
+//        UserDefaults.standard.set(confirm, forKey:Constants.KEY_DEFAULT_STORAGE.KEY_CONFIRM_ORDER_WHEN_HAVING_DRIVER)
+//    }
+//    
+//    static func confirmAppFoodOrderWhenHavingDriver() -> Bool {
+//        if let status  = UserDefaults.standard.object(forKey: Constants.KEY_DEFAULT_STORAGE.KEY_CONFIRM_ORDER_WHEN_HAVING_DRIVER){
+//            return status as! Bool
+//        }else{
+//            return false
+//        }
+//    }
+//    
 
     static func setIsDevMode(_ isDevMode: Bool){
         UserDefaults.standard.set(isDevMode, forKey: Constants.KEY_DEFAULT_STORAGE.KEY_DEV_MODE)

@@ -85,7 +85,7 @@ extension CreateFoodViewController:TagListViewDelegate {
         /*
             if: món bán kèm thì luôn ẩn view món bàn kèm
             if: món là món chính thì phải xét xem món đó thuộc danh mục gì
-                                                                            if: category_type == CATEGORY_OF_DRINK || CATEGORY_OF_OTHER -> ẩn đi view món bán kèm
+            if: category_type == CATEGORY_OF_DRINK || CATEGORY_OF_OTHER -> ẩn đi view món bán kèm
          */
         if createModel.is_addition == ACTIVE{
             view_of_addition_food.isHidden = true

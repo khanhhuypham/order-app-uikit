@@ -35,7 +35,7 @@ struct BankAccount:Mappable {
     var bank_account_name = ""
     var is_default = 0
     var type = 0
-    var payment_type = 0
+    var payment_type:PAYMENT_TYPE = .payos
     var is_use_static_qr = 0
     
     var qr_code = ""

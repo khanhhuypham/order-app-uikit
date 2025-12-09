@@ -133,6 +133,10 @@ class ColorUtils{
     static func blue_brand_700()->UIColor{
         return hexStringToUIColor(hex: "#0071BB")
     }
+    
+    static func blue_brand_800()->UIColor{
+        return hexStringToUIColor(hex: "#1462B0")
+    }
     static func blueButton()->UIColor{
         return hexStringToUIColor(hex: "#0072bc")
     }
@@ -141,14 +145,10 @@ class ColorUtils{
         let blackOpacity = black.withAlphaComponent(0.1)
         return blackOpacity;
     }
-    
- 
-    
- 
+
     static func main_navigabar_color()->UIColor{
         return hexStringToUIColor(hex: "#fa8f0c")
     }
-    
     
     //hệ màu đỏ
     static func red_000()->UIColor{
@@ -191,10 +191,7 @@ class ColorUtils{
 
 
     
-    //Mã màu xám
-    static func gray_600() -> UIColor {
-        return hexStringToUIColor(hex:"#7D7E81")
-    }
+   
     
     static func grayColor() -> UIColor {
         return hexStringToUIColor(hex:"#BEBEBE")
@@ -225,7 +222,14 @@ class ColorUtils{
         return hexStringToUIColor(hex:"#E7E8EB")
     }
 
-
+    //Mã màu xám
+    static func gray_600() -> UIColor {
+        return hexStringToUIColor(hex:"#7D7E81")
+    }
+    
+    static func gray_500() ->UIColor{
+        return hexStringToUIColor(hex: "A8A7AC")
+    }
     
     static func gray_300() ->UIColor{
         return hexStringToUIColor(hex: "E7E8EB")

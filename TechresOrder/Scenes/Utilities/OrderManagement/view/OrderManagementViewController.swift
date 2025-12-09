@@ -97,9 +97,7 @@ class OrderManagementViewController: BaseViewController {
         apiParameter.report_type = reportType
         apiParameter.from_date = reportType.from_date
         apiParameter.to_date = reportType.to_date
-        dLog(reportType.from_date)
-        dLog(reportType.to_date)
- 
+
         viewModel.APIParameter.accept(apiParameter)
         viewModel.clearDataAndCallAPI()
      

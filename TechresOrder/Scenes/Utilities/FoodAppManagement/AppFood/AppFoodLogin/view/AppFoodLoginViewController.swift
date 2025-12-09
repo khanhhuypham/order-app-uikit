@@ -92,20 +92,9 @@ class AppFoodLoginViewController: BaseViewController,WKUIDelegate {
         }
 
         if credential.id > 0{
-            getDetailOfChannelOrderFoodToken(id: credential.id)
+            getDetailOfChannelOrderFoodToken()
         }else{
-            
-//            viewModel.credential.accept(
-//                PartnerCredential(
-//                    id: p.id,
-//                    restaurant_id: Constants.restaurant_id,
-//                    restaurant_brand_id: Constants.brand.id,
-//                    channel_order_food_id: p.channel_order_food_token_id,
-//                    access_token: "",
-//                    username: "",
-//                    password: ""
-//                )
-//            )
+
             
             if credential.partnerType == .shoppee{
                 WKWebView.clean()
@@ -115,14 +104,14 @@ class AppFoodLoginViewController: BaseViewController,WKUIDelegate {
         }
         
         connection_view.isHidden = credential.is_connection == ACTIVE ? false : true
-        btn_login.setTitle(credential.is_connection == ACTIVE ? "Huỷ Kết nối" : "Kết nối", for: .normal)
+        btn_login.setTitle(credential.is_connection == ACTIVE ? "Huỷ kết nối" : "Kết nối", for: .normal)
         btn_login.tintColor = credential.is_connection == ACTIVE ? ColorUtils.red_600() : ColorUtils.orange_brand_900()
         lbl_title.text = String(format: "KẾT NỐI VỚI %@", (credential.name ?? "").uppercased(with: .autoupdatingCurrent))
     }
     
 
     @IBAction func actionback(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
+        viewModel.makePopViewController()
     }
     
     
@@ -159,7 +148,7 @@ class AppFoodLoginViewController: BaseViewController,WKUIDelegate {
 
 
 extension AppFoodLoginViewController{
-    func getDetailOfChannelOrderFoodToken(id:Int){
+    func getDetailOfChannelOrderFoodToken(){
         
         var cre = viewModel.credential.value
         
@@ -213,10 +202,7 @@ extension AppFoodLoginViewController{
             
             if(response.code == RRHTTPStatusCode.ok.rawValue){
                 if var infor = Mapper<PartnerCredential>().map(JSONObject: response.data){
-                    
-//                    infor.partnerType = self.viewModel.credential.value.partnerType
-//                    self.changeConnect(credential: self.viewModel.credential.value)
-                    
+
                     self.showSuccessMessage(content: "Kết nối thành công")
                     
                     self.actionback("")
@@ -258,7 +244,7 @@ extension AppFoodLoginViewController{
                     WKWebView.clean()
                 }
                 
-                self.showSuccessMessage(content: credential.is_connection == DEACTIVE ? "Kết nối thành công" : "ngắt kết nối thành công")
+                self.showSuccessMessage(content: credential.is_connection == DEACTIVE ? "Kết nối thành công" : "Ngắt kết nối thành công")
                 
                 self.actionback("")
             }else{
@@ -276,7 +262,6 @@ extension AppFoodLoginViewController{
             cre.username = cre.phoneNumber ?? ""
         }
         
-              
         if cre.id == 0{
             createTokenOfChannelFoodOrder(credential: cre)
         }else{

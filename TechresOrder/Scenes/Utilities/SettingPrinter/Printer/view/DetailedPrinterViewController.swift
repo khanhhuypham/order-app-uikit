@@ -21,7 +21,6 @@ class DetailedPrinterViewController: BaseViewController {
     @IBOutlet weak var view_of_ip_address: UIView!
     @IBOutlet weak var view_of_port: UIView!
     
-
     @IBOutlet weak var textfield_print_ipaddress: UITextField!
     @IBOutlet weak var textfield_print_port: UITextField!
     
@@ -30,8 +29,18 @@ class DetailedPrinterViewController: BaseViewController {
     
     
     @IBOutlet weak var lbl_header_options: UILabel!
-    @IBOutlet weak var btn_of_option1: UIButton!
-    @IBOutlet weak var btn_of_option2: UIButton!
+    
+    @IBOutlet weak var btn_of_60_x_40: UIButton!
+    @IBOutlet weak var btn_of_50_x_30: UIButton!
+    @IBOutlet weak var btn_of_40_x_30: UIButton!
+    @IBOutlet weak var btn_of_30_x_20: UIButton!
+    
+    @IBOutlet weak var btn_of_print_many_foods: UIButton!
+    @IBOutlet weak var btn_of_print_each_food: UIButton!
+    
+    @IBOutlet weak var stackview_of_stamp_direction: UIStackView!
+    @IBOutlet weak var btn_of_0_degree: UIButton!
+    @IBOutlet weak var btn_of_180_degree: UIButton!
             
     @IBOutlet weak var view_of_printer_number: UIView!
     @IBOutlet weak var textfield_print_number: UITextField!
@@ -44,10 +53,7 @@ class DetailedPrinterViewController: BaseViewController {
         super.viewDidLoad()
         viewModel.bind(view: self, router: router)
         firstSetup()
-        dLog(printer.toJSON())
         viewModel.printer.accept(printer)
-      
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -58,33 +64,17 @@ class DetailedPrinterViewController: BaseViewController {
     }
     
 
-    
-    
-//    @IBAction func actionSwitchDevice(_ sender: UISegmentedControl) {
-//        var printer = viewModel.printer.value
-//      
-//        if sender.selectedSegmentIndex == 0{ // wifi
-//            printer.connection_type = .wifi
-//        }else if sender.selectedSegmentIndex == 1{ // bluetooth
-//            printer.connection_type = .blueTooth
-//        }
-//        viewModel.printer.accept(printer)
-//        mapData(printer: printer)
-//    }
-    
 
     @IBAction func actionSearch(_ sender: Any) {
        presentDialogBLEInvestigator()
     }
      
     
-    @IBAction func actionChooseOption1(_ sender: Any) {
-        var printer = viewModel.printer.value
+    @IBAction func actionChooseOption1(_ sender: UIButton) {
+        let printer = viewModel.printer.value
             
         if printer.type == .stamp || printer.type == .stamp_of_food_app {
-            printer.printer_paper_size = 50
-        }else if printer.type == .chef || printer.type == .bar{
-            printer.is_print_each_food = DEACTIVE
+            printer.printer_paper_size = sender.tag
         }
         
         viewModel.printer.accept(printer)
@@ -93,21 +83,34 @@ class DetailedPrinterViewController: BaseViewController {
     
     
     
-    @IBAction func actionChooseOption2(_ sender: Any) {
-        var printer = viewModel.printer.value
+    @IBAction func actionChooseOption2(_ sender: UIButton) {
+        let printer = viewModel.printer.value
             
-        if printer.type == .stamp || printer.type == .stamp_of_food_app {
-            printer.printer_paper_size = 30
-        }else if printer.type == .chef || printer.type == .bar{
-            printer.is_print_each_food = ACTIVE
+        if printer.type == .chef || printer.type == .bar{
+          
+            printer.is_print_each_food = sender.currentTitle == "  In riêng từng món" ? ACTIVE : DEACTIVE
         }
+        
+        viewModel.printer.accept(printer)
+        mapData(printer: printer)
+    }
+    
+    @IBAction func actionChooseStampDirection(_ sender: UIButton) {
+        let printer = viewModel.printer.value
+            
+        if printer.type == .stamp || printer.type == .stamp_of_food_app{
+            printer.direction = sender.tag
+        }
+        
         viewModel.printer.accept(printer)
         mapData(printer: printer)
     }
     
     
+    
     @IBAction func actionTurnOnOffPrinter(_ sender: UISwitch) {
-        var printer = viewModel.printer.value
+        let printer = viewModel.printer.value
+        
         printer.is_have_printer = sender.isOn ? ACTIVE : DEACTIVE
 
         viewModel.printer.accept(printer)
@@ -117,13 +120,10 @@ class DetailedPrinterViewController: BaseViewController {
     
     @IBAction func actionPrintTest(_ sender: Any) {
         let printer = viewModel.printer.value
-
         
         printer.type == .cashier_of_food_app || printer.type == .stamp_of_food_app
         ? printTestForFoodApp(printer: printer)
         : printTestForTechResOrderApp(printer: printer)
-       
-        
     }
     
     @IBAction func actionUpdate(_ sender: Any) {
@@ -140,7 +140,7 @@ class DetailedPrinterViewController: BaseViewController {
         if printer.type == .stamp ||  printer.type == .stamp_of_food_app{
        
             for p in Constants.printers.filter{$0.type == .chef || $0.type == .bar || $0.type == .cashier || $0.type == .cashier_of_food_app}{
-                if p.printer_ip_address == printer.printer_ip_address{
+                if p.printer_ip_address == printer.printer_ip_address && printer.connection_type == .wifi{
                     valid = false
                     self.showAleartViewwithTitle(
                         "Cảnh bảo",
@@ -179,7 +179,7 @@ class DetailedPrinterViewController: BaseViewController {
             nếu empty thì tự động trả về một
             chia lấy dự cho 10 để lấy dc số cuối cùng vì value thật chất là luôn > 10
          */
-        var printer = viewModel.printer.value
+        let printer = viewModel.printer.value
         guard let value = Int(textField.text!) else {
             textField.text = String(1)
             printer.print_number = 1

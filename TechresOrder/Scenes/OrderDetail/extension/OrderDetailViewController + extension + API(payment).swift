@@ -11,21 +11,22 @@ import RxSwift
 import JonAlert
 extension OrderDetailViewController {
     
-    func getBrandBankAccount(completeHandler:@escaping (()->Void)){
+    func getBrandBankAccount(order:OrderDetail,completeHandler:@escaping (()->Void)){
         viewModel.getBrandBankAccount().subscribe(onNext: { [self] (response) in
             if(response.code == RRHTTPStatusCode.ok.rawValue){
                 if let bankAccount = Mapper<BankAccount>().map(JSONObject: response.data) {
                     
-                    PrinterUtils.shared.PrintReceipt(
+                    PrinterUtils.shared.PrintInvoice(
                         presenter: self,
-                        order: viewModel.order.value,
-                        bankAccount: bankAccount,
+                        order: order,
+                        bankAccount:bankAccount,
                         printer: Constants.printers.filter{$0.type == .cashier}.first ?? Printer(),
+                        printMode:.printBackgroundWithoutRetry,
                         completetHandler: completeHandler
                     )
                     
-                    
                 }
+            
             }else{
                 JonAlert.showError(message: response.message ?? "", duration: 2.0)
             }
@@ -39,15 +40,18 @@ extension OrderDetailViewController {
 
                 
                 let completeHandler:()->Void = {
+                    
                     JonAlert.showSuccess(message:"Đã hoàn tất đơn hàng và in bill cho khách.", duration: 2.0)
+                    
                     self.navigationController?.viewControllers.removeAll(where: { (vc) -> Bool in
                         return vc.isKind(of: OrderDetailViewController.self) ? true : false
                     })
+                    
                     self.viewModel.makePopViewController()
                 }
                 
-                if permissionUtils.BillPrinter {
-                    getBrandBankAccount(completeHandler: completeHandler)
+                if permissionUtils.InvoicePrinter {
+                    getBrandBankAccount(order:viewModel.order.value,completeHandler: completeHandler)
                 }else{
                     completeHandler()
                 }
@@ -58,9 +62,10 @@ extension OrderDetailViewController {
         }).disposed(by: rxbag)
     }
     
-    
-    
-    
-    
-    
+    func handlePayment() {
+        ManageCacheObject.getPaymentMethod().is_apply_only_cash_amount_payment_method == ACTIVE
+        ? self.callBackToGetPaymentMethod(paymentMethod: Constants.PAYMENT_METHOD.CASH)
+        : self.presentPaymentPopupViewController(totalPayment: self.viewModel.order.value.total_final_amount)
+    }
+        
 }

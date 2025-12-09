@@ -95,6 +95,7 @@ extension BaseViewModel{
 }
 
 extension BaseViewModel {
+    
     func uploadWithData(serverUrl: URL, headers: HTTPHeaders, progressing: ((Double) -> Void)?, success:  ((AFDataResponse<Any>) -> Void)?, failure: ((Error) -> Void)?)  {
         dLog("\(serverUrl.absoluteString)")
         let upload_requests = upload_request.value

@@ -10,7 +10,7 @@ import UIKit
 import Charts
 
 class ChartUtils: NSObject {
-    static func customLineChart(chartView : LineChartView, entries: [ChartDataEntry],x_label:[String],labelCount:Int) {
+    static func customLineChart(chartView : LineChartView, entries: [ChartDataEntry],x_label:[String],labelCount:Int,horizontalScroll:Bool=false) {
         
     
         chartView.noDataText = "Chưa có dữ liệu!"
@@ -45,6 +45,8 @@ class ChartUtils: NSObject {
         chartView.leftAxis.axisLineWidth = 2
         chartView.leftAxis.valueFormatter = CustomAxisValueFormatter() // Thêm valueFormatter
         
+        
+        
         chartView.rightAxis.enabled = false
         
         chartView.xAxis.drawAxisLineEnabled = true
@@ -58,6 +60,18 @@ class ChartUtils: NSObject {
         chartView.xAxis.labelRotationAngle = -50
         chartView.xAxis.labelRotatedHeight = 40
         chartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: x_label)
+        
+        if horizontalScroll {
+            let visibleXRange = 8 // Number of values to show in y-Axis
+            chartView.setVisibleXRangeMaximum(Double(visibleXRange))
+            chartView.xAxis.setLabelCount(visibleXRange, force: false)
+            chartView.xAxis.granularity = 1
+            chartView.xAxis.labelCount = visibleXRange
+            chartView.dragEnabled = true
+        }
+        
+        
+        
         chartView.pinchZoomEnabled = false
         chartView.doubleTapToZoomEnabled = false
         chartView.marker = CustomMarkerView(frame: CGRect(x: 0, y: 0, width: 80, height: 30))
@@ -157,6 +171,10 @@ class ChartUtils: NSObject {
     
     static func customBarChart(chartView : BarChartView, barChartItems:[BarChartDataEntry], xLabel:[String]=[],
                                color:[UIColor]?=nil, drawValuesOnDataSet:Bool=false, isDateXLabel:Bool = false) {
+        
+        chartView.fitScreen()  // Resets zoom and drag
+        chartView.moveViewToX(0) // Optional: Move to the beginning
+        
         chartView.noDataText = "Chưa có dữ liệu !!"
         //Bar Chart
         let barChartDataSet = BarChartDataSet(entries: barChartItems, label: "")
@@ -213,184 +231,9 @@ class ChartUtils: NSObject {
         chartView.marker = CustomMarkerView(frame: CGRect(x: 0, y: 0, width: 80, height: 30))
     }
     
-    static func customGroupBarChart(chartView:BarChartView,data:[FoodAppReportData],reportType:Int) {
-        chartView.chartDescription.enabled = false
-        chartView.legend.enabled = false
-        chartView.backgroundColor = UIColor.white
-        chartView.xAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
-        chartView.xAxis.granularity = 1 // xác định bước giữa các giá trị trên trục ngang.
-        chartView.xAxis.labelHeight = 50
-        chartView.xAxis.labelPosition = .bottom
-        chartView.xAxis.centerAxisLabelsEnabled = true
-        chartView.xAxis.axisMinimum = 0
-        chartView.fitScreen()
-        chartView.dragEnabled = true
-        chartView.leftAxis.granularity = 2 // xác định bước giữa các giá trị trên trục dọc.
-        chartView.leftAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
-        chartView.rightAxis.enabled = false
-        //chart animation
-        chartView.animate(xAxisDuration: 0, yAxisDuration: 0, easingOption: .linear)
-        // calculate the required height for the chart based on the number of labels and their rotated height
-        let labelHeight = chartView.xAxis.labelRotatedHeight // use the rotated label height
-        let labelRotationAngle = CGFloat(chartView.xAxis.labelRotationAngle) * .pi / 180 // convert the rotation angle to radians
-        let chartHeight = chartView.frame.origin.y + (CGFloat(chartView.xAxis.labelCount) * labelHeight * abs(cos(labelRotationAngle))) // use the rotated height and the cosine of the rotation angle
-        chartView.xAxis.labelRotationAngle = -27
-        chartView.xAxis.labelRotatedHeight = 35
-        chartView.xAxis.wordWrapEnabled = true
-        // resize the height of the chart view
-        chartView.frame.size.height = chartHeight
-        chartView.leftAxis.valueFormatter = CustomAxisValueFormatter()
-        chartView.highlightValue(nil, callDelegate: false)
-        chartView.xAxis.axisMaximum = Double(data.count)
-        
-        let visibleXRange = 7 // Number of values to show in y-Axis
-        chartView.setVisibleXRangeMaximum(Double(visibleXRange))
-        chartView.xAxis.setLabelCount(visibleXRange, force: false)
-        chartView.xAxis.labelCount = visibleXRange
-        chartView.leftAxis.axisMinimum = 0
-        
-        chartView.extraTopOffset = 35.0 // Adjust the value as per your requirement
-        chartView.marker = CustomMarkerView(frame: CGRect(x: 0, y: 0, width: 80, height: 30))
-
-        let x_label:[String] = data.enumerated().map{(i,value) in ChartUtils.getXLabel(dateTime: value.report_date, reportType: reportType, dataPointnth:i)}
-        
-        chartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: x_label)
-        
-        
-        chartView.highlightValue(nil, callDelegate: false)
-
-        // MARK: Handle click show tooltip
-       
-    
-        //======================================
-
-        let SHF_DataEntry: (Int) -> BarChartDataEntry = { (i) -> BarChartDataEntry in
-            return BarChartDataEntry(x: Double(i), y: Double(data[i].total_amount_SHF))
-        }
-        
-        let GRF_DataEntry: (Int) -> BarChartDataEntry = { (i) -> BarChartDataEntry in
-            return BarChartDataEntry(x: Double(i), y: Double(data[i].total_amount_GRF))
-        }
-        
-        let GOF_DataEntry: (Int) -> BarChartDataEntry = { (i) -> BarChartDataEntry in
-            return BarChartDataEntry(x: Double(i), y: Double(data[i].total_amount_GOF))
-        }
-        
-        let BEF_DataEntry: (Int) -> BarChartDataEntry = { (i) -> BarChartDataEntry in
-            return BarChartDataEntry(x: Double(i), y: Double(data[i].total_amount_BEF))
-        }
-        
-
-        let SHF_DataEntryArray = (0..<data.count).map(SHF_DataEntry)
-        let GRF_DataEntryArray = (0..<data.count).map(GRF_DataEntry)
-        let GOF_DataEntryArray = (0..<data.count).map(GOF_DataEntry)
-        let BEF_DataEntryArray = (0..<data.count).map(BEF_DataEntry)
 
     
-        let SHF_DataSet = BarChartDataSet(entries: SHF_DataEntryArray, label: "")
-        SHF_DataSet.setColor(ColorUtils.red_600())
 
-        let GRF_DataSet = BarChartDataSet(entries: GRF_DataEntryArray, label: "")
-        GRF_DataSet.setColor(ColorUtils.orange_brand_900())
-
-        let GOF_DataSet = BarChartDataSet(entries: GOF_DataEntryArray, label: "")
-        GOF_DataSet.setColor(ColorUtils.green_600())
-
-        let BEF_DataSet = BarChartDataSet(entries: BEF_DataEntryArray, label: "")
-        BEF_DataSet.setColor(ColorUtils.blue_brand_700())
-
-
-    
-        let chartData: BarChartData =  [SHF_DataSet,GRF_DataSet,GOF_DataSet,BEF_DataSet]
-        
-
-    
-        let groupSpace = 0.08 //inset padding of everygroup example |<-content->| (<-,-> is inset padding)
-        let barSpace = 0.03
-        let barWidth = 0.2
-        // (0.2 + 0.03) * 4 + 0.08 = 1.00 -> interval per "group"
-        // specify the width each bar should have
-        chartData.barWidth = barWidth
-        chartData.groupBars(fromX: 0, groupSpace: groupSpace, barSpace: barSpace)
-        
-
-        chartView.data = chartData
-        
-        for set in chartView.data! {
-            set.drawValuesEnabled = !set.drawValuesEnabled
-        }
-        
-        
-
-    }
-    
-    
-    static func setupBarChart(chartView : BarChartView, dataChart: FoodAppReport) {
-        let totalGOF = dataChart.total_revenue_GOF
-        let totalBEF = dataChart.total_revenue_BEF
-        let totalGRF = dataChart.total_revenue_GRF
-        let totalSHF = dataChart.total_revenue_SHF
-        
-        chartView.chartDescription.enabled = false
-        chartView.legend.enabled = false
-        chartView.backgroundColor = UIColor.white
-        chartView.xAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
-        chartView.xAxis.granularity = 1 // xác định bước giữa các giá trị trên trục ngang.
-        chartView.xAxis.labelHeight = 50
-        chartView.xAxis.labelPosition = .bottom
-        chartView.xAxis.centerAxisLabelsEnabled = true
-        chartView.xAxis.axisMinimum = 0
-        chartView.fitScreen()
-        chartView.dragEnabled = true
-        chartView.leftAxis.granularity = 2 // xác định bước giữa các giá trị trên trục dọc.
-        chartView.leftAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
-        chartView.rightAxis.enabled = false
-        //chart animation
-        chartView.animate(xAxisDuration: 0, yAxisDuration: 0, easingOption: .linear)
-        // calculate the required height for the chart based on the number of labels and their rotated height
-        let labelHeight = chartView.xAxis.labelRotatedHeight // use the rotated label height
-        let labelRotationAngle = CGFloat(chartView.xAxis.labelRotationAngle) * .pi / 180 // convert the rotation angle to radians
-        let chartHeight = chartView.frame.origin.y + (CGFloat(chartView.xAxis.labelCount) * labelHeight * abs(cos(labelRotationAngle))) // use the rotated height and the cosine of the rotation angle
-        chartView.xAxis.labelRotationAngle = -27
-        chartView.xAxis.labelRotatedHeight = 35
-        chartView.xAxis.wordWrapEnabled = true
-        // resize the height of the chart view
-        chartView.frame.size.height = chartHeight
-        chartView.leftAxis.valueFormatter = CustomAxisValueFormatter()
-        chartView.highlightValue(nil, callDelegate: false)
-        
-        var barChartItems = [BarChartDataEntry]()
-        
-        //Chart Datax
-        barChartItems.append(BarChartDataEntry(x: Double(0), y: Double(totalGOF)))
-        barChartItems.append(BarChartDataEntry(x: Double(1), y: Double(totalBEF)))
-        barChartItems.append(BarChartDataEntry(x: Double(2), y: Double(totalGRF)))
-        barChartItems.append(BarChartDataEntry(x: Double(3), y: Double(totalSHF)))
-        
-        //Bar Chart
-        let barChartDataSet = BarChartDataSet(entries: barChartItems, label: "")
-        barChartDataSet.setColors(ColorUtils.blueButton(), ColorUtils.red_color(), ColorUtils.main_navigabar_color())
-        barChartDataSet.drawValuesEnabled = false
-        barChartDataSet.colors = [ColorUtils.red_600(), ColorUtils.orange_brand_900(), ColorUtils.green_600(),ColorUtils.blue_brand_700()]
-        
-        chartView.data = BarChartData(dataSet: barChartDataSet)
-        chartView.xAxis.drawAxisLineEnabled = false
-        chartView.xAxis.drawGridLinesEnabled = false
-        chartView.xAxis.centerAxisLabelsEnabled = false
-        chartView.xAxis.axisMinimum = -1
-        chartView.xAxis.axisMaximum = Double(barChartItems.count)
-        chartView.extraTopOffset = 30
-                                                            
-        // label
-        var x_label = [String]()
-        x_label.append("Gofood")
-        x_label.append("Befood")
-        x_label.append("Grabfood")
-        x_label.append("Shopeefood")
-        chartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: x_label)
-        chartView.marker = CustomMarkerView(frame: CGRect(x: 0, y: 0, width: 80, height: 30))
-
-    }
     
     
     ////variable  dataPointnth is used to get label for the report type of week
@@ -481,6 +324,14 @@ class ChartUtils: NSObject {
                     x_label.append(String(format: "%@",substringDate[0]))
                     break
                 
+                case REPORT_TYPE_OPTION_DAY:
+                    let datetimeSeparator = dateTime.components(separatedBy: [" "])
+                    let substringDate = datetimeSeparator[0].components(separatedBy: ["-"])
+
+                    x_label = String(format: "%@/%@/%@", substringDate[1], substringDate[0],substringDate[2])
+                
+                    break
+                
                 default:
                     break
             }
@@ -527,14 +378,6 @@ class ChartUtils: NSObject {
         }
 
     }
-    
-    
-    
-    
-    
-    
-    
-    
     
 }
 

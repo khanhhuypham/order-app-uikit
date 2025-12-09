@@ -124,7 +124,7 @@ class BuffetTicketTableViewCell: UITableViewCell {
             lbl_name.text = buffet.name
             
             
-            let price = Utils.stringVietnameseMoneyFormatWithNumberInt(amount: buffet.adult_price)
+            let price = buffet.adult_price.toString
             
             lbl_price.attributedText = Utils.setAttributesForLabel(
                 label: lbl_price,
@@ -142,8 +142,6 @@ class BuffetTicketTableViewCell: UITableViewCell {
                 lbl_discount.text = String(format: "%d%%", buffet.adult_discount_percent)
             }
 
-        
-        
             view_relatedQuantity_action.isHidden = buffet.isSelected == ACTIVE ? false : true
             lbl_quantity.text = String(buffet.quantity)
         }

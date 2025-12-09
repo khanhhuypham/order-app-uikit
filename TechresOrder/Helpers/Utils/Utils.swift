@@ -26,9 +26,9 @@ class Utils: NSObject {
     
     static func getUDID()-> String{
         let UDID = UIDevice.current.identifierForVendor!.uuidString
-        
         return UDID.lowercased()
     }
+    
     static func getOSName()-> String{
         return  "iOS"
     }
@@ -39,6 +39,7 @@ class Utils: NSObject {
     static func getAppType()-> Int{
         return  11
     }
+    
     static func getFullMediaLink(string:String) -> String {
         
         return (ManageCacheObject.getConfig().api_upload_short + string).encodeUrl()!
@@ -57,7 +58,6 @@ class Utils: NSObject {
     
     static func getDeviceName()-> String{
         let UDID = UIDevice.current.name
-        
         return UDID.lowercased()
     }
     
@@ -93,6 +93,12 @@ class Utils: NSObject {
         return filteredString
     }
     
+    static func isValidURL(_ urlString: String) -> Bool {
+        if let url = URL(string: urlString) {
+            return UIApplication.shared.canOpenURL(url)
+        }
+        return false
+    }
     
     
     
@@ -379,26 +385,7 @@ class Utils: NSObject {
         return Int(amount) ?? 0
     }
     
-   
-    
-   
-    
 
-
-    
-    // MARK: QUYỀN HỦY MÓN KHI ĐÃ HOÀN TẤT( MÓN HOÀN TẤT, PHỤ THU, MÓN NGOÀI
-    static func checkRoleCancel(permission:[String])->Bool{
-        var isAllow = false
-        for item in permission {
-            if ((item.elementsEqual(CANCEL_COMPLETED_FOOD)) == true
-                || (item.elementsEqual(EMPLOYEE_MANAGER)) == true
-                || (item.elementsEqual(OWNER)) == true){
-                isAllow = true
-            }
-        }
-        return isAllow
-    }
-   
     
     //MARK: QUYỀN KIỂM SOÁT ORDER TRÊN APP TECHRES-ORDER
     static func checkRoleManagerOrder(permission:[String], employeeId:Int = 0)->Bool{
@@ -412,18 +399,18 @@ class Utils: NSObject {
         return isAllow
     }
     
-    // MARK: QUYỀN GIẢM GIÁ, TẶNG MÓN, VAT,  TRÊN APP TECHRES-ORDER
-    static func checkRoleDiscountGifFood(permission:[String])->Bool{
-        var isAllow = false
-        for item in permission {
-            if ((item.elementsEqual(RESTAURANT_MANAGER)) == true ||
-                (item.elementsEqual(OWNER)) == true ||
-                (item.elementsEqual(DISCOUNT_ORDER)) == true){
-                isAllow = true
-            }
-        }
-        return isAllow
-    }
+//    // MARK: QUYỀN GIẢM GIÁ, TẶNG MÓN, VAT,  TRÊN APP TECHRES-ORDER
+//    static func checkRoleDiscountGifFood(permission:[String])->Bool{
+//        var isAllow = false
+//        for item in permission {
+//            if ((item.elementsEqual(RESTAURANT_MANAGER)) == true ||
+//                (item.elementsEqual(OWNER)) == true ||
+//                (item.elementsEqual(DISCOUNT_ORDER)) == true){
+//                isAllow = true
+//            }
+//        }
+//        return isAllow
+//    }
     
     //MARK: QUYỀN THÊM MÓN NGOÀI, PHỤ THU & HUỶ PHỤ THU
     static func checkRoleAddCustomFood(permission:[String])->Bool{
@@ -437,41 +424,32 @@ class Utils: NSObject {
         }
         return isAllow
     }
-    //MARK: QUYỀN SUPPERADMIN | CHỦ NHÀ HÀNG
-    static func checkRoleOwner(permission:[String])->Bool{
-           var isAllow = false
-           for item in permission {
-               if ((item.elementsEqual(OWNER)) == true){
-                     isAllow = true
-                   }
-           }
-           return isAllow
-    }
-    
+
    
     //MARK: QUYỀN TỔNG QUẢN LÝ
     static func checkRoleOwnerAndGeneralManager(permission:[String])->Bool{
-           var isAllow = false
-           for item in permission {
-               if ((item.elementsEqual(OWNER)) == true
-                    || (item.elementsEqual(GENERAL_MANAGER)) == true
-                    ){
-                     isAllow = true
-                   }
-           }
-           return isAllow
+        var isAllow = false
+        for item in permission {
+           if ((item.elementsEqual(OWNER)) == true
+                || (item.elementsEqual(GENERAL_MANAGER)) == true
+                ){
+                 isAllow = true
+               }
+        }
+        return isAllow
     }
+    
     //MARK: QUYỀN HỦY MÓN KHI ĐÃ HOÀN TẤT( MÓN HOÀN TẤT, PHỤ THU, MÓN NGOÀI... )
     static func checkRoleCancelFoodCompleted(permission:[String])->Bool{
-              var isAllow = false
-              for item in permission {
-                if ((item.elementsEqual(OWNER)) == true
-                    || (item.elementsEqual(CANCEL_COMPLETED_FOOD)) == true){
-                        isAllow = true
-                      }
-              }
-              return isAllow
-       }
+          var isAllow = false
+          for item in permission {
+            if ((item.elementsEqual(OWNER)) == true
+                || (item.elementsEqual(CANCEL_COMPLETED_FOOD)) == true){
+                    isAllow = true
+                  }
+          }
+          return isAllow
+    }
     
   
     
@@ -492,11 +470,6 @@ class Utils: NSObject {
    
 
     
-
-    
-
-    
-
     static let calendar = Calendar.current
     static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -651,58 +624,50 @@ class Utils: NSObject {
     }
     
     static func setAttributesForLabel(label: UILabel, attributes:[(str:String,properties:[NSAttributedString.Key:Any])]) -> NSMutableAttributedString {
-            var totalStr = ""
-            var pointer = 0
-            
-            for i in 0..<(attributes.count - 1) {
-                totalStr += attributes[i].str
-            }
-            totalStr += attributes[attributes.count - 1].str
-            
-            let myMutableString = NSMutableAttributedString(string: totalStr,attributes: [NSAttributedString.Key.foregroundColor :label.textColor as Any])
-            for attr in attributes {
-                for property in attr.properties {
-                    myMutableString.addAttribute(property.key, value: property.value, range: NSRange(location:pointer,length:attr.str.count))
-                }
-                pointer += attr.str.count
-            }
+        var totalStr = ""
+        var pointer = 0
         
-            label.text = totalStr
-            return myMutableString
+        for i in 0..<(attributes.count - 1) {
+            totalStr += attributes[i].str
+        }
+        totalStr += attributes[attributes.count - 1].str
+        
+        let myMutableString = NSMutableAttributedString(string: totalStr,attributes: [NSAttributedString.Key.foregroundColor :label.textColor as Any])
+        for attr in attributes {
+            for property in attr.properties {
+                myMutableString.addAttribute(property.key, value: property.value, range: NSRange(location:pointer,length:attr.str.count))
+            }
+            pointer += attr.str.count
+        }
+    
+        label.text = totalStr
+        return myMutableString
     }
     
     
     static func getAttributedString(attributes:[(str:String,properties:[NSAttributedString.Key:Any])]) -> NSMutableAttributedString {
-            var totalStr = ""
-            var pointer = 0
-            
-            for i in 0..<(attributes.count - 1) {
-                totalStr += attributes[i].str
-            }
-            totalStr += attributes[attributes.count - 1].str
-            
-            let myMutableString = NSMutableAttributedString(string: totalStr,attributes:[:])
+        var totalStr = ""
+        var pointer = 0
         
-            for attr in attributes {
-                for property in attr.properties {
-                    myMutableString.addAttribute(property.key, value: property.value, range: NSRange(location:pointer,length:attr.str.count))
-                }
-                pointer += attr.str.count
-            }
+        for i in 0..<(attributes.count - 1) {
+            totalStr += attributes[i].str
+        }
+        totalStr += attributes[attributes.count - 1].str
         
-            return myMutableString
+        let myMutableString = NSMutableAttributedString(string: totalStr,attributes:[:])
+
+        for attr in attributes {
+            for property in attr.properties {
+                myMutableString.addAttribute(property.key, value: property.value, range: NSRange(location:pointer,length:attr.str.count))
+            }
+            pointer += attr.str.count
+        }
+
+        return myMutableString
     }
     
     
     
-    
-
-  
-//    
-//   static func address<T: AnyObject>(of object: T) -> Int {
-//        return unsafeBitCast(object, to: Int.self)
-//    }
-
     
     static func changeBgBtn(btn:UIButton, btnArray:[UIButton]){
         for button in btnArray{
@@ -790,9 +755,10 @@ class Utils: NSObject {
         ManageCacheObject.saveCurrentPoint(NextPoint()!)
         ManageCacheObject.saveCurrentBrand(Brand())
         ManageCacheObject.saveCurrentBranch(Branch())
-        ManageCacheObject.setSetting(Setting()!)
+        ManageCacheObject.setSetting(Setting())
         ManageCacheObject.saveCurrentUser(Account())
-        ManageCacheObject.setConfig(Config()!)
+        ManageCacheObject.setConfig(Config())
+        
     }
     
     
@@ -837,8 +803,133 @@ class Utils: NSObject {
         
         return secKey
     }
+    
+    
+    static func getNumberOfLines(label: UILabel) -> Int {
+        let textSize = CGSize(width: label.frame.size.width, height: CGFloat(Float.infinity))
+        let rHeight = lroundf(Float(label.sizeThatFits(textSize).height))
+        let charSize = lroundf(Float(label.font.lineHeight))
+        let lineCount = rHeight/charSize
+        return lineCount
+    }
+   
+    
+    static func fetchQRCodeImage(from urlString: String, completion: @escaping (UIImage?) -> Void) {
+        guard let encodedURLString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+              let url = URL(string: encodedURLString) else {
+            print("❌ Invalid or unencoded URL")
+            completion(nil)
+            return
+        }
+
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                print("❌ Error loading QR image: \(error)")
+                completion(nil)
+                return
+            }
+
+            guard let data = data, let originalImage = UIImage(data: data) else {
+                print("❌ Failed to decode image data")
+                completion(nil)
+                return
+            }
+
+            DispatchQueue.main.async {
+                completion(originalImage)
+            }
+    
+            
+        }.resume()
+    }
+    
+    
+    
+    static func getTopMostViewController(
+        _ base: UIViewController? = {
+            // Lấy scene active
+            let activeScene = UIApplication.shared.connectedScenes
+                .filter { $0.activationState == .foregroundActive }
+                .compactMap { $0 as? UIWindowScene }
+                .first
+
+            let keyWindow = activeScene?.windows.first(where: { $0.isKeyWindow })
+
+            return keyWindow?.rootViewController
+        }()
+    ) -> UIViewController? {
+        guard let base = base else { return nil }
+
+        // Nếu base là UINavigationController
+        if let nav = base as? UINavigationController {
+            return getTopMostViewController(nav.visibleViewController)
+        }
+
+        // Nếu base là UITabBarController
+        if let tab = base as? UITabBarController, let selected = tab.selectedViewController {
+            return getTopMostViewController(selected)
+        }
+
+        // Nếu có ViewController được present lên
+        if let presented = base.presentedViewController {
+            return getTopMostViewController(presented)
+        }
+
+        // Kiểm tra ignore list — nếu base thuộc loại cần ignore, bỏ qua và không return base
+        let typesToIgnore: [AnyClass] = [
+            UIAlertController.self,
+            UITableViewController.self,
+            ForegroundPrintProcessViewController.self,
+        ]
+
+        for ignoredType in typesToIgnore {
+            if base.isKind(of: ignoredType) {
+                return nil
+            }
+        }
+        
+        // Mặc định base là topmost nếu không có gì else
+        return base
+    }
+    
+    static func getTabbarViewController(
+        _ base: UIViewController? = {
+            // Get the active scene
+            let activeScene = UIApplication.shared.connectedScenes
+                .first { $0.activationState == .foregroundActive } as? UIWindowScene
+
+            let keyWindow = activeScene?.windows.first { $0.isKeyWindow }
+            return keyWindow?.rootViewController
+        }()
+    ) -> UITabBarController? {
+        guard let base = base else { return nil }
+
+        // If base is a UINavigationController, go deeper
+        if let nav = base as? UINavigationController {
+            return getTabbarViewController(nav.visibleViewController)
+        }
+
+        // ✅ If base is a UITabBarController, return it
+        if let tab = base as? UITabBarController {
+            return tab
+        }
+
+        // If there's a presented view controller, check that
+        if let presented = base.presentedViewController {
+            return getTabbarViewController(presented)
+        }
+
+        // Base is something else (e.g. a custom controller), no tab bar found
+        return nil
+    }
+    
+    
 
 }
+
+
+    
+
 extension UITextView {
     /// Change Color Placeholder UILabel To This UITextView
     public func setPlaceholderColor(_ placeholderText: String , _ isCallApi: Bool) {
@@ -869,5 +960,7 @@ extension UITextView {
         // Remove the observer when you no longer need it to prevent any potential memory leaks
         NotificationCenter.default.removeObserver(self, name: UITextView.textDidChangeNotification, object: nil)
     }
+    
+    
    
 }

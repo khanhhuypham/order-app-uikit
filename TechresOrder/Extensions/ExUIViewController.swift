@@ -75,6 +75,33 @@ extension UIViewController{
          
     }
     
+    func showConfirmationDialog(_ title: String,message: String ,confirmTitle: String = "Delete",cancelTitle: String = "Huỷ",onConfirm: (() -> Void)? = nil) {
+            let alert = UIAlertController(
+                title: title,
+                message: message,
+                preferredStyle: .alert
+            )
+            
+//            let confirmAction = UIAlertAction(title: confirmTitle, style: .destructive) { _ in
+//                onConfirm?()
+//            }
+//                
+            let cancelAction = UIAlertAction(title: cancelTitle, style: .cancel, handler: {_ in
+                self.dismiss(animated: true)
+            })
+            
+//            alert.addAction(confirmAction)
+            alert.addAction(cancelAction)
+            
+            present(alert, animated: true, completion: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+                    alert.dismiss(animated: false, completion: {
+                        self.dismiss(animated: true)
+                    })
+                })
+            })
+    }
+    
     func showAlertWithMessage(_ message: String, with completion: (() -> Void)?){
         let alertController = UIAlertController(title: "Message", message: message, preferredStyle: .alert)
         self.present(alertController, animated: true, completion: nil)
@@ -102,6 +129,5 @@ extension UIViewController{
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
-    
     
 }

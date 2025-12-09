@@ -11,12 +11,19 @@ import RxRelay
 
 class RevenueDetailViewModel: BaseViewModel {
     private(set) weak var view: RevenueDetailViewController?
+    
     private var router:RevenueDetailRouter?
-    public var saleReport = BehaviorRelay<SaleReport>(value: SaleReport.init(reportType: REPORT_TYPE_THIS_MONTH, dateString: TimeUtils.getCurrentDateTime().thisMonth))
+    
+    public var saleReport = BehaviorRelay<SaleReport>(value: SaleReport.init(
+        reportType: REPORT_TYPE_THIS_MONTH,
+        dateString: TimeUtils.getCurrentDateTime().thisMonth,
+        fromDate: TimeUtils.getToday(),
+        toDate: TimeUtils.getToday()
+    ))
+    
     public var restaurant_brand_id : BehaviorRelay<Int> = BehaviorRelay(value: Constants.brand.id)
     public var branch_id : BehaviorRelay<Int> = BehaviorRelay(value: Constants.branch.id)
-    public var from_date : BehaviorRelay<String> = BehaviorRelay(value: "")
-    public var to_date : BehaviorRelay<String> = BehaviorRelay(value: "")
+
     
 
     func bind(view: RevenueDetailViewController, router: RevenueDetailRouter){
@@ -32,7 +39,14 @@ class RevenueDetailViewModel: BaseViewModel {
 }
 extension RevenueDetailViewModel{
     func reportRevenueByTime() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.report_revenue_by_time(restaurant_brand_id: restaurant_brand_id.value, branch_id: branch_id.value, report_type: saleReport.value.reportType, date_string: saleReport.value.dateString, from_date: from_date.value, to_date: to_date.value))
+        return appServiceProvider.rx.request(.report_revenue_by_time(
+            restaurant_brand_id: restaurant_brand_id.value,
+            branch_id: branch_id.value,
+            report_type: saleReport.value.reportType,
+            date_string: saleReport.value.dateString,
+            from_date: saleReport.value.fromDate,
+            to_date: saleReport.value.toDate
+        ))
                .filterSuccessfulStatusCodes()
                .mapJSON().asObservable()
                .showAPIErrorToast()

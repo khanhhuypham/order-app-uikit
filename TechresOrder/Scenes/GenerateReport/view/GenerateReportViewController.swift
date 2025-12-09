@@ -9,11 +9,25 @@ import UIKit
 import RxSwift
 import ObjectMapper
 import RxRelay
+
+
+class Person {
+    let name: String
+    init(name: String) {
+        self.name = name
+        dLog("\(name) được tạo")
+    }
+    deinit {
+        dLog("\(name) được giải phóng")
+    }
+}
+
 class GenerateReportViewController: BaseViewController {
 
 
     @IBOutlet weak var tableview: UITableView!
     
+    @IBOutlet weak var reportFilter: ReportFilter!
     @IBOutlet weak var avatar_branch: UIImageView!
     @IBOutlet weak var lbl_branch_name: UILabel!
     @IBOutlet weak var view_select_brach: UIView!
@@ -42,15 +56,14 @@ class GenerateReportViewController: BaseViewController {
         bindTableView()
         
         // Tắt Chọn chi nhánh ở đầu tổng quan ở gpbh leve 1
-        
         view_select_brach.isHidden = permissionUtils.GPBH_1_o_1 ? true : false
-//        btm_constraint_of_stackview.constant -= Utils.heightOfCustomBar
+
         
         refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
         tableview.addSubview(refreshControl) // not required when using UItableViewController
+        
+        
     }
-    
-    
     
     @objc func refresh(_ sender: AnyObject) {
         reportRevenueTodayByBranch()
@@ -60,29 +73,32 @@ class GenerateReportViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if(ManageCacheObject.isLogin()){
-            lbl_branch_name.text = ManageCacheObject.getCurrentBranch().name
-            lbl_branch_address.text = ManageCacheObject.getCurrentBranch().address
-            avatar_branch.kf.setImage(with: URL(string: Utils.getFullMediaLink(string: ManageCacheObject.getCurrentBranch().avatar)), placeholder: UIImage(named: "image_defauft_medium"))
-            
-            reportRevenueTodayByBranch()
-            reportOfFoodApp()
-            reportRevenueTodayByTime()
-            getSaleReport()//MARK: báo cáo bán hàng
-            getRevenueCostProfitReport()//MARK: báo cao doanh thu chi phí lợi nhuận
-            getReportRevenueArea()//MARK: báo cáo doanh thu khu vực
-            getReportTableRevenue()//MARK: báo cáo doanh thu bàn
-            getReportRevenueEmployee()//MARK: báo cáo doanh thu nhân viên
-            getRevenueReportByFood() //MARK: báo cáo danh thu bán hàng món ăn
-            getRevenueReportCommodity()//MARK: báo cáo danh thu bán hàng hàng hoá
-            getCategoryReport()//MARK: báo cáo danh mục
-            getGiftedFoodReport()//MARK: báo cáo món tặng
-            getReportFoodOther()//MARK: báo cáo doanh thu món ngoài menu
-            getReportFoodCancel()//MARK: báo cao doanh thu món huỷ
-            getVATReport()//MARK: báo cao doanh thu VAT
-            getdiscountReport()//MARK: báo cao doanh thu các món giảm giá
-            getReportSurcharge()//MARK: báo cao doanh thu phụ thu
-        }
+        
+        
+        viewModel.restaurant_brand_id.accept( Constants.brand.id)
+        viewModel.branch_id.accept(Constants.branch.id)
+    
+        lbl_branch_name.text = Constants.branch.name
+        lbl_branch_address.text = Constants.branch.address
+        avatar_branch.kf.setImage(with: URL(string: Utils.getFullMediaLink(string: Constants.branch.avatar)), placeholder: UIImage(named: "image_defauft_medium"))
+        
+        reportRevenueTodayByBranch()
+        reportOfFoodApp()
+        reportRevenueTodayByTime()
+        getSaleReport()//MARK: báo cáo bán hàng
+        getRevenueCostProfitReport()//MARK: báo cao doanh thu chi phí lợi nhuận
+        getReportRevenueArea()//MARK: báo cáo doanh thu khu vực
+        getReportTableRevenue()//MARK: báo cáo doanh thu bàn
+        getReportRevenueEmployee()//MARK: báo cáo doanh thu nhân viên
+        getRevenueReportByFood() //MARK: báo cáo danh thu bán hàng món ăn
+        getRevenueReportCommodity()//MARK: báo cáo danh thu bán hàng hàng hoá
+        getCategoryReport()//MARK: báo cáo danh mục
+        getGiftedFoodReport()//MARK: báo cáo món tặng
+        getReportFoodOther()//MARK: báo cáo doanh thu món ngoài menu
+        getReportFoodCancel()//MARK: báo cao doanh thu món huỷ
+        getVATReport()//MARK: báo cao doanh thu VAT
+        getdiscountReport()//MARK: báo cao doanh thu các món giảm giá
+        getReportSurcharge()//MARK: báo cao doanh thu phụ thu
         
     }
     
@@ -92,25 +108,25 @@ class GenerateReportViewController: BaseViewController {
     func registerCell(){
         
         let cellIdentifiers = [
-                    "ReportOrderTodayTableViewCell",
-                    "ReportTotalAmountTempTodayTableViewCell",
-                    "ReportRevenueTempTodayTableViewCell",
-                    "ReportRevenueGeneralTableViewCell",
-                    "ReportRevenueFeeProfitTableViewCell",
-                    "ReportRevenueAreaTableViewCell",
-                    "ReportRevenueTableTableViewCell",
-                    "ReportRevenueEmployeeTableViewCell",
-                    "ReportRevenueByCategoryTableViewCell",
-                    "ReportRevenueByFoodTableViewCell",
-                    "ReportRevenueCommodityTableViewCell",
-                    "ReportCategoryTableViewCell",
-                    "ReportGiftFoodTableViewCell",
-                    "ReportOtherFoodTableViewCell",
-                    "ReportCancelFoodTableViewCell",
-                    "ReportTakeAwayFoodTableViewCell",
-                    "ReportVATTableViewCell",
-                    "ReportDiscountTableViewCell",
-                    "ReportSurchargeTableViewCell"
+            "ReportOrderTodayTableViewCell",
+            "ReportTotalAmountTempTodayTableViewCell",
+            "ReportRevenueTempTodayTableViewCell",
+            "ReportRevenueGeneralTableViewCell",
+            "ReportRevenueFeeProfitTableViewCell",
+            "ReportRevenueAreaTableViewCell",
+            "ReportRevenueTableTableViewCell",
+            "ReportRevenueEmployeeTableViewCell",
+            "ReportRevenueByCategoryTableViewCell",
+            "ReportRevenueByFoodTableViewCell",
+            "ReportRevenueCommodityTableViewCell",
+            "ReportCategoryTableViewCell",
+            "ReportGiftFoodTableViewCell",
+            "ReportOtherFoodTableViewCell",
+            "ReportCancelFoodTableViewCell",
+            "ReportTakeAwayFoodTableViewCell",
+            "ReportVATTableViewCell",
+            "ReportDiscountTableViewCell",
+            "ReportSurchargeTableViewCell"
         ]
         
         // Register cells using a for loop
@@ -138,7 +154,6 @@ extension GenerateReportViewController{
                     cell.viewModel = viewModel
                     return cell
 
-                
                 case 2:
                     let cell = tableView.dequeueReusableCell(withIdentifier: "ReportRevenueTempTodayTableViewCell") as! ReportRevenueTempTodayTableViewCell
                     cell.viewModel = viewModel

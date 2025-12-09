@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -65,9 +65,6 @@
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Giảm giá 20%" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="auK-E6-Gzd">
                                                 <rect key="frame" x="21" y="0.0" width="168" height="15"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="15" id="QrZ-cj-szG"/>
-                                                </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                                 <color key="textColor" red="0.0" green="0.4431372549" blue="0.73333333329999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -76,6 +73,7 @@
                                         <constraints>
                                             <constraint firstItem="auK-E6-Gzd" firstAttribute="leading" secondItem="DjY-fQ-XOa" secondAttribute="trailing" constant="5" id="0S8-xu-OKC"/>
                                             <constraint firstItem="auK-E6-Gzd" firstAttribute="top" secondItem="QeZ-FY-qdg" secondAttribute="top" id="2qP-Ua-IN3"/>
+                                            <constraint firstAttribute="height" constant="15" id="DBK-Al-o1N"/>
                                             <constraint firstItem="DjY-fQ-XOa" firstAttribute="centerY" secondItem="QeZ-FY-qdg" secondAttribute="centerY" id="KFl-sN-Nca"/>
                                             <constraint firstAttribute="bottom" secondItem="auK-E6-Gzd" secondAttribute="bottom" id="gDK-Uo-Pww"/>
                                             <constraint firstAttribute="trailing" secondItem="auK-E6-Gzd" secondAttribute="trailing" constant="5" id="gdJ-Ku-olE"/>
@@ -83,17 +81,17 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="i2T-oz-8p4" userLabel="view_note">
-                                        <rect key="frame" x="0.0" y="111" width="194" height="101"/>
+                                        <rect key="frame" x="0.0" y="111" width="194" height="69.666666666666686"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-note-food-orange" translatesAutoresizingMaskIntoConstraints="NO" id="cLT-rf-b14">
-                                                <rect key="frame" x="0.0" y="42.666666666666657" width="16" height="16"/>
+                                                <rect key="frame" x="0.0" y="27" width="16" height="16"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="16" id="2nb-ry-8y2"/>
                                                     <constraint firstAttribute="width" constant="16" id="mMN-yd-PIf"/>
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalCompressionResistancePriority="751" text="ít cay nhiều ớt ít cay nhiều ớt  ít cay nhiều ớt. ít cay nhiều ớt. ít cay nhiều ớt. ít cay nhiều ớt. ít cay nhiều ớt " lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" showsExpansionTextWhenTruncated="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m5n-ma-faT">
-                                                <rect key="frame" x="21" y="0.0" width="173" height="101"/>
+                                                <rect key="frame" x="21" y="0.0" width="173" height="69.666666666666671"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -109,6 +107,26 @@
                                             <constraint firstItem="cLT-rf-b14" firstAttribute="centerY" secondItem="i2T-oz-8p4" secondAttribute="centerY" id="uP2-dR-lNJ"/>
                                         </constraints>
                                     </view>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="mUz-hu-H8k">
+                                        <rect key="frame" x="0.0" y="182.66666666666666" width="194" height="29.333333333333343"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalCompressionResistancePriority="751" text="SL điều chỉnh: 0.05" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" showsExpansionTextWhenTruncated="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dKW-rB-JfT">
+                                                <rect key="frame" x="0.0" y="0.0" width="194" height="15"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="15" id="dYB-CW-00k"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Lý do: không đủ số lượng" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" showsExpansionTextWhenTruncated="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r93-fK-Lzf">
+                                                <rect key="frame" x="0.0" y="15" width="194" height="14.333333333333336"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T7V-Mj-oVJ" userLabel="view_gif">
                                         <rect key="frame" x="0.0" y="214" width="194" height="21"/>
                                         <subviews>
@@ -341,6 +359,7 @@
                 <outlet property="btn_show_service_popup" destination="UbX-VJ-NdU" id="GTQ-y4-Laa"/>
                 <outlet property="hand_holder" destination="Xeo-pm-ZBk" id="CxK-yP-YYd"/>
                 <outlet property="lbl_addition_food" destination="4VV-xF-0Us" id="0ne-0T-2Ae"/>
+                <outlet property="lbl_adjusted_quantity" destination="dKW-rB-JfT" id="kYG-DO-Hiw"/>
                 <outlet property="lbl_amount" destination="oTq-LY-Guc" id="AAa-u8-N8Z"/>
                 <outlet property="lbl_discount_percent" destination="auK-E6-Gzd" id="MIF-e7-mTa"/>
                 <outlet property="lbl_discount_price" destination="a6J-6l-RZK" id="kk1-wi-xth"/>
@@ -349,9 +368,11 @@
                 <outlet property="lbl_note" destination="m5n-ma-faT" id="cgr-WM-E3x"/>
                 <outlet property="lbl_quantity" destination="gpo-To-BSs" id="2Dq-yj-cWF"/>
                 <outlet property="lbl_quantity_status_completed" destination="T1y-R2-azB" id="lvo-Hq-jIU"/>
+                <outlet property="lbl_reason" destination="r93-fK-Lzf" id="EZ2-qA-eCL"/>
                 <outlet property="lbl_service_time_block" destination="D38-8g-3zy" id="GDW-wQ-ViS"/>
                 <outlet property="lbl_status" destination="s1b-p8-7dW" id="iO7-br-Tif"/>
                 <outlet property="parent_view_of_view_action" destination="Rlp-xC-71c" id="JmH-71-N1o"/>
+                <outlet property="stackView_of_fish_tank" destination="mUz-hu-H8k" id="s9g-3a-jeY"/>
                 <outlet property="view_discount" destination="QeZ-FY-qdg" id="tKU-EV-Lwp"/>
                 <outlet property="view_gift" destination="T7V-Mj-oVJ" id="5r1-Sv-8Ai"/>
                 <outlet property="view_note" destination="i2T-oz-8p4" id="ald-5z-T3K"/>

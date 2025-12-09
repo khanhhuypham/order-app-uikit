@@ -154,7 +154,7 @@ extension AreaViewController:SNCollectionViewLayoutDelegate{
             }else if(element.status == STATUS_TABLE_MERGED){
                 let message = String(format: "Bàn %@ đang được gộp với bàn %@. Bạn có muốn đóng bàn %@ hay không?", element.name, element.merge_table_name, element.name)
                 self.presentModalDialogConfirmViewController(dialog_type: DEACTIVE, title: "XÁC NHẬN ĐÓNG BÀN ĐANG GỘP", content: message)
-                self.viewModel.table_id.accept(element.id)
+                self.viewModel.order_id.accept(element.order_id)
             }else if(element.status == STATUS_TABLE_BOOKING){
                 self.showWarningMessage(content: "Bàn đang có khách đặt trước bạn không được phép thao tác.")
             }else{

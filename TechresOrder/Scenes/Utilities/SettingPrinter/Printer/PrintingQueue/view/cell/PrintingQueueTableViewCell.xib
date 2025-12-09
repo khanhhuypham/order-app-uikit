@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -71,7 +71,7 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="isLastItem:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M0Q-r5-DDt">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="print foreground" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JmN-zS-q8x" userLabel="print foreground">
                                         <rect key="frame" x="0.0" y="138.66666666666666" width="160" height="20.333333333333343"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <nil key="textColor"/>
@@ -117,10 +117,10 @@
             <connections>
                 <outlet property="img" destination="Tfc-Hl-Pav" id="O9i-um-hqB"/>
                 <outlet property="lbl_itemList" destination="ca5-cc-rM6" id="blf-Ke-VUd"/>
-                <outlet property="lbl_lastItem" destination="M0Q-r5-DDt" id="Jlt-kH-DpA"/>
                 <outlet property="lbl_orderId" destination="RuQ-MO-YhA" id="PNe-3H-E7j"/>
+                <outlet property="lbl_print_type" destination="JmN-zS-q8x" id="Qrk-IG-9NA"/>
                 <outlet property="lbl_printer" destination="MlL-Cf-cmD" id="AAS-xi-YYF"/>
-                <outlet property="lbl_retried_number" destination="X28-X1-OSD" id="kcj-2j-lTd"/>
+                <outlet property="lbl_retried_number" destination="X28-X1-OSD" id="nk8-M9-042"/>
             </connections>
             <point key="canvasLocation" x="129.7709923664122" y="8.0985915492957758"/>
         </tableViewCell>

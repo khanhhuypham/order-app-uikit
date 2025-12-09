@@ -8,11 +8,8 @@
 import UIKit
 import ObjectMapper
 
-
-@objc class Printer: NSObject, Mappable {
-
+@objc class Printer: NSObject,Mappable {
     var id = 0
-    @objc var name = ""
     var descript = ""
     var restaurant_id = 0
     var branch_id = 0
@@ -20,17 +17,20 @@ import ObjectMapper
     var status = 0
     var branch_name = ""
     var type:PRINTER_TYPE = .bar
-    var printer_name = ""
+    @objc var name = ""
+    @objc var printer_name = ""
     @objc var printer_ip_address = ""
     @objc var printer_port = ""
     @objc var printer_paper_size = 1
+    @objc var direction = 0 // chiều của stamp
+    @objc var connection_type:CONNECTION_TYPE = .wifi
+    
     var is_have_printer = 0
     var created_at = ""
     var updated_at = ""
     var is_print_each_food:Int = 0
-    @objc var connection_type:CONNECTION_TYPE = .wifi
+ 
     var print_number:Int = 1
-    var isFoodAppPrinter:Bool = false
 
     
     override init(){}
@@ -43,7 +43,7 @@ import ObjectMapper
         if let paperSize = paperSize{
             self.printer_paper_size = paperSize
         }
-        self.isFoodAppPrinter = isFoodAppPrinter
+
     }
 
     
@@ -61,28 +61,31 @@ import ObjectMapper
         self.type = printerObject.type
         self.connection_type = printerObject.connection_type
         self.print_number = printerObject.print_number
+        self.direction = printerObject.direction
+        
     }
 
     func mapping(map: Map) {
         id                                      <- map["id"]
         name                                    <- map["name"]
-        descript                             <- map["description"]
+        descript                                <- map["description"]
         restaurant_id                           <- map["restaurant_id"]
         status                                  <- map["status"]
         branch_id                               <- map["branch_id"]
         branch_name                             <- map["branch_name"]
         created_at                              <- map["created_at"]
         updated_at                              <- map["updated_at"]
-        printer_name                              <- map["printer_name"]
-        printer_ip_address                              <- map["printer_ip_address"]
-        printer_port                              <- map["printer_port"]
-        printer_paper_size                              <- map["printer_paper_size"]
-        print_number                         <- map["print_number"]
-        is_have_printer                              <- map["is_have_printer"]
-        is_print_each_food                       <- map["is_print_each_food"]
-        type                       <- map["type"]
-        connection_type                       <- map["printer_type"]
-        isFoodAppPrinter <- map["isFoodAppPrinter"]
+        printer_name                            <- map["printer_name"]
+        printer_ip_address                      <- map["printer_ip_address"]
+        printer_port                            <- map["printer_port"]
+        printer_paper_size                      <- map["printer_paper_size"]
+        print_number                            <- map["print_number"]
+        direction                               <- map["location_stamp"]
+        is_have_printer                         <- map["is_have_printer"]
+        is_print_each_food                      <- map["is_print_each_food"]
+        type                                    <- map["type"]
+        connection_type                         <- map["printer_type"]
+
     }
 }
 

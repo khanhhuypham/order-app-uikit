@@ -93,6 +93,32 @@ struct BrandSetting: Mappable {
     var maximum_shf_account = 0
     var maximum_grf_account = 0
     
+    
+    var show_branch_name = 0
+    var show_address = 0
+    var show_cashier_name = 0
+    var show_waiter_name = 0
+    var show_point_staff_name = 0
+    var show_total_amount = 0
+    var show_customer_paid_amount = 0
+    var show_bill_title = 0
+    var show_table_code = 0
+    var show_hotline = 0
+    var show_salesperson = 0
+    var show_datetime = 0
+    var show_gift = 0
+    var show_points_used = 0
+    var show_discount = 0
+    var show_vat = 0
+    var show_surcharge = 0
+    var show_service_charge = 0
+    var show_deposit = 0
+    var show_qr_code = 0
+    var show_bank_info = 0
+    var show_footer = 0
+    var show_dev_info = 0
+    
+    
     init?(map: Map) {}
     init?() {}
     
@@ -115,5 +141,30 @@ struct BrandSetting: Mappable {
         maximum_bef_account <- map["maximum_bef_account"]
         maximum_shf_account <- map["maximum_shf_account"]
         maximum_grf_account <- map["maximum_grf_account"]
+        
+        show_branch_name            <- map["show_branch_name"]
+        show_address                <- map["show_address"]
+        show_cashier_name           <- map["show_cashier_name"]
+        show_waiter_name            <- map["show_waiter_name"]
+        show_point_staff_name       <- map["show_point_staff_name"]
+        show_total_amount           <- map["show_total_amount"]
+        show_customer_paid_amount   <- map["show_customer_paid_amount"]
+        show_bill_title             <- map["show_bill_title"]
+        show_table_code             <- map["show_table_code"]
+        show_hotline                <- map["show_hotline"]
+        show_salesperson            <- map["show_salesperson"]
+        show_datetime               <- map["show_datetime"]
+        show_gift                   <- map["show_gift"]
+        show_points_used            <- map["show_points_used"]
+        show_discount               <- map["show_discount"]
+        show_vat                    <- map["show_vat"]
+        show_surcharge              <- map["show_surcharge"]
+        show_service_charge         <- map["show_service_charge"]
+        show_deposit                <- map["show_deposit"]
+        show_qr_code                <- map["show_qr_code"]
+        show_bank_info              <- map["show_bank_info"]
+        show_footer                 <- map["show_footer"]
+        show_dev_info               <- map["show_dev_info"]
+        
     }
 }

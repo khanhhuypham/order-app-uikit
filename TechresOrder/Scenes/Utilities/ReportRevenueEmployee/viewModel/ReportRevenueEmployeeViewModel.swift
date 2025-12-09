@@ -15,7 +15,12 @@ class ReportRevenueEmployeeViewModel: BaseViewModel {
     private(set) weak var view: ReportRevenueEmployeeViewController?
     private var router: ReportRevenueEmployeeRouter?
     
-    public var report = BehaviorRelay<EmployeeRevenueReport>(value: EmployeeRevenueReport.init(reportType: REPORT_TYPE_THIS_MONTH, dateString: TimeUtils.getCurrentDateTime().thisMonth))
+    public var report = BehaviorRelay<EmployeeRevenueReport>(value: EmployeeRevenueReport.init(
+        reportType: REPORT_TYPE_THIS_MONTH,
+        dateString: TimeUtils.getCurrentDateTime().thisMonth,
+        fromDate: TimeUtils.getToday(),
+        toDate: TimeUtils.getToday()
+    ))
   
     func bind(view: ReportRevenueEmployeeViewController, router: ReportRevenueEmployeeRouter){
         self.view = view
@@ -34,8 +39,8 @@ extension ReportRevenueEmployeeViewModel {
             branch_id: Constants.branch.id,
             report_type: report.value.reportType,
             date_string: report.value.dateString,
-            from_date: "",
-            to_date: ""
+            from_date: report.value.fromDate,
+            to_date: report.value.toDate
         ))
             .filterSuccessfulStatusCodes()
             .mapJSON().asObservable()

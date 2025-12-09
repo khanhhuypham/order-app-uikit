@@ -15,25 +15,14 @@ class ReportRevenueCommodityTableViewCell: UITableViewCell {
     @IBOutlet weak var bar_chart: BarChartView!
     
     @IBOutlet weak var lbl_total_amount: UILabel!
-    @IBOutlet weak var lbl_total_original_amount: UILabel!
     @IBOutlet weak var root_view_empty_data: UIView!
     
     // MARK: Biến của button filter
-    @IBOutlet weak var btn_today: UIButton!
-    @IBOutlet weak var btn_yesterday: UIButton!
-    @IBOutlet weak var btn_this_week: UIButton!
-    @IBOutlet weak var btn_this_month: UIButton!
-    @IBOutlet weak var btn_last_month: UIButton!
-    @IBOutlet weak var btn_last_three_month: UIButton!
-    @IBOutlet weak var btn_this_year: UIButton!
-    @IBOutlet weak var btn_last_year: UIButton!
-    @IBOutlet weak var btn_last_three_year: UIButton!
-    @IBOutlet weak var btn_all_year: UIButton!
-    
-    @IBOutlet weak var btn_filter_value: UIButton!
+
     
     var filterType:[String] = ["Giá vốn","Giá bán","Số lượng"]
-    var btnArray:[UIButton] = []
+    @IBOutlet weak var reportFilter: ReportFilter!
+    var datePicker: DatePickerUtils = DatePickerUtils()
     
     private(set) var disposeBag = DisposeBag()
         override func prepareForReuse() {
@@ -52,73 +41,85 @@ class ReportRevenueCommodityTableViewCell: UITableViewCell {
     }
     
 
-    
-    @IBAction func actionChooseReportType(_ sender: UIButton) {
+    private func handleChooseDate(date:Date,tag:Int){
         guard let viewModel = self.viewModel else {return}
-        var commodityReport = viewModel.commodityReport.value
-        commodityReport.foods = []
-        switch sender.tag{
-            case REPORT_TYPE_TODAY:
-                commodityReport.reportType = REPORT_TYPE_TODAY
-                commodityReport.dateString = TimeUtils.getCurrentDateTime().dateTimeNow
-                break
-            case REPORT_TYPE_YESTERDAY:
-                commodityReport.reportType = REPORT_TYPE_YESTERDAY
-                commodityReport.dateString = TimeUtils.getCurrentDateTime().yesterday
-                break
-            case REPORT_TYPE_THIS_WEEK:
-                commodityReport.reportType = REPORT_TYPE_THIS_WEEK
-                commodityReport.dateString = TimeUtils.getCurrentDateTime().thisWeek
-                break
-            case REPORT_TYPE_THIS_MONTH:
-                commodityReport.reportType = REPORT_TYPE_THIS_MONTH
-                commodityReport.dateString = TimeUtils.getCurrentDateTime().thisMonth
-                break
-            case REPORT_TYPE_THREE_MONTHS:
-                commodityReport.reportType = REPORT_TYPE_THREE_MONTHS
-                commodityReport.dateString = TimeUtils.getCurrentDateTime().threeLastMonth
-                break
-            case REPORT_TYPE_THIS_YEAR:
-                commodityReport.reportType = REPORT_TYPE_THIS_YEAR
-                commodityReport.dateString = TimeUtils.getCurrentDateTime().yearCurrent
-                break
-            case REPORT_TYPE_LAST_YEAR:
-                commodityReport.reportType = REPORT_TYPE_LAST_YEAR
-                commodityReport.dateString = TimeUtils.getCurrentDateTime().lastYear
-                break
-            case REPORT_TYPE_THREE_YEAR:
-                commodityReport.reportType = REPORT_TYPE_THREE_YEAR
-                commodityReport.dateString = TimeUtils.getCurrentDateTime().threeLastYear
-                break
-            case REPORT_TYPE_LAST_MONTH:
-                commodityReport.reportType = REPORT_TYPE_LAST_MONTH
-                commodityReport.dateString = TimeUtils.getCurrentDateTime().lastMonth
-                break
-            case REPORT_TYPE_ALL_YEAR:
-                commodityReport.reportType = REPORT_TYPE_ALL_YEAR
-                commodityReport.dateString = ""
-                break
-            default:
-                break
+        let dateString = TimeUtils.convertDateToString(from: date, format: .dd_mm_yyyy)
+        var report = viewModel.commodityReport.value
+     
+        if tag == -2{
+            if TimeUtils.isDateValid(fromDateStr: dateString,toDateStr: report.toDate){
+                self.reportFilter.setFromDateTitle(dateString)
+                report.fromDate = dateString
+                report.reportType = 13
+                viewModel.commodityReport.accept(report)
+                viewModel.view?.getRevenueReportCommodity()
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+          
+        }else if tag == -1{
+            if TimeUtils.isDateValid(fromDateStr: report.fromDate,toDateStr: dateString){
+                self.reportFilter.setToDateTitle(dateString)
+                report.toDate = dateString
+                report.reportType = 13
+                viewModel.commodityReport.accept(report)
+                viewModel.view?.getRevenueReportCommodity()
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
         }
-        viewModel.commodityReport.accept(commodityReport)
-        viewModel.view?.getRevenueReportCommodity()
+        
     }
-    
     
     
     var viewModel: GenerateReportViewModel? {
        didSet {
            if let viewModel = viewModel {
                
-               btnArray = [btn_today, btn_yesterday, btn_this_week, btn_this_month, btn_last_month, btn_last_three_month, btn_this_year, btn_last_year, btn_last_three_year, btn_all_year]
-               Utils.changeBgBtn(btn: btn_this_month, btnArray: btnArray)
-               for btn in self.btnArray{
-                   btn.rx.tap.asDriver().drive(onNext: { [weak self] in
-                       Utils.changeBgBtn(btn: btn, btnArray: self?.btnArray ?? [])
-                   }).disposed(by: disposeBag)
-
+               datePicker.chooseDate = { [weak self] (date,tag) in
+                   self?.handleChooseDate(date: date, tag: tag)
                }
+               
+               reportFilter.defaultReportType = viewModel.commodityReport.value.reportType
+               
+               reportFilter.chooseReportType = { [weak self] reportType in
+                  var report = viewModel.commodityReport.value
+                  
+                  if reportType == -1{
+                      
+                      if let view = viewModel.view{
+                          
+                          self?.datePicker.showDatePicker(
+                               view,
+                               date:TimeUtils.convertStringToDate(from: report.toDate, format: .dd_mm_yyyy),
+                               tag:reportType
+                          )
+                       
+                      }
+                   
+                  }else if reportType == -2{
+                      
+                      if let view = viewModel.view{
+                          
+                          self?.datePicker.showDatePicker(
+                               view,
+                               date:TimeUtils.convertStringToDate(from: report.fromDate, format: .dd_mm_yyyy),
+                               tag:reportType
+                          )
+                       
+                      }
+                   
+                      
+                  }else if reportType > 0{
+                   
+                      report.reportType = reportType
+                      report.dateString = Constants.REPORT_TYPE_DICTIONARY[reportType] ?? ""
+                      viewModel.commodityReport.accept(report)
+                      viewModel.view?.getRevenueReportCommodity()
+                  }
+                  
+              }
+
                
                             
                viewModel.commodityReport.subscribe(onNext: { [self] report in

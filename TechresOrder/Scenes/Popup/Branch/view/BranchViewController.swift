@@ -19,12 +19,12 @@ class BranchViewController: BaseViewController {
     var viewModel = BranchViewModel()
     var key_word = ""
     var delegate:BranchDelegate?
-    var brand_id:Int = 0
+    var brand:Brand = Brand()
     override func viewDidLoad() {
         super.viewDidLoad()
         registerCell()
         bindTableViewData()
-        viewModel.brand_id.accept(self.brand_id)
+        viewModel.brand.accept(self.brand)
         getBranch()
     }
 }
@@ -33,14 +33,13 @@ extension BranchViewController{
         let branchTableViewCell = UINib(nibName: "BranchTableViewCell", bundle: .main)
         tableView.register(branchTableViewCell, forCellReuseIdentifier: "BranchTableViewCell")
         
-//        self.tableView.estimatedRowHeight = 170
         self.tableView.rowHeight = UITableView.automaticDimension
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         
         tableView.rx.modelSelected(Branch.self) .subscribe(onNext: { [self] element in
       
-          
             dismiss(animated: true,completion: {
+                ManageCacheObject.saveCurrentBrand(self.viewModel.brand.value)
                 self.delegate?.callBackChooseBranch(branch: element)
             })
 

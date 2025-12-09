@@ -30,7 +30,6 @@ class PrintingQueueViewController: UIViewController {
         timer?.invalidate()
         timer = nil
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
-   
             self?.lbl_time.text = TimeUtils.getCurrentDateTime().today
         }
         //tableview
@@ -39,9 +38,6 @@ class PrintingQueueViewController: UIViewController {
         viewmodel.setupObserve()
         tableView.delegate = self
         tableView.dataSource = self
-        
-        
-        
         fetchData()
     }
     
@@ -50,15 +46,11 @@ class PrintingQueueViewController: UIViewController {
         timer = nil
     }
     
-    func updateUI() {
-        tableView.reloadData()
-    }
-    
-    
+
     func fetchData() {
         viewmodel.fetchData{ (done) in
             if done {
-                self.updateUI()
+                tableView.reloadData()
             } else {
                 print("Lỗi fetch data từ realm")
             }
@@ -74,22 +66,12 @@ extension PrintingQueueViewController: UITableViewDataSource, UITableViewDelegat
         return UITableView.automaticDimension
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         return viewmodel.itemArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PrintingQueueTableViewCell", for: indexPath) as! PrintingQueueTableViewCell
-
-        let data = viewmodel.getItem(at: indexPath)
-        
-        if data.type == .tsc {
-            cell.tscdata = data.item as? TSCQueuedItemObject
-        }else{
-            cell.wifidata = data.item as? WIFIQueuedItemObject
-        }
-        
-        cell.viewModel = viewmodel
+        cell.data = viewmodel.getItem(at: indexPath) as? (type: itemType, item: Any)
         return cell
     }
     
@@ -106,7 +88,6 @@ extension PrintingQueueViewController: UITableViewDataSource, UITableViewDelegat
             var image:UIImage = UIImage()
             
             
-
             for data in TSCItem!.data{
                 
                image = MediaUtils.combineScreenshots(image, UIImage(data: data)) ?? UIImage()

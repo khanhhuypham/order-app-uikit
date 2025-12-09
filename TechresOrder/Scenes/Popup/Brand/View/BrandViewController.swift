@@ -44,10 +44,11 @@ extension BrandViewController{
 
             
             tableView.rx.modelSelected(Brand.self) .subscribe(onNext: { [self] element in
-                print("Selected \(element)")
-                ManageCacheObject.saveCurrentBrand(element)
+//                print("Selected \(element)")
+//                ManageCacheObject.saveCurrentBrand(element)
                 self.dismiss(animated: true,completion: {
-                    self.delegate?.callBackChooseBrand(brand: Brand())
+                
+                    self.delegate?.callBackChooseBrand(brand:element)
                 })
             })
             .disposed(by: rxbag)

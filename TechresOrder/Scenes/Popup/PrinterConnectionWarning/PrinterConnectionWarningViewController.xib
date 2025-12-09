@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PrinterConnectionWarningViewController" customModule="TECHRES_ORDER" customModuleProvider="target">
+            <connections>
+                <outlet property="stack_view" destination="HYV-ag-C21" id="8bW-j6-qr1"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="0wq-k4-NVo"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jjG-u2-Cdr">
+                    <rect key="frame" x="30" y="341" width="333" height="170"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="rr6-gY-vfe">
+                            <rect key="frame" x="8" y="8" width="317" height="154"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CẢNH BẢO MÁY IN MẤT KẾT NỐI" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tIj-fP-J66">
+                                    <rect key="frame" x="0.0" y="0.0" width="317" height="19.333333333333332"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                    <color key="textColor" systemColor="systemRedColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="HYV-ag-C21">
+                                    <rect key="frame" x="0.0" y="31.333333333333314" width="317" height="10"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="10" id="nvj-uv-Txr"/>
+                                    </constraints>
+                                </stackView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Vui lòng kiểm tra lại kết nối hoặc tắt máy in nếu bạn không sử dụng" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lx6-vj-wxu">
+                                    <rect key="frame" x="0.0" y="53.333333333333314" width="317" height="33.666666666666657"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="srL-Fm-Y4y">
+                                    <rect key="frame" x="0.0" y="99" width="317" height="55"/>
+                                    <subviews>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fn2-xW-MY4">
+                                            <rect key="frame" x="113.66666666666666" y="10" width="90" height="40"/>
+                                            <color key="backgroundColor" red="1" green="0.5450980392" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="90" id="PCL-R6-rc6"/>
+                                                <constraint firstAttribute="height" constant="40" id="hSi-o8-VAn"/>
+                                            </constraints>
+                                            <state key="normal" title="Button"/>
+                                            <buttonConfiguration key="configuration" style="plain" title="ĐÓNG">
+                                                <fontDescription key="titleFontDescription" type="system" weight="semibold" pointSize="16"/>
+                                                <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </buttonConfiguration>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                    <real key="value" value="5"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                            <connections>
+                                                <action selector="actionDismiss:" destination="-1" eventType="touchUpInside" id="540-v2-yXy"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottom" secondItem="Fn2-xW-MY4" secondAttribute="bottom" constant="5" id="EIX-so-Mpf"/>
+                                        <constraint firstItem="Fn2-xW-MY4" firstAttribute="centerX" secondItem="srL-Fm-Y4y" secondAttribute="centerX" id="H21-zH-dFJ"/>
+                                        <constraint firstItem="Fn2-xW-MY4" firstAttribute="top" secondItem="srL-Fm-Y4y" secondAttribute="top" constant="10" id="ZqQ-lr-aLA"/>
+                                    </constraints>
+                                </view>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="rr6-gY-vfe" secondAttribute="trailing" constant="8" id="9oC-tD-4P8"/>
+                        <constraint firstAttribute="bottom" secondItem="rr6-gY-vfe" secondAttribute="bottom" constant="8" id="G7F-wF-ugk"/>
+                        <constraint firstItem="rr6-gY-vfe" firstAttribute="leading" secondItem="jjG-u2-Cdr" secondAttribute="leading" constant="8" id="Laz-Ik-Ur5"/>
+                        <constraint firstItem="rr6-gY-vfe" firstAttribute="top" secondItem="jjG-u2-Cdr" secondAttribute="top" constant="8" id="UFd-qV-Hh8"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <real key="value" value="5"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" systemColor="systemFillColor"/>
+            <constraints>
+                <constraint firstItem="jjG-u2-Cdr" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="Jze-Lk-7T4"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="jjG-u2-Cdr" secondAttribute="trailing" constant="30" id="dcl-RX-H0c"/>
+                <constraint firstItem="jjG-u2-Cdr" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="30" id="zCF-Cd-Dy0"/>
+            </constraints>
+            <point key="canvasLocation" x="130.53435114503816" y="-32.394366197183103"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemFillColor">
+            <color red="0.47058823529411764" green="0.47058823529411764" blue="0.50196078431372548" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

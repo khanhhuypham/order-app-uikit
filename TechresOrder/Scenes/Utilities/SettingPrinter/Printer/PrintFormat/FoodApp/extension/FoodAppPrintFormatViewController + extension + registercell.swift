@@ -12,54 +12,54 @@ extension FoodAppPrintFormatViewController {
 
     func bindTableViewAndRegisterCell(){
         registerCell()
-        bindTableViewData()
+        bindDataForTableOfInvoice()
+        bindDataForTableOfKitchenTicket()
     }
     
     private func registerCell() {
-        let cell = UINib(nibName: "Bill3TableViewCell", bundle: .main)
-        tableView.register(cell, forCellReuseIdentifier: "Bill3TableViewCell")
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.isScrollEnabled = false
+        let invoiceCell = UINib(nibName: "FoodAppInvoiceTableViewCell", bundle: .main)
+        tableView_of_invoice.register(invoiceCell, forCellReuseIdentifier: "FoodAppInvoiceTableViewCell")
+        tableView_of_invoice.rowHeight = UITableView.automaticDimension
+        tableView_of_invoice.isScrollEnabled = false
+        
+        
+        let kitchenTicketCell = UINib(nibName: "FoodAppKitchenTicketTableViewCell", bundle: .main)
+        tableView_of_kitchen_ticket.register(kitchenTicketCell, forCellReuseIdentifier: "FoodAppKitchenTicketTableViewCell")
+        tableView_of_kitchen_ticket.rowHeight = UITableView.automaticDimension
+        tableView_of_kitchen_ticket.isScrollEnabled = false
     
     }
     
-    private func bindTableViewData() {
-        viewModel.order.map{$0.details}.bind(to: tableView.rx.items(cellIdentifier: "Bill3TableViewCell", cellType: Bill3TableViewCell.self)){(row, item, cell) in
-            let item = self.viewModel.order.value.details[row]
+    private func bindDataForTableOfInvoice() {
+        viewModel.currentOrder.map{$0.details}.bind(to: tableView_of_invoice.rx.items(cellIdentifier: "FoodAppInvoiceTableViewCell", cellType: FoodAppInvoiceTableViewCell.self)){(row, item, cell) in
+
+            cell.isCancel = self.viewModel.currentOrder.value.is_cancel_order == ACTIVE
+            cell.data = item
             
-           
-            //=====================================================If having children item==========================================================================================
-            var orderItem = OrderItem(name: item.name, price: Int(item.price), quantity: Float(item.quantity), total_price: item.total_price_addition)
-            orderItem.total_price_include_addition_foods = item.total_price_addition
-            orderItem.note = item.note
-            
-            for child in item.food_options{
-                orderItem.order_detail_additions.append(OrderDetailAddition(
-                    id: 0,
-                    name: child.name,
-                    quantity: Float(child.quantity),
-                    price: child.price,
-                    total_price: child.quantity*child.price)
-                )
+            if row < (self.viewModel.currentOrder.value.details.count - 1){
+                self.createDashedLine(parentView:cell.underlineView, color: .systemGray, strokeLength: 10, gapLength: 2, width: 2)
             }
-            //===================================================================================================================================================================================
-            cell.view_of_food_note.isHidden = item.note.count == 0 ? true : false
-            cell.data = orderItem
+            PrinterUtils.shared.changeTextColorForPOSPrinter(view: cell.contentView,textColor:self.textColor,bgColor:.black)
+        }.disposed(by: rxbag)
+    }
+    
+    private func bindDataForTableOfKitchenTicket() {
+        viewModel.currentOrder.map{$0.details}.bind(to: tableView_of_kitchen_ticket.rx.items(cellIdentifier: "FoodAppKitchenTicketTableViewCell", cellType: FoodAppKitchenTicketTableViewCell.self)){(row, item, cell) in
             
-            if row != (self.viewModel.order.value.details.count  - 1) {
-                let A = CGPoint(x: 0, y: cell.underlineView.bounds.height)
-                let B = CGPoint(x: cell.underlineView.bounds.width, y: cell.underlineView.bounds.height)
-                self.createDashedLine(parentView:cell.underlineView,from: A, to: B, color: self.textColor, strokeLength: 10, gapLength: 2, width: 2)
-            }
-            
+            cell.isCancel = self.viewModel.currentOrder.value.is_cancel_order == ACTIVE
+            cell.data = item
+            PrinterUtils.shared.changeTextColorForPOSPrinter(view: cell.contentView,textColor:self.textColor,bgColor:.black)
         }.disposed(by: rxbag)
     }
     
     
 
-    func createDashedLine(parentView:UIView,from point1: CGPoint, to point2: CGPoint, color: UIColor, strokeLength: NSNumber, gapLength: NSNumber, width: CGFloat) {
+    func createDashedLine(parentView:UIView, color: UIColor, strokeLength: NSNumber, gapLength: NSNumber, width: CGFloat) {
         let shapeLayer = CAShapeLayer()
         let path = CGMutablePath()
+        
+        let point1 = CGPoint(x: 0, y: parentView.bounds.height)
+        let point2 = CGPoint(x: parentView.bounds.width, y: parentView.bounds.height)
         
         shapeLayer.strokeColor = color.cgColor
         shapeLayer.lineWidth = width
@@ -68,9 +68,7 @@ extension FoodAppPrintFormatViewController {
         path.addLines(between: [point1, point2])
         shapeLayer.path = path
         parentView.layer.addSublayer(shapeLayer)
-      
-    }
 
-    
+    }
     
 }

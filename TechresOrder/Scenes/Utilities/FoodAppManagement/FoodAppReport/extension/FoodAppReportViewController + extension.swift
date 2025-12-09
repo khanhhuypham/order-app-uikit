@@ -17,8 +17,8 @@ extension FoodAppReportViewController {
             if(response.code == RRHTTPStatusCode.ok.rawValue){
                 if var report = Mapper<FoodAppReport>().map(JSONObject: response.data) {
                     
-                    lbl_total_amount.text = Utils.stringVietnameseMoneyFormatWithNumberInt(amount: report.total_revenue)
-                    lbl_total_order.text = Utils.stringVietnameseMoneyFormatWithNumberInt(amount: report.total_order)
+                    lbl_total_amount.text = report.total_revenue.toString
+                    lbl_total_order.text = report.total_order.toString
                     
                     report.dateString = viewModel.report.value.dateString
                     report.reportType = viewModel.report.value.reportType

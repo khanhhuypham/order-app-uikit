@@ -37,3 +37,23 @@ class ChooseOptionViewModel: NSObject {
     
     
 }
+
+
+extension ChooseOptionViewModel{
+    func notes() -> Observable<APIResponse> {
+        return appServiceProvider.rx.request(.notes(branch_id: Constants.branch.id))
+               .filterSuccessfulStatusCodes()
+               .mapJSON().asObservable()
+               .showAPIErrorToast()
+               .mapObject(type: APIResponse.self)
+    }
+    
+    
+    func notesByFood() -> Observable<APIResponse> {
+        return appServiceProvider.rx.request(.notesByFood(food_id:item.value.id, branch_id: Constants.branch.id))
+               .filterSuccessfulStatusCodes()
+               .mapJSON().asObservable()
+               .showAPIErrorToast()
+               .mapObject(type: APIResponse.self)
+       }
+}

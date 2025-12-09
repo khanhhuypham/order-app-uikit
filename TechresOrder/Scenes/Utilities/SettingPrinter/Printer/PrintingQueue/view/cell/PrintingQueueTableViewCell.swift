@@ -13,9 +13,9 @@ class PrintingQueueTableViewCell: UITableViewCell {
     @IBOutlet weak var lbl_printer: UILabel!
     @IBOutlet weak var lbl_orderId: UILabel!
     @IBOutlet weak var lbl_itemList: UILabel!
-    @IBOutlet weak var lbl_lastItem: UILabel!
+//    @IBOutlet weak var lbl_lastItem: UILabel!
     @IBOutlet weak var lbl_retried_number: UILabel!
-    
+    @IBOutlet weak var lbl_print_type: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -28,45 +28,64 @@ class PrintingQueueTableViewCell: UITableViewCell {
     }
     
     @IBAction func actionPrint(_ sender: Any) {
-        if let item = self.wifidata{
-            PrinterUtils.shared.print(wifiQueuedItem: WIFIQueuedItem(wifiQueuedItem: item))
+        guard let data = self.data else {
+            return
         }
         
-        
-        if let item = self.tscdata{
-            PrinterUtils.shared.print(tscQueuedItem: TSCQueuedItem(tscQueuedItem: item))
+        switch data.type {
+            case .wifi:
+                if let item = data.item as? WIFIQueuedItemObject{
+                    PrinterUtils.shared.print(wifiQueuedItem: WIFIQueuedItem(wifiQueuedItem: item))
+                }
+               
+            default:
+                if let item = data.item as? TSCQueuedItemObject{
+                    PrinterUtils.shared.print(tscQueuedItem: TSCQueuedItem(tscQueuedItem: item))
+                }
         }
+                
     }
     
     @IBAction func actionDelete(_ sender: Any) {
         
-//        guard
-//            let position = viewModel?.wifiQueuedItems.firstIndex(where: {$0.id == wifidata?.id}),
-//            let item = viewModel?.getItem(at: IndexPath(row: position, section: 0))
-//        else {
-//            return
-//        }
-//        LocalDataBaseUtils.UpdateWifiQueuedItemToFinish(id: item.id)
-//        
-//        viewModel?.view?.fetchData()
+        guard let data = self.data else {
+            return
+        }
+        
+        switch data.type {
+            case .wifi:
+                if let item = data.item as? WIFIQueuedItemObject{
+                    LocalDataBaseUtils.shared.UpdateWifiQueuedItemToFinish(id: item.id)
+                }
+               
+            default:
+                if let item = data.item as? TSCQueuedItemObject{
+                    LocalDataBaseUtils.shared.UpdateTSCQueuedItemToFinish(id: item.id)
+                }
+        }
+
     }
     
-    
-    var viewModel:PrintingQueueViewModel? = nil
-    
-    var wifidata: WIFIQueuedItemObject?{
+    var data:(type:itemType,item:Any)?{
         didSet{
-            mapWifiItem(item:wifidata!)
+            if let data = self.data{
+                switch data.type {
+                    case .wifi:
+                        if let item = data.item as? WIFIQueuedItemObject{
+                            mapWifiItem(item:item)
+                        }
+                       
+                    default:
+                        if let item = data.item as? TSCQueuedItemObject{
+                            mapTSCItem(item:item)
+                        }
+
+                }
+            }
         }
     }
-    
-    
-    var tscdata: TSCQueuedItemObject?{
-        didSet{
-            mapTSCItem(item:tscdata!)
-        }
-    }
-    
+
+        
     private func mapTSCItem(item:TSCQueuedItemObject){
         
         var image:UIImage = UIImage()
@@ -76,24 +95,21 @@ class PrintingQueueTableViewCell: UITableViewCell {
         }
         
         img.image = image
-        
         lbl_printer.text = item.printer?.printer_name ?? ""
         lbl_orderId.text = String(format: "#%d", item.orderId)
         var itemNames = ""
         
-//        for (i,data) in item.items.enumerated(){
-//            itemNames += i == item.items.count-1 ? data.name : (data.name + " \n")
-//        }
-        
         lbl_itemList.text = itemNames
-        lbl_lastItem.text = String(format: "isLastItem: %@", item.isLastItem ? "true" : "false")
         lbl_retried_number.text = String(format: "RetriedNumber: %d/10 \n(%@)", item.retryNumber, item.isFinished ? "finished" : "unfinish")
+        lbl_retried_number.isHidden = item.printMode != .printBackgroundWithRetry
         
+        
+        lbl_print_type.text = item.printMode == .printForeground ? "Print Foreground" : "Print Background"
     }
     
 
     private func mapWifiItem(item:WIFIQueuedItemObject){
-
+             
         img.image = UIImage(data: item.data)
 
         lbl_printer.text = item.printer?.printer_name ?? ""
@@ -105,9 +121,9 @@ class PrintingQueueTableViewCell: UITableViewCell {
         }
         
         lbl_itemList.text = itemNames
-        lbl_lastItem.text = String(format: "isLastItem: %@", item.isLastItem ? "true" : "false")
         lbl_retried_number.text = String(format: "RetriedNumber: %d/10 \n(%@)", item.retryNumber, item.isFinished ? "finished" : "unfinish")
-        
+        lbl_retried_number.isHidden = item.printMode != .printBackgroundWithRetry
+        lbl_print_type.text = item.printMode == .printForeground ? "Print Foreground" : "Print Background"
     }
     
 }

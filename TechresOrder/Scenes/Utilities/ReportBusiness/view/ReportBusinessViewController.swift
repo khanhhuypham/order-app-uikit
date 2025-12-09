@@ -26,18 +26,11 @@ class ReportBusinessViewController: BaseViewController {
 
     
   
-    
-    
-    
     @IBOutlet weak var avatar_branch: UIImageView!
     @IBOutlet weak var branch_name: UILabel!
     @IBOutlet weak var branch_address: UILabel!
     
 
-    
-    @IBOutlet weak var scroll_view: UIScrollView!
-
-    
     var cates = [Category]()
     var cate_names = ["DANH MỤC", "MÓN ĂN","MÓN NGOÀI MENU" ,"MÓN HỦY", "MÓN TẶNG", "GIẢM GIÁ", "VAT","BÀN","KHU VỰC"]
     var categoryPresent:Int = 0
@@ -85,11 +78,7 @@ class ReportBusinessViewController: BaseViewController {
         branch_address.text = ManageCacheObject.getCurrentBranch().address // đia chỉ chi nhánh
       
         avatar_branch.kf.setImage(with: URL(string: Utils.getFullMediaLink(string: ManageCacheObject.getCurrentBranch().image_logo )), placeholder: UIImage(named: "image_defauft_medium"))
-        /*
-            Nếu từ module tổng quan route qua module này thì ta hiển thị report của tháng này
-         */
-//        report_type == REPORT_TYPE_THIS_MONTH ? actionFilterThisMonth(REPORT_TYPE_THIS_MONTH) : actionFilterToday(REPORT_TYPE_TODAY)
-//        scroll_view.setContentOffset(report_type == REPORT_TYPE_THIS_MONTH ? CGPoint(x: 200,y: 0) : CGPoint(x: 0,y: 0), animated: true)
+
     }
     
     @IBAction func actionBack(_ sender: Any) {
@@ -197,16 +186,22 @@ extension ReportBusinessViewController: BmoViewPagerDataSource, BmoViewPagerDele
             
             case 3:
                 return CGSize(width: 100, height: navigationBar.bounds.height)
+            
             case 4:
                 return CGSize(width: 100, height: navigationBar.bounds.height)
+            
             case 5:
                 return CGSize(width: 100, height: navigationBar.bounds.height)
+            
             case 6:
                 return CGSize(width: 60, height: navigationBar.bounds.height)
+            
             case 7:
                 return CGSize(width: 60, height: navigationBar.bounds.height)
+            
             case 8:
                 return CGSize(width: 80, height: navigationBar.bounds.height)
+            
             default:
                 return CGSize(width: 100, height: navigationBar.bounds.height)
         }

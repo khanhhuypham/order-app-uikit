@@ -11,10 +11,10 @@ import ObjectMapper
 
 struct Payment {
     var order_id = 0
-    var tip_amount:Double = 0
-    var bank_amount:Double = 0
-    var transfer_amount:Double = 0
-    var cash_amount:Double = 0
+    var tip_amount = 0
+    var bank_amount = 0
+    var transfer_amount = 0
+    var cash_amount = 0
     var payment_method = 0
 
     

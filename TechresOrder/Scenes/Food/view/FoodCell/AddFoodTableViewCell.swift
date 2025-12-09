@@ -65,6 +65,7 @@ class AddFoodTableViewCell: UITableViewCell {
                 ? food.deSelect()
                 : viewModel.view?.presentDialogChooseToppingViewController(item:food)
                 
+               
             }else{
                 
                 food.is_selected == ACTIVE
@@ -73,6 +74,10 @@ class AddFoodTableViewCell: UITableViewCell {
                 
             }
             viewModel.setElement(element: food, categoryType: .food)
+            
+            if food.is_selected == ACTIVE{
+                viewModel.view?.view.endEditing(true)
+            }
         }
     }
     
@@ -150,16 +155,13 @@ class AddFoodTableViewCell: UITableViewCell {
         food_image.kf.setImage(with: URL(string: Utils.getFullMediaLink(string: food.avatar)), placeholder:  UIImage(named: "image_defauft_medium"))
         lbl_food_name.text = food.name
         
-        
-        if food.is_selected == ACTIVE{
-            viewModel.view?.view.endEditing(true)
-        }
              
         let color = NSAttributedString.Key.foregroundColor
         let crossLine = NSAttributedString.Key.strikethroughStyle
         let value = NSNumber(value: NSUnderlineStyle.single.rawValue)
         
         if food.temporary_price < 0 {
+            
             lbl_price.attributedText = Utils.setAttributesForLabel(
                 label: lbl_price,
                 attributes: [
@@ -168,6 +170,7 @@ class AddFoodTableViewCell: UITableViewCell {
                     (str:" " + food.price_with_temporary.toString.replacingOccurrences(of: "-", with: ""),properties:[color:ColorUtils.green_600()]),
                     (str:"/" + food.unit_type,properties:[color:ColorUtils.gray_600()])
             ])
+            
         }else{
             
             lbl_price.attributedText = Utils.setAttributesForLabel(
@@ -176,6 +179,7 @@ class AddFoodTableViewCell: UITableViewCell {
                     (str:food.price_with_temporary.toString,properties:[color:ColorUtils.orange_brand_900()]),
                     (str:"/" + food.unit_type,properties:[color:ColorUtils.gray_600()]),
             ])
+            
         }
         
         // KIỂM TRA MÓN HẾT HOẶC MÓN CHƯA GÁN BẾP ( ĐỐI VỚI MÓN CÓ THUỘC TÍNH IN BẾP )
@@ -197,6 +201,7 @@ class AddFoodTableViewCell: UITableViewCell {
             }
            
         }else{
+            
             if(food.is_out_stock == ACTIVE){
                 parent_view_of_action.isHidden = false
                 lbl_out_of_food.isHidden = false
@@ -211,6 +216,7 @@ class AddFoodTableViewCell: UITableViewCell {
                 self.isUserInteractionEnabled = true
                 hand_holder.isHidden = false
             }
+            
         }
         
         
@@ -238,7 +244,7 @@ class AddFoodTableViewCell: UITableViewCell {
             heightTable = CGFloat(food.addition_foods.count*60)
             tuppleArray = food.addition_foods.map{(value) in (mainFood:food, additionFood:value,isFoodOption:false)}
             
-        }else if food.food_in_combo.count > 0 && food.is_combo == ACTIVE{
+        }else if food.food_in_combo.count > 0{
             
 
             heightTable = CGFloat(food.food_in_combo.count*60)

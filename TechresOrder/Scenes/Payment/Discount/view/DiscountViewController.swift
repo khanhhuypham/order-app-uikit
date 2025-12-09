@@ -18,6 +18,9 @@ class DiscountViewController: BaseViewController {
     @IBOutlet weak var root_view: UIView!
     @IBOutlet weak var btnDiscountTotalBill: UIButton!
     @IBOutlet weak var btnDiscountByCategory: UIButton!
+    
+    
+    @IBOutlet weak var view_of_discount_type: UIView!
     @IBOutlet weak var btnShowDiscountType: UIButton!
     
     @IBOutlet weak var view_of_discount_by_category: UIView!
@@ -107,6 +110,7 @@ class DiscountViewController: BaseViewController {
         btnDiscountByCategory.isSelected = false
         btnDiscountFood.isSelected = false
         btnDiscountDrink.isSelected = false
+        view_of_discount_type.isHidden = false
         textfield_discount_percent_on_bill.isUserInteractionEnabled = btnDiscountTotalBill.isSelected ? true : false
         /*sử dụng hàm insertText để chạy lại hàm validate*/
         refreshTextfield()
@@ -119,6 +123,7 @@ class DiscountViewController: BaseViewController {
         btnDiscountByCategory.isSelected = true
         view_of_discount_by_category.isHidden = false
         view_of_discount_on_total_bill.isHidden = true
+        view_of_discount_type.isHidden = true
         /*sử dụng hàm insertText để chạy lại hàm validate*/
         refreshTextfield()
     }

@@ -75,8 +75,7 @@ class MediaUtils {
         guard let screenshot1 = screenshot1, let screenshot2 = screenshot2 else {
             return nil
         }
-        let combinedSize = CGSize(width: max(screenshot1.size.width, screenshot2.size.width),
-                                   height: screenshot1.size.height + screenshot2.size.height)
+        let combinedSize = CGSize(width: max(screenshot1.size.width, screenshot2.size.width),height: screenshot1.size.height + screenshot2.size.height)
         UIGraphicsBeginImageContextWithOptions(combinedSize, false, UIScreen.main.scale)
         screenshot1.draw(at: CGPoint.zero)
         screenshot2.draw(at: CGPoint(x: 0, y: screenshot1.size.height))
@@ -84,6 +83,40 @@ class MediaUtils {
         UIGraphicsEndImageContext()
         return combinedScreenshot
     }
+    
+    static func combineScreenshotsWithSpacing(
+        _ screenshot1: UIImage?,
+        _ screenshot2: UIImage?,
+        spacing: CGFloat = 20 // add spacing in points
+    ) -> UIImage? {
+        guard let screenshot1 = screenshot1, let screenshot2 = screenshot2 else {
+            return nil
+        }
+        
+        let combinedSize = CGSize(
+            width: max(screenshot1.size.width, screenshot2.size.width),
+            height: screenshot1.size.height + spacing + screenshot2.size.height
+        )
+        
+        UIGraphicsBeginImageContextWithOptions(combinedSize, false, UIScreen.main.scale)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        
+        // Fill background with white
+        UIColor.white.setFill()
+        context.fill(CGRect(origin: .zero, size: combinedSize))
+        
+        // Draw first image
+        screenshot1.draw(at: CGPoint(x: 0, y: 0))
+        
+        // Draw second image with spacing
+        screenshot2.draw(at: CGPoint(x: 0, y: screenshot1.size.height + spacing))
+        
+        let combinedScreenshot = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return combinedScreenshot
+    }
+
     
     static func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage? {
         
@@ -112,9 +145,26 @@ class MediaUtils {
 //        if let data:Data = newImage?.pngData() {
 //            return UIImage(data: data)
 //        }
-//        
+//
         return newImage
     }
+ 
+    
+    
+    static func overlayWithGray(image: UIImage, color: UIColor = .systemGray6, alpha: CGFloat = 0.4) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(image.size, false, image.scale)
+        let rect = CGRect(origin: .zero, size: image.size)
+
+        image.draw(in: rect)
+
+        color.withAlphaComponent(alpha).setFill()
+        UIRectFillUsingBlendMode(rect, .multiply)
+
+        let result = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return result
+    }
+    
     
     static func convertImageToBlackAndWhiteFormat(yourUIImage:UIImage) -> UIImage{
         guard let currentCGImage = yourUIImage.cgImage else { return yourUIImage}
@@ -136,6 +186,21 @@ class MediaUtils {
             return processedImage
         }
         return yourUIImage
+    }
+    
+   static func invertQRCodeColors(image: UIImage) -> UIImage? {
+        guard let ciImage = CIImage(image: image) else { return nil }
+
+        // Step 1: Invert the colors (black ↔︎ white)
+        guard let invertFilter = CIFilter(name: "CIColorInvert") else { return nil }
+        invertFilter.setValue(ciImage, forKey: kCIInputImageKey)
+
+        // Step 2: Render the output
+        guard let outputImage = invertFilter.outputImage else { return nil }
+        let context = CIContext()
+        guard let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else { return nil }
+
+        return UIImage(cgImage: cgImage)
     }
     
     
@@ -441,6 +506,8 @@ class MediaUtils {
             }
         
     }
+    
+    
     
     
     

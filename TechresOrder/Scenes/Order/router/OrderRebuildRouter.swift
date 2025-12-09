@@ -16,7 +16,7 @@ class OrderRebuildRouter: NSObject {
     private var sourceView:UIViewController?
     
     private func createViewController()-> UIViewController {
-        let view = OrderRebuildViewController(nibName: "OrderRebuildViewController", bundle: Bundle.main)
+        let view = OrderViewController(nibName: "OrderViewController", bundle: Bundle.main)
         return view
     }
     
@@ -38,19 +38,19 @@ class OrderRebuildRouter: NSObject {
     }
     
     func navigateToQRCodeCashbackViewController(order_id : Int, table_name:String){
-        let qRCodeCashbackBillViewController = QRCodeCashbackBillRouter().viewController as! QRCodeCashbackBillViewController
-        qRCodeCashbackBillViewController.order_id = order_id
-        qRCodeCashbackBillViewController.table_name = table_name
-        qRCodeCashbackBillViewController.delegate = sourceView as! QRCodeCashbackBillDelegate
-        sourceView?.navigationController?.pushViewController(qRCodeCashbackBillViewController, animated: true)
+        let vc = QRCodeCashbackBillRouter().viewController as! QRCodeCashbackBillViewController
+        vc.order_id = order_id
+        vc.table_name = table_name
+        vc.delegate = sourceView as! QRCodeCashbackBillDelegate
+        sourceView?.navigationController?.pushViewController(vc, animated: true)
     }
     
 
     func navigateToAddFoodViewController(order:OrderDetail,is_gift:Int){
-        let addFoodViewController = AddFoodRouter().viewController as! AddFoodViewController
-        addFoodViewController.order = order
-        addFoodViewController.is_gift = is_gift
-        sourceView?.navigationController?.pushViewController(addFoodViewController, animated: true)
+        let vc = AddFoodRouter().viewController as! AddFoodViewController
+        vc.order = order
+        vc.is_gift = is_gift
+        sourceView?.navigationController?.pushViewController(vc, animated: true)
     }
     
     
@@ -62,10 +62,10 @@ class OrderRebuildRouter: NSObject {
     }
     
     func navigateToGiftDetailViewController(qrcode:String, order_id:Int){
-        let dialogGiftDetailViewController = DialogGiftDetailRouter().viewController as! DialogGiftDetailViewController
-        dialogGiftDetailViewController.qrcode = qrcode
-        dialogGiftDetailViewController.order_id = order_id
-        sourceView?.navigationController?.pushViewController(dialogGiftDetailViewController, animated: true)
+        let vc = DialogGiftDetailRouter().viewController as! DialogGiftDetailViewController
+        vc.qrcode = qrcode
+        vc.order_id = order_id
+        sourceView?.navigationController?.pushViewController(vc, animated: true)
     }
     
     

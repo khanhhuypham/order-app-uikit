@@ -11,9 +11,7 @@ import Charts
 class ReportRevenueTempTodayTableViewCell: UITableViewCell {
 
     @IBOutlet weak var lbl_today_total_amount_temp: UILabel!
-    
     @IBOutlet weak var lbl_revenue_temp_ready_payment: UILabel!
-    
     @IBOutlet weak var lbl_revenue_temp_not_payment: UILabel!
     @IBOutlet weak var btnRevenueDetail: UIButton!
     @IBOutlet weak var line_chart: LineChartView!
@@ -47,10 +45,10 @@ class ReportRevenueTempTodayTableViewCell: UITableViewCell {
     var viewModel: GenerateReportViewModel? {
        didSet {
            guard let viewModel = self.viewModel else {return}
-           viewModel.dailyOrderReport.subscribe(onNext: { [weak self] (dailyOrderReport) in
-                 self?.lbl_revenue_temp_not_payment.text = Utils.stringVietnameseMoneyFormatWithNumberInt(amount: dailyOrderReport.revenue_serving)
-                 self?.lbl_revenue_temp_ready_payment.text = Utils.stringVietnameseMoneyFormatWithNumberInt(amount: dailyOrderReport.revenue_paid)
-                 self?.lbl_today_total_amount_temp.text = Utils.stringVietnameseMoneyFormatWithNumberInt(amount: dailyOrderReport.revenue_paid + dailyOrderReport.revenue_serving)
+           viewModel.dailyOrderReport.subscribe(onNext: { [weak self] (report) in
+               self?.lbl_revenue_temp_not_payment.text = report.revenue_serving.toString
+               self?.lbl_revenue_temp_ready_payment.text = report.total_amount.toString
+               self?.lbl_today_total_amount_temp.text = (report.total_amount + report.revenue_serving).toString
             }).disposed(by: disposeBag)
 
            viewModel.toDayRenueReport.subscribe(onNext: { [weak self] (toDayRenueReport) in

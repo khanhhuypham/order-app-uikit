@@ -1,91 +1,98 @@
-//
-//  ProjectIDManager.swift
-//  aloline-phamkhanhhuy
-//
-//  Created by Pham Khanh Huy on 16/02/2024.
-//
 
-import UIKit
-import Moya
+var environmentMode = ManageCacheObject.getEnvironment()
 
-var environmentMode = EnvironmentMode.develop
+//MARK: =========================== beta =============================
+//let onlineBaseUrl = "https://beta.api.gateway.overate-vntech.com"
+//let onlineRealTimeUrl = "https://beta.realtime.order.techres.vn"
+//let onlineRealTimeChatUrl = "https://beta.realtime.chat.techres.vn"
+//MARK: =========================== staging =============================
+//let onlineBaseUrl = "https://staging.api.gateway.overate-vntech.com"
+//let onlineRealTimeUrl = ManageCacheObject.getConfig().realtime_domain
+//let onlineRealTimeChatUrl = "https://staging.realtime.chat.techres.vn"
+//MARK: =========================== production =============================
+let onlineBaseUrl = "https://api-gateway.techres.vn"
+let onlineRealTimeUrl = "https://realtime.order.techres.vn"
+let onlineRealTimeChatUrl = "https://realtime.chat.techres.vn"
+
 
 enum EnvironmentMode {
+        
+    case online
     
-    case develop
+    case offline
     
-    case staging
-    
-    case production
+    init(value: Int) {
+        
+        switch value {
+            
+            case ONLINE:
+                self = .online
+            
+            case OFFLINE:
+                self = .offline
+            
+            default:
+                self = .online
+        }
+    }
     
     var value: Int {
         
         switch self {
+     
+            case .online:
+                return ONLINE
             
-            case .develop:
-                return 0
+            case .offline:
+                return OFFLINE
             
-            case .staging:
-                return 1
-            
-            case .production:
-                return 2
-        }
+            }
+        
     }
     
     var baseUrl: String {
+        
         switch self {
             
-            case .develop:
-                return "https://beta.api.gateway.overate-vntech.com"
+            case .online:
+                return onlineBaseUrl
             
-            case .staging:
-                return "https://staging.api.gateway.overate-vntech.com"
-            
-            case .production:
-                return "https://api.gateway.overate-vntech.com"
+            case .offline:
+                return String(format: "http://%@:8005", Constants.savedLoginInfor.ip_address)
         }
+        
     }
     
     
-    
-    
     var realTimeUrl: String {
+        
         switch self {
-            case .develop:
-                return "https://beta.realtime.order.techres.vn"
-            case .staging:
-                return "http://172.16.10.144:1483"
-            case .production:
-                return "https://realtime.order.techres.vn"
-        }
+   
+            case .online:
+                return onlineRealTimeUrl ?? ""
+            
+            case .offline:
+                return String(format: "http://%@:9092", Constants.savedLoginInfor.ip_address)
+            }
+            
     }
     
     
     var realTimeChatUrl: String {
+        
         switch self {
-            case .develop:
-                return "https://beta.realtime.chat.techres.vn"
-            case .staging:
-                return "https://staging.realtime.chat.techres.vn"
-            case .production:
-                return "https://realtime.chat.techres.vn"
-        }
+         
+            case .online:
+                return onlineRealTimeChatUrl
+            
+            case .offline:
+                return String(format: "http://%@:8005", Constants.savedLoginInfor.ip_address)
+            }
+        
     }
     
-    
-    
-    
-    var PROJECT_OAUTH: Int {
-        switch self {
-            case .develop:
-                return 8003
-            case .staging:
-                return 8003
-            case .production:
-                return 8003
-        }
-    }
+
+    var PROJECT_OAUTH: Int {8003}
     
     var PROJECT_ID_ORDER_SMALL: Int {
         return 8004
@@ -134,6 +141,8 @@ enum EnvironmentMode {
     
     
     var PROJECT_ID_FOR_APP_FOOD: Int { 1432}
+    
+    var PROJECT_ID_FOR_E_INVOICE: Int { 1401}
 }
 
 
@@ -163,10 +172,11 @@ enum ProjectID:Int {
     
     case PROJECT_ID_FOR_MEESSAGE_SERVICE
     
-    
     case PROJECT_ID_FOR_CONVERSATION_SERVICE
     
     case PROJECT_ID_FOR_APP_FOOD
+    
+    case PROJECT_ID_FOR_E_INVOICE
     
     var value:Int{
         switch self {
@@ -178,7 +188,6 @@ enum ProjectID:Int {
           
             case .PROJECT_ID_ORDER:
                 return environmentMode.PROJECT_ID_ORDER
-            
             
             case .PROJECT_ID_DASHBOARD:
                 return environmentMode.PROJECT_ID_DASHBOARD
@@ -212,6 +221,9 @@ enum ProjectID:Int {
             
             case  .PROJECT_ID_FOR_APP_FOOD:
                 return environmentMode.PROJECT_ID_FOR_APP_FOOD
+            
+            case  .PROJECT_ID_FOR_E_INVOICE:
+                return environmentMode.PROJECT_ID_FOR_E_INVOICE
         
         }
     }

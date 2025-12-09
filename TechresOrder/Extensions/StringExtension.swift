@@ -121,13 +121,7 @@ extension String {
     }
     
 }
-extension String {
-    
-    func addDomainImage() -> String {
-        return Constants.URL.UPLOAD_DOMAIN
-    }
 
-}
 extension String {
    var containsSpecialCharacter: Bool {
       let regex = "[.*&^%$#@()/]+"

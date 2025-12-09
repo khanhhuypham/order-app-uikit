@@ -61,11 +61,11 @@ extension DiscountViewModel{
         return appServiceProvider.rx.request(.discount(
             order_id:APIParameter.value.order_id,
             branch_id:ManageCacheObject.getCurrentBranch().id,
-            
+
             food_discount_percent:APIParameter.value.food_discount_percent,
             drink_discount_percent:APIParameter.value.drink_discount_percent,
             total_amount_discount_percent:APIParameter.value.total_bill_discount_percent,
-            
+
             food_discount_amount:Double(APIParameter.value.food_discount_amount),
             drink_discount_amount:Double(APIParameter.value.drink_discount_amount),
             total_amount_discount_amount:Double(APIParameter.value.total_bill_discount_amount),

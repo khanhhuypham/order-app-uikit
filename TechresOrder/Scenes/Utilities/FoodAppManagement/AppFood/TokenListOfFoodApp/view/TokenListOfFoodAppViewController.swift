@@ -89,7 +89,6 @@ extension TokenListOfFoodAppViewController{
                 
                 self.viewModel.credentials.accept(list)
                 
-                
                 switch self.partner.code {
                     
                     case .shoppee:
@@ -121,9 +120,9 @@ extension TokenListOfFoodAppViewController:UITableViewDataSource,UITableViewDele
         let cell = UINib(nibName: "TokenListOfFoodAppTableViewCell", bundle: .main)
         tableView.register(cell, forCellReuseIdentifier: "TokenListOfFoodAppTableViewCell")
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.isScrollEnabled = false
         tableView.dataSource = self
         tableView.delegate = self
+        
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

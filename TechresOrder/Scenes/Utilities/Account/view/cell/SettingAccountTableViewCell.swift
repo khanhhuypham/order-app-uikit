@@ -13,8 +13,8 @@ class SettingAccountTableViewCell: UITableViewCell {
     @IBOutlet weak var btnChangePassword: UIButton!
     @IBOutlet weak var btnChangeLanguage: UIButton!
     
-    
     @IBOutlet weak var btnChatChannel: UIButton!
+    @IBOutlet weak var btnGetTokenLogin: UIButton!
     @IBOutlet weak var settingSwitch: UISwitch!
     
 //    @IBOutlet weak var btnSyncData: UIButton!

@@ -34,7 +34,6 @@ class EnterInformationViewController: BaseViewController {
     }
 
 
-
     @IBAction func actionCancel(_ sender: Any) {
         self.dismiss(animated: true)
     }

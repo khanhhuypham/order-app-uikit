@@ -110,12 +110,12 @@ class ExtraFoodTableViewCell: UITableViewCell {
     
     private func mapData(mainFood:Food, additionFood:FoodAddition,isFoodOption:Bool){
         //if mainfood is
-        btnCheck.isUserInteractionEnabled = mainFood.is_combo == ACTIVE  ? false : true
-        icon_check.isHidden = mainFood.is_combo == ACTIVE ? true : false
+        btnCheck.isUserInteractionEnabled = !mainFood.food_in_combo.isEmpty ? false : true
+        icon_check.isHidden = !mainFood.food_in_combo.isEmpty ? true : false
         icon_check.image = UIImage(named: additionFood.is_selected == ACTIVE ? "check_2" : "un_check_2")
     
         lbl_food_name.text = data?.additionFood.name
-        lbl_food_price.text = Utils.stringVietnameseMoneyFormatWithNumberInt(amount: additionFood.price)
+        lbl_food_price.text = additionFood.price.toString
         lbl_food_price.isHidden = mainFood.food_list_in_promotion_buy_one_get_one.count > 0 ? true : false
         view_gift.isHidden =  mainFood.food_list_in_promotion_buy_one_get_one.count > 0 ? false : true
         let color = NSAttributedString.Key.foregroundColor
@@ -127,33 +127,33 @@ class ExtraFoodTableViewCell: UITableViewCell {
                 lbl_food_price.attributedText = Utils.setAttributesForLabel(
                     label: lbl_food_price,
                     attributes: [
-                        (str:Utils.stringVietnameseMoneyFormatWithNumberInt(amount: additionFood.price),properties:[color:ColorUtils.red_600(),crossLine:value]),
+                        (str:additionFood.price.toString,properties:[color:ColorUtils.red_600(),crossLine:value]),
                         (str:"/" + additionFood.unit_type,properties:[color:ColorUtils.red_600(),crossLine:value]),
-                        (str:" " + Utils.stringVietnameseMoneyFormatWithNumberInt(amount: additionFood.price_with_temporary).replacingOccurrences(of: "-", with: ""),properties:[color:ColorUtils.green_600()])
+                        (str:" " + additionFood.price_with_temporary.toString.replacingOccurrences(of: "-", with: ""),properties:[color:ColorUtils.green_600()])
                     ])
             } else if (additionFood.price_with_temporary > additionFood.price) {
                 lbl_food_price.attributedText = Utils.setAttributesForLabel(
                     label: lbl_food_price,
                     attributes: [
-                        (str:Utils.stringVietnameseMoneyFormatWithNumberInt(amount: additionFood.price_with_temporary),properties:[color:ColorUtils.orange_brand_900()])
+                        (str: additionFood.price_with_temporary.toString,properties:[color:ColorUtils.orange_brand_900()])
                     ])
             }
         }else{
             lbl_food_price.attributedText = Utils.setAttributesForLabel(
                 label: lbl_food_price,
                 attributes: [
-                    (str:Utils.stringVietnameseMoneyFormatWithNumberInt(amount: additionFood.price),properties:[color:ColorUtils.orange_brand_900()])
+                    (str:additionFood.price.toString,properties:[color:ColorUtils.orange_brand_900()])
                 ])
     
         }
         
-        let conditionToHideView = mainFood.is_combo == ACTIVE || (mainFood.addition_foods.count > 0 && mainFood.is_allow_print_stamp == ACTIVE)
+        let conditionToHideView = !mainFood.food_in_combo.isEmpty || (mainFood.addition_foods.count > 0 && mainFood.is_allow_print_stamp == ACTIVE)
         
         view_of_quantity_related_action.isHidden = conditionToHideView ? true : false
-        lbl_quantity.isHidden = false
+      
         if mainFood.addition_foods.count > 0{
             lbl_quantity.text = String(additionFood.quantity)
-        }else if mainFood.food_in_combo.count > 0 && mainFood.is_combo == ACTIVE {
+        }else if mainFood.food_in_combo.count > 0 {
             lbl_quantity.text = String(additionFood.combo_quantity)
         }else if mainFood.food_list_in_promotion_buy_one_get_one.count > 0{
             lbl_quantity.text = String(additionFood.quantity)
@@ -163,12 +163,13 @@ class ExtraFoodTableViewCell: UITableViewCell {
         if isFoodOption{
             view_gift.isHidden = true
             view_of_quantity_related_action.isHidden = true
-            lbl_quantity.isHidden = true
+            
+            lbl_quantity.text = additionFood.quantity.toString
+            
             lbl_food_price.isHidden =  additionFood.price == 0 ? true : false
             icon_check.isHidden = true
             btnCheck.isUserInteractionEnabled = false
             
-
         }
         
         

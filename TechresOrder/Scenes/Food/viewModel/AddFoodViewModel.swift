@@ -305,26 +305,11 @@ extension AddFoodViewModel {
                .mapObject(type: APIResponse.self)
     }
   
-    
-    func healthCheckDataChangeFromServer() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(
-            .healthCheckChangeDataFromServer(
-                branch_id: Constants.branch.id,
-                restaurant_brand_id: Constants.brand.id,
-                restaurant_id: Constants.restaurant_id
-            ))
-               .filterSuccessfulStatusCodes()
-               .mapJSON().asObservable()
-               .showAPIErrorToast()
-               .mapObject(type: APIResponse.self)
-       }
-    
+
 }
 
 //MARK: define API for buffet
 extension AddFoodViewModel{
-    
-   
     func healthCheckForBuffet(buffet:Buffet) -> Observable<APIResponse> {
         return appServiceProvider.rx.request(
             .healthCheckForBuffet(

@@ -12,175 +12,181 @@ import LocalAuthentication
 import JonAlert
 
 class LoginViewController: BaseViewController{
+    // MARK: - IBOutlet -
+    
+    @IBOutlet weak var stackView: UIStackView!
+    @IBOutlet weak var childView: UIView!
+    @IBOutlet weak var viewDevMode: UIView!
+    
+    @IBOutlet weak var btn_online_mode: UIButton!
+    @IBOutlet weak var btn_offline_mode: UIButton!
+    
     
     var viewModel = LoginViewModel()
     var router = LoginRouter()
 
-    // MARK: - IBOutlet -
-    @IBOutlet weak var text_field_account: UITextField!
-    @IBOutlet weak var btn_login: UIButton!
-    @IBOutlet weak var text_field_password: UITextField!
-    @IBOutlet weak var btn_hide_password: UIButton!
-    @IBOutlet weak var image_biometric: UIImageView!
-    @IBOutlet weak var btn_forgot_password: UIButton!
-    
-    @IBOutlet weak var btn_faceid: UIButton!
-    @IBOutlet weak var text_field_restaurant: UITextField!
-    
-    @IBOutlet weak var lbl_account_error: UILabel!
-    
-    @IBOutlet weak var lbl_error_pwd: UILabel!
-    
-    @IBOutlet weak var lbl_noti_restaurant: UILabel!
-    
-    @IBOutlet weak var view_faceid: UIView!
-    
-    @IBOutlet weak var viewDevMode: UIView!
-    
-   
-    var iconClick = false
-    var sessions_str = ""
-    // MARK: - Variable - User -
-    var context = LAContext()
-    var err: NSError?
-
-
     override func viewDidLoad() {
-        text_field_restaurant.text = ManageCacheObject.getRestaurantName()
-        text_field_account.text = ManageCacheObject.getUsername()
-        self.navigationController?.isNavigationBarHidden = true
-        
-        
+
         super.viewDidLoad()
         viewModel.bind(view: self, router: router)
-        
-        let deviceRequest = DeviceRequest(appType: Utils.getAppType(), deviceUID:Utils.getUDID(), pushToken: ManageCacheObject.getPushToken())
- 
-        viewModel.deviceRequest.accept(deviceRequest)
 
         
-        self.registerDeviceUDID()
-        
-        self.hideKeyboardWhenTappedAround()
-
-    
-        mapDataAndValidate()
-        // set layout
-        checkBiometricFunctionality()
+        registerDeviceUDID()
         let gesture = UITapGestureRecognizer(target: self, action: #selector(self.someActionDevMode(_:)))
         gesture.numberOfTapsRequired = 12
         viewDevMode.addGestureRecognizer(gesture)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(reLogin(_:)), name: Notification.Name("changedPassword"), object: nil)
         
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "changedPassword"), object: nil)
-    }
-    
-    @objc private func reLogin(_ notification:Notification){
-        if let account = notification.object as? Account {
-            text_field_restaurant.text = account.restaurant_name
-            text_field_account.text = account.username
-            text_field_password.text = account.password
-            viewModel.username.accept(account.username)
-            viewModel.password.accept(account.password)
-            Utils.resetConfig()
-            self.getSessions()
+        //Subscribe to a Notification which will fire before the keyboard will show
+        subscribeToNotification(UIResponder.keyboardWillShowNotification, selector: #selector(keyboardWillShowOrHide))
+
+        //Subscribe to a Notification which will fire before the keyboard will hide
+        subscribeToNotification(UIResponder.keyboardWillHideNotification, selector: #selector(keyboardWillShowOrHide))
+                
+
+        if ManageCacheObject.getEnvironment() == .offline{
+            actionChangeEnvironmentMode(btn_offline_mode)
+        }else{
+            actionChangeEnvironmentMode(btn_online_mode)
         }
     }
+
+
     
     @objc private func someActionDevMode(_ sender: UITapGestureRecognizer) {
         presentModalDevMode()
     }
     
-    private func checkBiometricFunctionality(){
-        self.iconClick = false
-        view_faceid.isHidden = true
-        
-        if ManageCacheObject.getBiometric() == "1"{
-            if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: &err){
-
-                if context.biometryType == .faceID{
-                    if #available(iOS 13.0, *) {
-                        view_faceid.isHidden = false
-                        image_biometric.image = UIImage(named: "icon-face-id")
-                    } else {
-                        // Fallback on earlier versions
-                    }
-                }else{
-                    if #available(iOS 13.0, *) {
-                        image_biometric.image = UIImage(systemName: "touchid")
-                    } else {
-                        // Fallback on earlier versions
-                    }
-                }
-            }else{
-//                UIAlertController.showAlert(title: nil, message: "Vân tay/Face ID chưa thiết lập")
-            }
+    @IBAction func actionChangeEnvironmentMode(_ sender: UIButton) {
+        switch sender.tag{
+            case 0:
+                let vc = LoginOnlineViewController(nibName: "LoginOnlineViewController", bundle: Bundle.main)
+                environmentMode = .online
+                vc.view.backgroundColor = .clear
+                addViewController(parent:self,child: vc)
+                btn_online_mode.backgroundColor = ColorUtils.orange_brand_900()
+                btn_offline_mode.backgroundColor = .systemGray5
+         
+                break
+                
+            case 1:
+              
+                let vc = LoginOfflineViewController(nibName: "LoginOfflineViewController", bundle: Bundle.main)
+                environmentMode = .offline
+                vc.view.backgroundColor = .clear
+                addViewController(parent:self,child: vc)
+                btn_online_mode.backgroundColor = .systemGray5
+                btn_offline_mode.backgroundColor = ColorUtils.orange_brand_900()
+                break
+            
+            default:
+                let vc = LoginOnlineViewController(nibName: "LoginOnlineViewController", bundle: Bundle.main)
+                environmentMode = .online
+                vc.view.backgroundColor = .clear
+                addViewController(parent:self,child: vc)
+                btn_online_mode.backgroundColor = ColorUtils.orange_brand_900()
+                btn_offline_mode.backgroundColor = .systemGray5
+                break;
         }
-    }
-    
-   
-
-    @IBAction func actionLogin(_ sender: Any) {
-//        if(self.isAllowPress){
-//            self.isAllowPress = false
-//            // call api login here...
-//            self.viewModel.isLoginFace.accept(false)
-//            self.getSessions()
-//        }
-        
-        self.getSessions()
 
     }
-    @IBAction func actionForgotPassword(_ sender: Any) {
-        viewModel.makeResetPasswordViewController()
-    }
     
-    @IBAction func actionLoginBiometric(_ sender: Any) {
-        
-        let localString =  "Biometric Authentication"
-        if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: &err){
-            if ManageCacheObject.getUsername() == "" || ManageCacheObject.getPassword() == "" {
-                let alert = UIAlertController(title: "THÔNG BÁO" , message: "Tính năng chỉ có thể sử dụng lần đăng nhập kế tiếp", preferredStyle:.alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-            }else{
-                context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: localString){ [self]
-                    (success, error) in
-                    if success{
-                        DispatchQueue.main.async {
-                            self.viewModel.isLoginFace.accept(true)
-                            getSessions()
-                        }
-                    }
-                }
-            }
-
-        }
-    }
-    
-    
-    @IBAction func actionShowPassword(_ sender: Any) {
-        text_field_password.becomeFirstResponder()
-        
-        if(iconClick == true) {
-            text_field_password.isSecureTextEntry = false
-            btn_hide_password.setImage(UIImage(named: "eye"), for: .normal)
-        } else {
-            btn_hide_password.setImage(UIImage(named: "icon_eye_pass"), for: .normal)
-            text_field_password.isSecureTextEntry = true
-        }
-       
-        iconClick = !iconClick
-    }
     
     @IBAction func actionRegisterAccount(_ sender: Any) {
           presentDialogRegisterAccountViewController()
     }
     
+    
+    private func addViewController(parent:UIViewController,child: UIViewController) {
+        
+        children.forEach({
+          $0.willMove(toParent: nil)
+          $0.view.removeFromSuperview()
+          $0.removeFromParent()
+        })
+
+        parent.addChild(child)
+
+        childView.addSubview(child.view)
+        
+        child.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            child.view.topAnchor.constraint(equalTo: childView.topAnchor, constant: 0),
+            child.view.leadingAnchor.constraint(equalTo: childView.leadingAnchor),
+            child.view.trailingAnchor.constraint(equalTo: childView.trailingAnchor),
+            child.view.bottomAnchor.constraint(equalTo: childView.bottomAnchor, constant: 0)
+        ])
+        
+        child.didMove(toParent: parent)
+    }
+   
+    
+    func registerDeviceUDID(){
+        // Get data from Server
+        viewModel.registerDeviceUDID().subscribe(onNext: { (response) in
+            if(response.code == RRHTTPStatusCode.ok.rawValue){
+                dLog("Register Device UDID Success...")
+            }
+         
+        }).disposed(by: rxbag)
+    }
+    
+    
 
 }
+
+
+
+extension LoginViewController {
+
+    func initializeHideKeyboard(){
+        //Declare a Tap Gesture Recognizer which will trigger our dismissMyKeyboard() function
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(
+            target: self,
+            action: #selector(dismissMyKeyboard))
+
+        //Add this tap gesture recognizer to the parent view
+        view.addGestureRecognizer(tap)
+    }
+
+    @objc func dismissMyKeyboard(){
+        //endEditing causes the view (or one of its embedded text fields) to resign the first responder status.
+        //In short- Dismiss the active keyboard.
+        view.endEditing(true)
+    }
+}
+
+extension LoginViewController {
+
+    func subscribeToNotification(_ notification: NSNotification.Name, selector: Selector) {
+        NotificationCenter.default.addObserver(self, selector: selector, name: notification, object: nil)
+    }
+
+    func unsubscribeFromAllNotifications() {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    
+    @objc func keyboardWillShowOrHide(notification: NSNotification) {
+        guard let childView = childView,
+              let userInfo = notification.userInfo,
+              let endValue = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
+              let durationValue = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber,
+              let curveValue = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber else {
+            return
+        }
+
+        let endRect = view.convert(endValue.cgRectValue, from: view.window)
+        let keyboardOverlap = max(0, childView.frame.maxY - endRect.origin.y)
+
+        let duration = durationValue.doubleValue
+        let options = UIView.AnimationOptions(rawValue: UInt(curveValue.intValue << 16))
+
+        UIView.animate(withDuration: duration, delay: 0, options: options, animations: {
+            self.childView?.transform = CGAffineTransform(translationX: 0, y: -keyboardOverlap)
+        }, completion: nil)
+    }
+
+
+}
+

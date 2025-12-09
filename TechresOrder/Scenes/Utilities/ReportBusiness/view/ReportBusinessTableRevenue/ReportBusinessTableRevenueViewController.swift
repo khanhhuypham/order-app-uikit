@@ -13,19 +13,6 @@ import RxRelay
 class ReportBusinessTableRevenueViewController: BaseViewController {
     
     
-    
-    // MARK: Biến của button filter
-    @IBOutlet weak var btn_today: UIButton!
-    @IBOutlet weak var btn_yesterday: UIButton!
-    @IBOutlet weak var btn_this_week: UIButton!
-    @IBOutlet weak var btn_this_month: UIButton!
-    @IBOutlet weak var btn_last_month: UIButton!
-    @IBOutlet weak var btn_last_three_month: UIButton!
-    @IBOutlet weak var btn_this_year: UIButton!
-    @IBOutlet weak var btn_last_year: UIButton!
-    @IBOutlet weak var btn_last_three_year: UIButton!
-    @IBOutlet weak var btn_all_year: UIButton!
-    
     @IBOutlet weak var pieChart: PieChartView!
     @IBOutlet weak var barChart: BarChartView!
     @IBOutlet weak var view_no_data: UIView!
@@ -35,32 +22,13 @@ class ReportBusinessTableRevenueViewController: BaseViewController {
     @IBOutlet weak var height_of_pie_chart: NSLayoutConstraint!
     @IBOutlet weak var height_of_table: NSLayoutConstraint!
     var colors = [UIColor]()
-    var btnArray:[UIButton] = []
+    
+    @IBOutlet weak var reportFilter: ReportFilter!
+    var datePicker: DatePickerUtils = DatePickerUtils()
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        btnArray = [btn_today, btn_yesterday, btn_this_week, btn_this_month, btn_last_month, btn_last_three_month, btn_this_year, btn_last_year, btn_last_three_year, btn_all_year]
-//        changeBgBtn(btn: btn_this_month)
-//        for btn in self.btnArray{
-//            btn.rx.tap.asDriver().drive(onNext: { [weak self] in
-//                self?.changeBgBtn(btn: btn)
-//            }).disposed(by: rxbag)
-//            if btn.tag == viewModel?.tableRevenueReport.value.reportType{
-//                changeBgBtn(btn: btn)
-//            }
-//        }
-        
-        Utils.changeBgBtn(btn: btn_this_month, btnArray: btnArray)
-        for btn in self.btnArray{
-            btn.rx.tap.asDriver().drive(onNext: { [weak self] in
-                Utils.changeBgBtn(btn: btn, btnArray: self?.btnArray ?? [])
-            }).disposed(by: rxbag)
-            
-            if btn.tag == viewModel?.tableRevenueReport.value.reportType{
-                Utils.changeBgBtn(btn: btn, btnArray: btnArray)
-            }
-        }
-        
         registerCell()
         bindTableViewData()
 
@@ -72,17 +40,7 @@ class ReportBusinessTableRevenueViewController: BaseViewController {
         getReportTableRevenue()
     }
     
-    
-    @IBAction func actionChooseReportType(_ sender: UIButton) {
-        guard let viewModel = self.viewModel else {return}
-        var report = viewModel.tableRevenueReport.value
-        report.reportType = sender.tag
-        report.dateString = Constants.REPORT_TYPE_DICTIONARY[sender.tag] ?? ""
-        viewModel.tableRevenueReport.accept(report)
-        getReportTableRevenue()
-    }
-    
-   
+//   
     
     var viewModel: ReportBusinessViewModel?
 }
@@ -98,6 +56,8 @@ extension ReportBusinessTableRevenueViewController{
                 if var report = Mapper<TableRevenueReport>().map(JSONObject: response.data) {
                     report.reportType = viewModel.tableRevenueReport.value.reportType
                     report.dateString = viewModel.tableRevenueReport.value.dateString
+                    report.fromDate = viewModel.tableRevenueReport.value.fromDate
+                    report.toDate = viewModel.tableRevenueReport.value.toDate
                     viewModel.tableRevenueReport.accept(report)
                 }
             }else{
@@ -118,9 +78,94 @@ extension ReportBusinessTableRevenueViewController{
         tableView.isScrollEnabled = false
         
     }
+    
+    private func handleChooseDate(date:Date,tag:Int){
+        guard let viewModel = self.viewModel else {return}
+        
+        
+        let dateString = TimeUtils.convertDateToString(from: date, format: .dd_mm_yyyy)
+        var report = viewModel.tableRevenueReport.value
+     
+        if tag == -2{
+            
+            if TimeUtils.isDateValid(fromDateStr: dateString,toDateStr: report.toDate){
+                self.reportFilter.setFromDateTitle(dateString)
+                report.fromDate = dateString
+                report.reportType = 13
+                viewModel.tableRevenueReport.accept(report)
+                self.getReportTableRevenue()
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+          
+        }else if tag == -1{
+            
+            if TimeUtils.isDateValid(fromDateStr: report.fromDate,toDateStr: dateString){
+                self.reportFilter.setToDateTitle(dateString)
+                report.toDate = dateString
+                report.reportType = 13
+                viewModel.tableRevenueReport.accept(report)
+                self.getReportTableRevenue()
+                
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+        }
+        
+    }
+    
 
     private func bindTableViewData() {
         guard let viewModel = self.viewModel else {return}
+        
+        
+        datePicker.chooseDate = { [weak self] (date,tag) in
+            
+            self?.handleChooseDate(date: date, tag: tag)
+            
+        }
+        
+        reportFilter.defaultReportType = viewModel.tableRevenueReport.value.reportType
+        reportFilter.chooseReportType = { [weak self] reportType in
+           var report = viewModel.tableRevenueReport.value
+           
+           if reportType == -1{
+               
+               if let view = viewModel.view{
+                   
+                   self?.datePicker.showDatePicker(
+                        view,
+                        date:TimeUtils.convertStringToDate(from: report.toDate, format: .dd_mm_yyyy),
+                        tag:reportType
+                   )
+                
+               }
+            
+           }else if reportType == -2{
+               
+               if let view = viewModel.view{
+                   
+                   self?.datePicker.showDatePicker(
+                        view,
+                        date:TimeUtils.convertStringToDate(from: report.fromDate, format: .dd_mm_yyyy),
+                        tag:reportType
+                   )
+                
+               }
+            
+               
+           }else if reportType > 0{
+ 
+               report.reportType = reportType
+               report.dateString = Constants.REPORT_TYPE_DICTIONARY[reportType] ?? ""
+               viewModel.tableRevenueReport.accept(report)
+               self?.getReportTableRevenue()
+               
+           }
+           
+       }
+        
+        
 
         viewModel.tableRevenueReport.subscribe(onNext: { [self] report in
             

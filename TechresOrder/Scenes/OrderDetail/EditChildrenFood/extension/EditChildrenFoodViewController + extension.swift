@@ -26,7 +26,7 @@ extension EditChildrenFoodViewController{
 
         var item = viewModel.orderItem.value
         lbl_name.text = item.name
-        lbl_amount.text = Utils.stringVietnameseMoneyFormatWithNumberDouble(amount: item.total_price)
+        lbl_amount.text = Utils.stringVietnameseMoneyFormatWithNumber(amount: item.total_price)
         text_field_quantity.text = Utils.stringQuantityFormatWithNumberFloat(amount: item.quantity)
         text_field_quantity.keyboardType = item.is_sell_by_weight == ACTIVE ? .decimalPad : .numberPad
         text_field_quantity.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)

@@ -11,7 +11,6 @@ class EditFoodOptionViewController:BaseViewController {
 
     @IBOutlet weak var root_view: UIView!
 
-    
     @IBOutlet weak var lbl_name: UILabel!
     @IBOutlet weak var lbl_price: UILabel!
    
@@ -48,52 +47,72 @@ class EditFoodOptionViewController:BaseViewController {
         switch sender.titleLabel?.text{
             
             case "+":
-                item.setQuantity(quantity: item.quantity + 1)
+                item.setQuantity(quantity: item.quantity + (item.is_sell_by_weight == ACTIVE ? 0.01 : 1))
                 break
             
             case "-":
-                item.setQuantity(quantity: item.quantity - 1)
+                item.setQuantity(quantity: item.quantity - (item.is_sell_by_weight == ACTIVE  ? 0.01 : 1))
                 break
             
             default:
                 break
         }
         
-      
         viewModel.orderItem.accept(item)
-        textfield_quantity.text = calculateTotalAmount(
-            item:item,
+        textfield_quantity.text = item.quantity.toString
+        self.lbl_price.text = self.calculateTotalAmount(
+            item:self.viewModel.orderItem.value,
             list: viewModel.sectionArray.value.flatMap{$0.items}
-        ).toString
-        
+        ).rounded(.up).toString
     }
     
     
     
     @IBAction func actionConfirm(_ sender: Any) {
-        let item = viewModel.orderItem.value
-        var array:[FoodUpdate] = []
+       
+        var valid = true
         
-        var updateItem = FoodUpdate.init()
-        updateItem.order_detail_id = item.id
-        updateItem.quantity = item.quantity
-        
-        if updateItem.quantity == 0{
-            updateItem.quantity = 1
+        for section in self.viewModel.sectionArray.value{
+            let option = section.model
+            let items = section.items
+            
+            if items.filter{$0.status == ACTIVE}.count < option.min_items_allowed{
+                self.showWarningMessage(content: String(format: "%@ phải có số lượng tối thiểu là %d", option.name,option.min_items_allowed))
+                valid = false
+            }
         }
         
-        updateItem.note = item.note
-                
-
-        for optItem in viewModel.sectionArray.value.flatMap{$0.items}{
-            let option = OptionUpdate.init(id: optItem.id, quantity: optItem.quantity,status: optItem.status)
-            updateItem.order_detail_food_options.append(option)
+        if valid{
+            
+            let item = viewModel.orderItem.value
+            var array:[FoodUpdate] = []
+            
+            var updateItem = FoodUpdate.init()
+            updateItem.order_detail_id = item.id
+            updateItem.quantity = item.quantity
+            
+            if updateItem.quantity == 0{
+                updateItem.quantity = 1
+            }
+            updateItem.price = item.price
+            updateItem.note = item.note
+                    
+            for section in viewModel.sectionArray.value{
+                for optionItem in section.items{
+                    let option = OptionUpdate.init(
+                        food_option_id:section.model.id,
+                        id: optionItem.id,
+                        quantity: optionItem.quantity,
+                        status: optionItem.status)
+                    updateItem.order_detail_food_options.append(option)
+                }
+            }
+            
+            array.append(updateItem)
+            
+            updateFoodsToOrder(updateFood: array)
         }
         
-        array.append(updateItem)
-        
-        updateFoodsToOrder(updateFood: array)
-
     }
     
     @IBAction func actionCancel(_ sender: Any) {
@@ -117,5 +136,6 @@ class EditFoodOptionViewController:BaseViewController {
         }
     }
     
-  
+    
+    
 }

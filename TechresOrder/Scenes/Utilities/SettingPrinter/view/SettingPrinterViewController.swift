@@ -44,7 +44,11 @@ class SettingPrinterViewController: BaseViewController {
          
         }else{
             
-            view_of_printer_bill.isHidden = permissionUtils.GPBH_1_o_3 || (permissionUtils.GPBH_2_o_1 && permissionUtils.OwnerOrCashier) ? false : true
+            view_of_printer_bill.isHidden = permissionUtils.GPBH_1_o_3 || 
+            (permissionUtils.GPBH_2_o_1 && permissionUtils.OwnerOrCashier) ||
+            (permissionUtils.GPBH_2_o_2 && permissionUtils.OwnerOrCashier)
+            ? false
+            : true
             
             view_of_printer_chef_bar.isHidden = false
             

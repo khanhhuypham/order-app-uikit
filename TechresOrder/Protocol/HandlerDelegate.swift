@@ -154,6 +154,12 @@ protocol dateTimePickerDelegate {
 }
 
 
+
+protocol dateTimePickerOfGeneralReportDelegate {
+    func callbackToGetDateTime(didSelectDate:Date,title:String,key:String)
+}
+
+
 protocol DialogEnterOTPDelegate {
     func callbackToGetAccessToken(accessToken:String,phoneNumber:String)
 }
@@ -166,6 +172,14 @@ protocol ChooseOptionViewControllerDelegate {
 
 protocol DropDownCustomerViewControllerDelegate {
     func callbackToGetCustomer(customer:Customer)
+}
+
+
+
+
+protocol PopupEnterPriceViewControllerDelegate {
+    func callbackToAdjustedPrice(id:Int,price:Int)
+    
 }
 
 

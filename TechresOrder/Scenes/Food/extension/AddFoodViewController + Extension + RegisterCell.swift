@@ -71,10 +71,7 @@ extension AddFoodViewController:UITextFieldDelegate,UICollectionViewDelegate,UIC
                         return cell
                     
                 }
-                
-
             }
-    
         )
 
         
@@ -132,7 +129,6 @@ extension AddFoodViewController:UITextFieldDelegate,UICollectionViewDelegate,UIC
                             note.backgroundColor = ColorUtils.gray_600()
                             note.image = UIImage(named: "icon-note-bg-gray")
                             
-                            
                             let discount = UIContextualAction(style: .normal, title: "") { [weak self] (action, view, completionHandler) in
                                 
                                 if permissionUtils.discountOrderItem {
@@ -143,19 +139,44 @@ extension AddFoodViewController:UITextFieldDelegate,UICollectionViewDelegate,UIC
                                     self?.showWarningMessage(content: "Bạn chưa được cấp quyền sử dụng tính năng này vui lòng liên hệ quản lý")
                                 }
                                 
-                                
                                 completionHandler(true)
                             }
+                            
                             discount.backgroundColor = ColorUtils.orange_brand_900()
                             discount.image = UIImage(named: "icon-discount-orange")
                             
+                            
+                            let enterPrice = UIContextualAction(style: .normal, title: "") { [weak self] (action, view, completionHandler) in
+                                self?.presentEnterPricePopupViewController(item:item)
+                                completionHandler(true)
+                            }
+                            
+                            enterPrice.backgroundColor = ColorUtils.gray_500()
+                            enterPrice.image = UIImage(named: "icon-adjust-price")
+                            
+
+                            var actions:[UIContextualAction] = []
+                            
+                            if (item.buffet_ticket_ids != nil || is_gift == ACTIVE){
+                                
+                                actions = [note]
+                                
+                            }else{
+                                
+                                if permissionUtils.adjustPriceForSellByWeightFood && item.is_sell_by_weight == ACTIVE{
+                                    actions = [discount,enterPrice,note]
+                                }else{
+                                    actions = [discount,note]
+                                }
+             
+                            }
+                            
+                        
                             // Create and return UISwipeActionsConfiguration with the defined action
-                            let configuration = UISwipeActionsConfiguration(actions:item.buffet_ticket_ids != nil || is_gift == ACTIVE
-                                                                                ? [note]
-                                                                                : [discount,note]
-                            )
+                            let configuration = UISwipeActionsConfiguration(actions:actions)
                             configuration.performsFirstActionWithFullSwipe = false
                             return configuration
+                            
                         } else {
                             // Return nil to disable swipe actions when is_out_stock is not DEACTIVE
                             return nil

@@ -11,6 +11,8 @@ import ObjectMapper
 struct AreaRevenueReport:Mappable{
     var reportType = 0
     var dateString = ""
+    var fromDate = ""
+    var toDate = ""
     var areaRevenueReportData = [AreaRevenueReportData]()
     var total_revenue = 0
     var total_revenue_amount = 0
@@ -21,6 +23,13 @@ struct AreaRevenueReport:Mappable{
     init(reportType:Int, dateString:String){
         self.reportType = reportType
         self.dateString = dateString
+    }
+    
+    init(reportType:Int, dateString:String,fromDate:String,toDate:String){
+        self.reportType = reportType
+        self.dateString = dateString
+        self.fromDate = fromDate
+        self.toDate = toDate
     }
     
     mutating func mapping(map: Map) {

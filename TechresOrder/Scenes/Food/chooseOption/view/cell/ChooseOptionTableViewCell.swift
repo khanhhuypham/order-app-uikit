@@ -19,7 +19,8 @@ class ChooseOptionTableViewCell: UITableViewCell {
     @IBOutlet weak var view_of_quanity_adjustment: UIView!
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        textfield_quantity.addTarget(self, action: #selector(textFieldEditingDidEnd(_:)), for: .editingDidEnd)
+        textfield_quantity.setMaxValue(maxValue: 999)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -28,10 +29,34 @@ class ChooseOptionTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    
+    @objc func textFieldEditingDidEnd(_ textField: UITextField) {
+        guard let indexPath = self.indexPath, let viewModel = self.viewModel else {
+            return
+        }
+        
+        let number = Int(textField.text ?? "0") ?? 0
+        let section = viewModel.sectionArray.value[indexPath.section]
+        var items = section.items
+        items[indexPath.row].quantity = number
+        
+        if items[indexPath.row].quantity <= 0 {
+            items[indexPath.row].quantity = 0
+            items[indexPath.row].is_selected = DEACTIVE
+        }
+        
+  
+        viewModel.setSection(
+            section:SectionModel(model: section.model, items: items),
+            indexPath: indexPath
+        )
+        
+    }
+    
+    
     var viewModel:ChooseOptionViewModel? = nil
+    
     var indexPath:IndexPath? = nil
-    
-    
     
     var data: FoodAddition?{
         didSet {
@@ -45,14 +70,17 @@ class ChooseOptionTableViewCell: UITableViewCell {
             let section = viewModel.sectionArray.value[indexPath.section].model
                 
             if section.max_items_allowed > 1{
-                view_of_quanity_adjustment.isHidden = data.is_selected == ACTIVE ? false : true
+                
                 icon_check.image = data.is_selected == ACTIVE ? UIImage(named: "check_2") : UIImage(named: "un_check_2")
-                textfield_quantity.text = data.quantity.toString
+                
             }else{
-                view_of_quanity_adjustment.isHidden = true
+                
                 icon_check.image = data.is_selected == ACTIVE ? UIImage(named: "icon-radio-checked") : UIImage(named: "icon-radio-uncheck")
               
             }
+            
+            textfield_quantity.text = data.quantity.toString
+            view_of_quanity_adjustment.isHidden = data.is_selected == ACTIVE ? false : true
             
             lbl_name.text = String(format: " %@",data.name)
                 
@@ -110,7 +138,7 @@ class ChooseOptionTableViewCell: UITableViewCell {
 
         if section.max_items_allowed > 1{
 
-            for (index, option) in items.enumerated() {
+            for (index,_) in items.enumerated() {
 
                 if index == indexPath.row{
                     items[index].is_selected = items[index].is_selected == ACTIVE ? DEACTIVE : ACTIVE
@@ -123,13 +151,12 @@ class ChooseOptionTableViewCell: UITableViewCell {
                     items[index].is_selected = DEACTIVE
                     viewModel.view?.showWarningMessage(content: String(format: "Số lượng %@ tối đa là %d", section.name,section.max_items_allowed))
                 }
-                
-                
-                
+            
             }
             
         }else{
-            for (index, option) in items.enumerated() {
+            for (index, _) in items.enumerated() {
+                
                 items[index].is_selected = (index == indexPath.row) ? ACTIVE : DEACTIVE
                 items[index].quantity = items[index].is_selected == ACTIVE ? 1 : 0
 

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="307" id="KGk-i7-Jjw" customClass="FoodAppKitchenTicketTableViewCell" customModule="TECHRES_ORDER" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="523" height="307"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="523" height="307"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="evo-Tt-v8Q">
+                        <rect key="frame" x="0.0" y="0.0" width="523" height="306"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="O6b-gi-RtY">
+                                <rect key="frame" x="0.0" y="15" width="523" height="276"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="HyK-GD-1MW">
+                                        <rect key="frame" x="0.0" y="0.0" width="373" height="276"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="752" text="Cafe sữa chua rang muối ớt ăn là chớt Cafe sữa chua rang muối ớt ăn là chớt" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" showsExpansionTextWhenTruncated="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CZP-I6-ZFV">
+                                                <rect key="frame" x="0.0" y="0.0" width="373" height="48"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="combo food combo food combo food combo food combo food combo food" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gwA-tO-yBr">
+                                                <rect key="frame" x="0.0" y="50" width="373" height="43"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalCompressionResistancePriority="751" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" showsExpansionTextWhenTruncated="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sOh-pK-18Y">
+                                                <rect key="frame" x="0.0" y="95" width="373" height="181"/>
+                                                <string key="text">ít cay nhiều ớt ít cay nhiều ớt  ít cay nhiều ớt. ít cay nhiều ớt. ít cay nhiều ớt. ít cay nhiều ớt. ít cay nhiều ớt ít cay nhiều ớt ít cay nhiều ớt  ít cay nhiều ớt. ít cay nhiều ớt. ít cay nhiều ớt. ít cay nhiều ớt. ít cay nhiều ớt </string>
+                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                <nil key="textColor"/>
+                                                <color key="highlightedColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Phần" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8cc-dx-Uxs">
+                                        <rect key="frame" x="383" y="0.0" width="80" height="276"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="80" id="IsE-1q-tFh"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pqK-ZK-xgu">
+                                        <rect key="frame" x="473" y="0.0" width="50" height="276"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="U6c-0K-iSw"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="O6b-gi-RtY" firstAttribute="top" secondItem="evo-Tt-v8Q" secondAttribute="top" constant="15" id="U8A-cU-3Lb"/>
+                            <constraint firstAttribute="bottom" secondItem="O6b-gi-RtY" secondAttribute="bottom" constant="15" id="i4o-NP-kmW"/>
+                            <constraint firstItem="O6b-gi-RtY" firstAttribute="leading" secondItem="evo-Tt-v8Q" secondAttribute="leading" id="rqo-Yb-im8"/>
+                            <constraint firstAttribute="trailing" secondItem="O6b-gi-RtY" secondAttribute="trailing" id="zmv-Mq-CVP"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="evo-Tt-v8Q" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="1TC-wp-hTw"/>
+                    <constraint firstAttribute="trailing" secondItem="evo-Tt-v8Q" secondAttribute="trailing" id="98u-gD-yG5"/>
+                    <constraint firstItem="evo-Tt-v8Q" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="YVw-oo-0Ua"/>
+                    <constraint firstAttribute="bottom" secondItem="evo-Tt-v8Q" secondAttribute="bottom" constant="1" id="prD-RH-luR"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="container_view" destination="evo-Tt-v8Q" id="om0-EO-B0V"/>
+                <outlet property="lbl_item_addition" destination="gwA-tO-yBr" id="TuC-8e-ciS"/>
+                <outlet property="lbl_item_name" destination="CZP-I6-ZFV" id="Bja-v9-yPX"/>
+                <outlet property="lbl_note" destination="sOh-pK-18Y" id="Zpo-EG-TU9"/>
+                <outlet property="lbl_quantity" destination="pqK-ZK-xgu" id="nGy-zs-hP7"/>
+                <outlet property="lbl_unit" destination="8cc-dx-Uxs" id="fBE-sd-AQk"/>
+            </connections>
+            <point key="canvasLocation" x="182.44274809160305" y="60.211267605633807"/>
+        </tableViewCell>
+    </objects>
+</document>

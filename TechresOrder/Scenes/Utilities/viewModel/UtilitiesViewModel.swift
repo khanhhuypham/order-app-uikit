@@ -19,12 +19,15 @@ class UtilitiesViewModel: BaseViewModel {
         self.router = router
         self.router?.setSourceView(view)
     }
+    
     func makeSettingAccountViewController(){
         router?.navigateToSettingAccountViewController()
     }
+    
     func makeManagementAreaTableViewController(){
         router?.navigateToManagementAreaTableViewController()
     }
+    
     func makeManagementCategoryFoodNoteViewController(){
         router?.navigateToManagementCategoryFoodNoteViewController()
     }
@@ -49,12 +52,15 @@ class UtilitiesViewModel: BaseViewModel {
     func makeToRevenueDetailViewController(){
         router?.navigateToRevenueDetailViewController()
     }
+    
     func makeToReportBusinessAnalyticsViewController(){
         router?.navigateToReportBusinessAnalyticsViewController()
     }
+    
     func makeToReportBusinessViewController(){
         router?.navigateToReportBusinessViewController()
     }
+    
     func makeToEmployeeReportRevenueViewController(){
         router?.navigateToEmployeeReportRevenueViewController()
         
@@ -80,10 +86,14 @@ class UtilitiesViewModel: BaseViewModel {
     }
     
   
-    
     func makeOrderHistoryOfFoodAppViewController() {
         router?.navigationToOrderHistoryOfFoodAppViewController()
     }
+    
+    func makeOrderOfFoodAppViewController() {
+        router?.navigationToOrderOfFoodAppViewController()
+    }
+    
     
     func makeFoodAppReportViewController() {
         router?.navigationToFoodAppReportViewController()
@@ -95,6 +105,16 @@ class UtilitiesViewModel: BaseViewModel {
     }
 
 
-  
+    func makeAssignToEReceiptConnectionViewController() {
+        router?.navigationToEReceiptConnectionViewController()
+    }
+
+    func makeEInvoiceManagementViewController() {
+        router?.navigationToEInvoiceManagementViewController()
+    }
+    
+    func makeClosedSessionHistoryViewController() {
+        router?.navigationToClosedSessionHistoryViewController()
+    }
 
 }

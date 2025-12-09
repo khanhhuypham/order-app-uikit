@@ -99,7 +99,6 @@ extension OrderManagementViewController{
                     apiParameter.isGetFullData = dataFromServer.data.count < apiParameter.limit ? true: false
                     btnShowMore.isHidden = apiParameter.isGetFullData ? true : false
                     
-                    
                     viewModel.APIParameter.accept(apiParameter)
                     view_nodata_order.isHidden = viewModel.dataArray.value.count > 0 ? true : false
                     total_order_number.text = String(dataFromServer.total_record!)

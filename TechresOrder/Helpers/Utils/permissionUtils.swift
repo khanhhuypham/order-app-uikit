@@ -32,8 +32,10 @@ struct permissionUtils {
     static private let ACTION_ON_FOOD_AND_TABLE = "ACTION_ON_FOOD_AND_TABLE"
     static private let ORDER_FOOD = "ORDER_FOOD"
     static private let SHARE_POINT = "SHARE_POINT_IN_BILL"
+    static private var CUSTOMIZE_PRICE_PER_KG = "CUSTOMIZE_PRICE_PER_KG"
     static private let VIEW_ALL = "VIEW_ALL"
     static private let REPORT_SYSTEM_ERRORS = "REPORT_SYSTEM_ERRORS"
+    
     
     static private let SALE_REPORT = "SALE_REPORT"
     
@@ -180,14 +182,27 @@ struct permissionUtils {
         get{
             let permissions = ManageCacheObject.getCurrentUser().permissions
     
-            return permissions.contains(DISCOUNT_ORDER) || permissions.contains(OWNER)
+            return permissions.contains(DISCOUNT_ORDER) || permissions.contains(OWNER) || permissions.contains(RESTAURANT_MANAGER)
+        }
+    }
+    
+    static var adjustPriceForSellByWeightFood :Bool{
+        get{
+            let permissions = ManageCacheObject.getCurrentUser().permissions
+    
+            return permissions.contains(CUSTOMIZE_PRICE_PER_KG) || permissions.contains(OWNER)
+         
         }
     }
     
     
+    
     static var is_allow_take_away :Bool{
+       
         get{
-            return (GPBH_1 || (GPBH_2_o_1 && OwnerOrCashier) || GPBH_2_o_2) && ManageCacheObject.getOrderMethod().is_have_take_away == ACTIVE
+        
+            return (GPBH_1 && ManageCacheObject.getOrderMethod().is_have_take_away == ACTIVE) || (GPBH_2_o_1 && OwnerOrCashier) || GPBH_2_o_2
+
         }
     }
     
@@ -200,18 +215,16 @@ struct permissionUtils {
     
     static var IOSPrinter :Bool{
         get{
-            return GPBH_1_o_2 || GPBH_1_o_3 || GPBH_2_o_1
+            return GPBH_1 || GPBH_2
         }
     }
 
 
-    static var BillPrinter :Bool{
+    static var InvoicePrinter :Bool{
         get{
             let billPrinter = Constants.printers.filter{$0.type == .cashier}.first ?? Printer()
 
-            return billPrinter.is_have_printer == ACTIVE &&
-            Utils.checkRoleIsPrintBill() &&
-            (GPBH_1_o_3 || (GPBH_2_o_1 && OwnerOrCashier))
+            return billPrinter.is_have_printer == ACTIVE && Utils.checkRoleIsPrintBill() && (GPBH_1_o_3 || (GPBH_2_o_1 && OwnerOrCashier) || GPBH_2_o_2)
         }
     }
 
@@ -242,7 +255,7 @@ struct permissionUtils {
             var condition:Bool = false
             let branch = Constants.branch
             
-            if permissionUtils.GPBH_2_o_1 && permissionUtils.Cashier && branch.is_office == DEACTIVE && !Constants.user.alreadCheckWorkingSession{
+            if permissionUtils.GPBH_2_o_1 && permissionUtils.OwnerOrCashier && branch.is_office == DEACTIVE && !Constants.user.alreadCheckWorkingSession{
                 condition = true
             }else if branch.is_office == ACTIVE && permissionUtils.Owner{
                 condition = false
@@ -261,17 +274,38 @@ struct permissionUtils {
         }
     }
     
-    
-    static var isAllowFoodApp:Bool{
+    static var allowScanOrderFoodApp:Bool{
         get{
  
-            let isAllow = Constants.branch.setting.is_enable_app_food == ACTIVE ? true : false
-//            let isAllow = (Constants.branch.setting.is_enable_app_food == ACTIVE) && (GPBH_1 || GPBH_2_o_1) ? true : false
-            return isAllow
+            let allow = ((GPBH_1 || GPBH_2_o_1) && (Constants.branch.setting.is_enable_app_food == ACTIVE) ) ? true : false
+            return allow
+   
+        }
+    }
+    
+    
+    static var allowFoodAppManagement:Bool{
+        get{
+ 
+//            let allow = GPBH_1 || (GPBH_2_o_1 && Constants.branch.setting.is_enable_app_food == ACTIVE) ? true : false
+            let allow = Constants.branch.setting.is_enable_app_food == ACTIVE ? true : false
+            return allow
             
         }
     }
     
+    
+    static var allowConnectFoodAppPartner:Bool{
+        get{
+ 
+            let allow = Constants.branch.setting.is_enable_app_food == ACTIVE && Owner ? true : false
+            return allow
+            
+        }
+    }
+    
+    
+
     
     static var isSaleReport:Bool{
         get{

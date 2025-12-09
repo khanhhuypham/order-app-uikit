@@ -9,7 +9,6 @@ import UIKit
 
 class OrderManagementOfFoodAppViewController: BaseViewController {
     var viewModel = OrderManagementOfFoodAppViewModel()
-    var router = OrderManagementOfFoodAppRouter()
     let refreshControl = UIRefreshControl()
     
     
@@ -31,29 +30,26 @@ class OrderManagementOfFoodAppViewController: BaseViewController {
     @IBOutlet weak var view_no_data: UIView!
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        viewModel.bind(view: self, router: router)
+        super.viewDidLoad() 
+        viewModel.bind(view: self)
         bindTableViewAndRegisterCell()
-        getOrderHistoryOfFoodApp()
+        viewModel.clearDataAndCallAPI()
         // Do any additional setup after loading the view.
     }
     
     
     @IBAction func actionBack(_ sender: Any) {
-        viewModel.makePopViewController()
+        navigationController?.popViewController(animated: true)
     }
     
     @IBAction func actionShowReportTypeFilter(_ sender: UIButton) {
         viewModel.filterType.accept(1)
-        showDropDown(btn: sender, list: viewModel.reportTypeFilter.value.map{$0.value})
+        showDropDown(btn: sender, list: viewModel.reportTypeFilter.value.map{$0.1})
     }
     
     @IBAction func actionShowParterFilter(_ sender: UIButton) {
         viewModel.filterType.accept(2)
         showDropDown(btn: sender, list: viewModel.partnerFilter.value.map{$0.key})
     }
-    
-    
-
 
 }

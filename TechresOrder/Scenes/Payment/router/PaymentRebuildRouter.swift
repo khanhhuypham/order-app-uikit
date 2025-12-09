@@ -31,13 +31,6 @@ class PaymentRebuildRouter {
 
 
     
-//    func navigateToReviewFoodViewController(order_id : Int){
-//        let reviewFoodViewController = ReviewFoodRouter().viewController as! ReviewFoodViewController
-//        reviewFoodViewController.order_id = order_id
-//        sourceView?.navigationController?.pushViewController(reviewFoodViewController, animated: true)
-//    }
-
-    
     func navigateToOrderHistoryViewController(order:Order){
         let vc = OrderHistoryViewController()
         vc.order = order

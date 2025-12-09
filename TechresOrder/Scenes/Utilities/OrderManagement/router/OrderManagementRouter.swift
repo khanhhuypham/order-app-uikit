@@ -33,6 +33,7 @@ class OrderManagementRouter {
     func navigateToPayMentViewController(order: OrderDetail){
         let vc = PaymentRebuildRouter().viewController as! PaymentRebuildViewController
         vc.order = order
+        vc.orderHistoryScreen = true
         sourceView?.navigationController?.pushViewController(vc, animated: true)
     }
     

@@ -27,7 +27,7 @@ extension TabbarViewController{
                                 title: "THÔNG BÁO",
                                 content: "Hiện tại ca làm việc đang mở. Nhấn nút \"Tiếp Tục\" để làm việc với ca hiện tại hoặc nhấn nút \"Đóng Ca\" để mở ca mới ",
                                 titleOfBtnAccept: "Tiếp tục".uppercased(),
-                                titleOfBtnCancel: "Dóng ca".uppercased(),
+                                titleOfBtnCancel: "đóng ca".uppercased(),
                                 completion: {
                                     self.viewModel.order_session_id.accept(workingSession.order_session_id)
                                     self.assignWorkingSession()
@@ -45,31 +45,37 @@ extension TabbarViewController{
                             
                         case EXPIRED_SHIFT:
                             
-                        
                             self.presentModalDialogConfirm(
-                                title: "Đóng ca làm việc".uppercased(),
+                                title: "xác nhận đóng ca".uppercased(),
                                 content: "Ca làm việc hiện tại đã hết hạn. Vui lòng đóng ca hiện tại và mở ca mới để tiếp tục làm việc",
-                                titleOfBtnCancel: "ĐÓNG CA",
-                                cancel: {
+                                titleOfBtnAccept: "xác nhận".uppercased(),
+                                titleOfBtnCancel: "huỷ".uppercased(),
+                                completion: {
                                     let vc = ClosedWorkingSessionRouter().viewController as! ClosedWorkingSessionViewController
                                     vc.delegate = self
                                     self.navigationController?.pushViewController(vc, animated: true)
+                                },
+                                cancel: {
+                                    Utils.resetConfig()
+                                    FoodAppPrintUtils.shared.stopPrintOrderForFoodAppOnBackground()
+                                    LocalDataBaseUtils.shared.removeAllQueuedItem()
+                                    PrinterUtils.shared.clearWorkItemUnderBackGround()
+                                    let loginVC = LoginRouter().viewController
+                                    (UIApplication.shared.delegate as? AppDelegate)?.changeRootViewController(loginVC)
                                 }
                             )
-                            
                             
                         default:
                             break
                     }
-                    
-                    
-                    
-                    
+
                 }
 
             }
         }).disposed(by: disposeBag)
-  }
+    }
+    
+   
     
     func getWorkingSession(){
         viewModel.workingSessions().subscribe(onNext: { (response) in
@@ -77,7 +83,12 @@ extension TabbarViewController{
 
                 if let workingSessions = Mapper<WorkingSession>().mapArray(JSONObject: response.data){
                     
-                    self.presentModalDialogOpenWorkingSessionViewController(workingSession:WorkingSession.init())
+                    if let firstSession = workingSessions.first{
+                        self.presentModalDialogOpenWorkingSessionViewController(workingSession:firstSession)
+                    }else{
+                        self.presentModalDialogOpenWorkingSessionViewController(workingSession:WorkingSession.init())
+                    }
+              
 
                 }
             }
@@ -107,15 +118,14 @@ extension TabbarViewController{
         vc.modalTransitionStyle = .crossDissolve
         
         if let title = titleOfBtnAccept{
-            vc.btnOK.setTitle("Tiếp tục".uppercased(), for: .normal)
+            vc.btnOK.setTitle(title, for: .normal)
         }else{
             vc.btnOK.isHidden = true
         }
         
         if let title = titleOfBtnCancel{
-            vc.btnCancel.setTitle("Đóng ca".uppercased(), for: .normal)
+            vc.btnCancel.setTitle(title, for: .normal)
         }
-        
         
         vc.dialog_title = title
         vc.content = content

@@ -63,26 +63,18 @@ class OrderDetailViewController: BaseViewController {
         super.viewWillAppear(animated)
         firstSetup()
     }
-
         
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        let real_time_url = String(format: "%@/%d/%@/%d/%@/%d",
-                                   "restaurants",
-                                   ManageCacheObject.getCurrentUser().restaurant_id,
-                                   "branches", Constants.branch.id,
-                                   "orders",
-                                   self.order.id)
-        SocketIOManager.shared().socketRealTime!.emit("leave_room", real_time_url)
+        let real_time_url = String(format: "restaurants/%d/branches/%d/orders/%d",Constants.restaurant_id, Constants.branch.id,self.order.id)
+        SocketIOManager.shared().socketOrderRealTime!.emit("leave_room", real_time_url)
     }
     
-    
-
 
     @IBAction func actionBack(_ sender: Any) {
     
         if viewModel.order.value.order_details.filter{$0.isChange == 1}.count > 0{
-            presentModalDialogConfirmViewController(
+            presentPopupConfirmViewController(
                 content: "Đơn hàng chưa được lưu bạn có muốn lưu lại không?",
                 confirmClosure: {
                     self.actionUpdateFood("")
@@ -100,6 +92,7 @@ class OrderDetailViewController: BaseViewController {
     
 
     @IBAction func actionAddOtherFood(_ sender: Any) {
+        
         if(viewModel.order.value.booking_status != STATUS_TABLE_BOOKING || viewModel.order.value.booking_status == STATUS_BOOKING_WAITING_COMPLETE){
             //Check có quyền mới cho dùng chức năng này
             Utils.checkRoleAddCustomFood(permission: ManageCacheObject.getCurrentUser().permissions)
@@ -125,7 +118,7 @@ class OrderDetailViewController: BaseViewController {
     
     @IBAction func actionAddGifFood(_ sender: Any) {
         // check quyền trước khi thực hiện tặng món
-        if(Utils.checkRoleDiscountGifFood(permission: ManageCacheObject.getCurrentUser().permissions)){
+        if permissionUtils.discountOrderItem{
             viewModel.is_gift.accept(ACTIVE)
             viewModel.makeNavigatorAddFoodViewController()
         }else{
@@ -144,14 +137,17 @@ class OrderDetailViewController: BaseViewController {
     
     
     @IBAction func actionUpdateFood(_ sender: Any) {
-        repairUpdateFoods(items: viewModel.order.value.order_details)
-        updateFoodsToOrder()
+        let list = repairAndUpdateFoods(items: viewModel.order.value.order_details)
+        viewModel.foodsNeedToUpdate.accept(list)
+        updateFoodsToOrder(foods: list)
     }
     
     @IBAction func actionSentChefBar(_ sender: Any) {
 
         if permissionUtils.GPBH_1 || permissionUtils.GPBH_2{
-            permissionUtils.GPBH_2_o_1 ? self.getOrderNeedToPrintFor2o1(print: true) : self.getFoodsNeedPrint(print: true)
+            
+            permissionUtils.GPBH_2_o_1 ? getOrderNeedToPrintFor2o1(print:true) : getFoodsNeedPrint(print:true)
+            
         }else{
             self.getItemNeedToSendToKitchen(send:true)
         }
@@ -162,18 +158,21 @@ class OrderDetailViewController: BaseViewController {
     @IBAction func actionPrintBillAndPay(_ sender: Any) {
 
         if viewModel.foodsNeedToPrint.value.count > 0{
-            presentModalDialogConfirmViewController(
-                content: "Hiện tại còn món chưa gửi Bếp/Bar bạn có muốn gửi Bếp/Bar trước khi thanh toán không?",
-                confirmClosure: {
-                    self.actionSentChefBar("")
-                }
-            )
+            
+            if permissionUtils.GPBH_1 || permissionUtils.GPBH_2{
+                
+                permissionUtils.GPBH_2_o_1 ? self.getOrderNeedToPrintFor2o1(print:true,pay:true) : self.getFoodsNeedPrint(print:true,pay:true)
+                
+            }else{
+                
+                self.getItemNeedToSendToKitchen(send:true, pay:true)
+                
+            }
+            
         }else{
-         
-            ManageCacheObject.getPaymentMethod().is_apply_only_cash_amount_payment_method == ACTIVE
-            ? callBackToGetPaymentMethod(paymentMethod: Constants.PAYMENT_METHOD.CASH)
-            : presentPaymentPopupViewController(totalPayment: viewModel.order.value.total_final_amount)
+            handlePayment()
         }
+
     }
     
     
@@ -181,35 +180,47 @@ class OrderDetailViewController: BaseViewController {
         let order = viewModel.order.value
         var customer = Customer()
         
-        if order.customer_id > 0 {
+        if environmentMode == .online{
+            
+            if order.customer_id > 0 {
+                customer = Customer(
+                    id: order.customer_id,
+                    name: order.customer_name,
+                    phone: order.customer_phone,
+                    address: order.customer_address
+                )
+            }else{
+                customer = Customer(
+                    id: 0,
+                    name: order.shipping_receiver_name,
+                    phone: order.shipping_phone,
+                    address: order.shipping_address
+                )
+            }
+        }else{
             customer = Customer(
                 id: order.customer_id,
                 name: order.customer_name,
                 phone: order.customer_phone,
                 address: order.customer_address
             )
-        }else{
-            customer = Customer(
-                id: 0,
-                name: order.shipping_receiver_name,
-                phone: order.shipping_phone,
-                address: order.shipping_address
-            )
         }
+    
         presentEnterInformationViewController(orderId: order.id,customer:customer)
     }
     
     
     @IBAction func actionUnassignCustomer(_ sender: Any) {
-        
         let order = viewModel.order.value
-        
-        if order.customer_id > 0 {
-            self.unassignCustomerFromOrder(orderId: order.id)
+        if environmentMode == .online{
+            if order.customer_id > 0 {
+                self.unassignCustomerFromOrder(orderId: order.id)
+            }else{
+                self.updateCustomer(orderId: order.id, customer: Customer())
+            }
         }else{
-            self.updateCustomer(orderId: order.id, customer: Customer())
+            self.unassignCustomerFromOrder(orderId: order.id)
         }
-        
     }
     
 

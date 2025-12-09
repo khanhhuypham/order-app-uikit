@@ -117,7 +117,12 @@ class UtilitiesRouter {
     
         
     func navigationToOrderHistoryOfFoodAppViewController() {
-        let vc = OrderManagementOfFoodAppRouter().viewController as! OrderManagementOfFoodAppViewController
+        let vc = OrderManagementOfFoodAppViewController()
+        sourceView?.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func navigationToOrderOfFoodAppViewController() {
+        let vc = FoodAppOrderViewController()
         sourceView?.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -126,6 +131,21 @@ class UtilitiesRouter {
         sourceView?.navigationController?.pushViewController(vc, animated: true)
     }
     
+    func navigationToEReceiptConnectionViewController() {
+        let vc = EReceiptConnectionViewController()
+        sourceView?.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func navigationToEInvoiceManagementViewController() {
+        let vc = EInvoiceManagementViewController()
+        sourceView?.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    
+    func navigationToClosedSessionHistoryViewController() {
+        let vc = ClosedSessionHistoryViewController()
+        sourceView?.navigationController?.pushViewController(vc, animated: true)
+    }
 
 }
  

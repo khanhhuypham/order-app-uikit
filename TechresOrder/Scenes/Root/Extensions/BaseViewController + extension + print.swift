@@ -58,7 +58,6 @@ extension BaseViewController {
         if permissionUtils.GPBH_2_o_1{
 
         
-        
             DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: {
 //                self.schedule()
             })
@@ -138,8 +137,8 @@ extension BaseViewController {
     
 //    //MARK: print_type = 0 => món mới; print_type = 1 => món cập nhật tăng giảm; print_type = 2 => món huỷ;
 //    private func printItems(order:OrderDetail,items:[Food], printType:Constants.printType) {
-//        let printers = ManageCacheObject.getChefBarConfigs(cache_key: KEY_CHEF_BARS)
-//        
+//        let printers = ManageCacheObject.getChefBarConfigs(cache_key: KEY_PRINTERS)
+//
 //        var itemSendToPrinter:[Food] = []
 //      
 //        for printer in printers{

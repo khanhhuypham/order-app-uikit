@@ -32,10 +32,13 @@ extension CreateTableViewModel{
                 area_id:table.value.area_id,
                 total_slot:table.value.slot_number,
                 status:table.value.status
-            ))
-               .filterSuccessfulStatusCodes()
-               .mapJSON().asObservable()
-               .showAPIErrorToast()
-               .mapObject(type: APIResponse.self)
-       }
+        ))
+           .filterSuccessfulStatusCodes()
+           .mapJSON().asObservable()
+           .showAPIErrorToast()
+           .mapObject(type: APIResponse.self)
+    }
+    
+    
+    
 }

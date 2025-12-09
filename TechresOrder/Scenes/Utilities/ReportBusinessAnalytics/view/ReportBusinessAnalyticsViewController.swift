@@ -15,57 +15,18 @@ class ReportBusinessAnalyticsViewController: BaseViewController {
     
     @IBOutlet weak var viewPager: BmoViewPager!
     @IBOutlet weak var viewPagerNavigationBar: BmoViewPagerNavigationBar!
+    
 
     @IBOutlet weak var lbl_branch_name: UILabel!
     @IBOutlet weak var lbl_branch_address: UILabel!
     @IBOutlet weak var branch_logo: UIImageView!
     
-    @IBOutlet weak var lbl_filter_today: UILabel!
-    @IBOutlet weak var lbl_filter_yesterday: UILabel!
-    @IBOutlet weak var lbl_filter_thisweek: UILabel!
-    @IBOutlet weak var lbl_filter_this_month: UILabel!
-    @IBOutlet weak var lbl_filter_last_month: UILabel!
-    @IBOutlet weak var lbl_filter_three_month: UILabel!
-    @IBOutlet weak var lbl_filter_this_year: UILabel!
-    @IBOutlet weak var lbl_filter_last_year: UILabel!
-    @IBOutlet weak var lbl_filter_three_year: UILabel!
-    @IBOutlet weak var lbl_filter_all_year: UILabel!
-    
-    
-    @IBOutlet weak var view_filter_today: UIView!
-    @IBOutlet weak var view_filter_yesterday: UIView!
-    @IBOutlet weak var view_filter_thisweek: UIView!
-    @IBOutlet weak var view_filter_last_month: UIView!
-    @IBOutlet weak var view_filter_this_month: UIView!
-    
-    @IBOutlet weak var view_filter_three_month: UIView!
-    @IBOutlet weak var view_filter_this_year: UIView!
-    @IBOutlet weak var view_filter_last_year: UIView!
-    @IBOutlet weak var view_filter_three_year: UIView!
-    @IBOutlet weak var view_filter_all_year: UIView!
-    
-    @IBOutlet weak var btnFilterToday: UIButton!
-    @IBOutlet weak var btnFilterYesterday: UIButton!
-    @IBOutlet weak var btnFilterThisweek: UIButton!
-    @IBOutlet weak var btnFilterThismonth: UIButton!
-    @IBOutlet weak var btnFilterThreeMonth: UIButton!
-    @IBOutlet weak var btnFilterThisYear: UIButton!
-    @IBOutlet weak var btnFilterLastYear: UIButton!
-    @IBOutlet weak var btnFilterThreeYear: UIButton!
-    @IBOutlet weak var btnFilterAllYear: UIButton!
-    
-    
-    var dateTimeNow = ""
-    var yesterday = ""
-    var thisWeek = ""
-    var lastThreeMonth = ""
-    var lastMonth = ""
-    var currentMonth = ""
-    var lastThreeYear = ""
-    var lastYear = ""
-    var currentYear = ""
     var report_type = 1
     var cates = [Category]()
+    
+    
+    @IBOutlet weak var reportFilter: ReportFilter!
+    var datePicker: DatePickerUtils = DatePickerUtils()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,15 +45,86 @@ class ReportBusinessAnalyticsViewController: BaseViewController {
         self.viewPager.dataSource = self
         self.viewPager.delegate = self
         
-        getCurentTime()
+//        getCurentTime()
         getCategoriesManagement()
+        
+        
+        datePicker.chooseDate = { [weak self] (date,tag) in
+            self?.handleChooseDate(date: date, tag: tag)
+        }
+        
+        reportFilter.defaultReportType = viewModel.report_type.value
+        
+        reportFilter.chooseReportType = { [weak self] reportType in
+            guard let self = self else { return }
+           
+           if reportType == -1{
+               
+               self.datePicker.showDatePicker(
+                    self,
+                    date:TimeUtils.convertStringToDate(from: viewModel.to_date.value, format: .dd_mm_yyyy),
+                    tag:reportType
+               )
+            
+           }else if reportType == -2{
+               
+               self.datePicker.showDatePicker(
+                    self,
+                    date:TimeUtils.convertStringToDate(from: viewModel.from_date.value, format: .dd_mm_yyyy),
+                    tag:reportType
+               )
+
+
+           }else if reportType > 0{
+            
+               viewModel.date_string.accept(Constants.REPORT_TYPE_DICTIONARY[reportType] ?? "")
+               viewModel.report_type.accept(reportType)
+     
+               
+           }
+           
+       }
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
-
+    
+    
+    @IBAction func actionBack(_ sender: Any) {
+        viewModel.makePopViewController()
+    }
+    
+    
+    private func handleChooseDate(date:Date,tag:Int){
+    
+        let dateString = TimeUtils.convertDateToString(from: date, format: .dd_mm_yyyy)
+        
+        if tag == -2{
+            
+            if TimeUtils.isDateValid(fromDateStr: dateString,toDateStr: viewModel.to_date.value){
+                self.reportFilter.setFromDateTitle(dateString)
+                viewModel.from_date.accept(dateString)
+                viewModel.report_type.accept(13)
+             
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+          
+        }else if tag == -1{
+            
+            if TimeUtils.isDateValid(fromDateStr: viewModel.from_date.value,toDateStr: dateString){
+                self.reportFilter.setToDateTitle(dateString)
+                viewModel.to_date.accept(dateString)
+                viewModel.report_type.accept(13)
+    
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+        }
+    }
+    
 }
 extension ReportBusinessAnalyticsViewController: BmoViewPagerDataSource, BmoViewPagerDelegate{
     

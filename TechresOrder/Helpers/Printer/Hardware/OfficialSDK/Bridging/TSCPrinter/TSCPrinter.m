@@ -11,7 +11,6 @@
 #import "TSCPrinter.h"
 #import "POSPrinter.h"
 
-
 @implementation TSCPrinter
 
 // Declaring the static variable which will hold
@@ -68,54 +67,74 @@ static TSCPrinter *shared = nil;
 }
 
 
--(void)sendNotifiErr:(NSString *)message printer:(Printer*)printer{
-    
-    NSError *customErr = [NSError
-        errorWithDomain: [NSString stringWithFormat:@"%d",kCFStreamErrorDomainNetDB]
-        code:8
-        userInfo:@{
-        NSLocalizedDescriptionKey:[NSString stringWithFormat:@"%@: %@",printer.name, message]
-    }];
-    
+-(void)sendNotifiErr:(NSError *)error printer:(Printer*)printer{
+
     NSMutableDictionary *dictionary =  [[NSMutableDictionary alloc] init];
    
     // Set value for key i.e adding an entry
     
     NSMutableDictionary *identifier = [_ids lastObject];
-    [_ids removeLastObject];
+    [_ids removeAllObjects];
     
     [dictionary setValue:[identifier valueForKey:@"id"] forKey:@"id"];
-    [dictionary setValue:customErr forKey:@"error"];
+    [dictionary setValue:error forKey:@"error"];
+    [dictionary setValue:@(_printMode) forKey:PRINTER_NOTIFI.PRINT_MODE];
     [dictionary setValue:[NSNumber numberWithInteger:PRINTER_METHODTSCPrinter] forKey:PRINTER_NOTIFI.PRINTER_METHOD_KEY];
+    [dictionary setValue:_printer forKey:@"printer"];
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:_isPrintLive ? PRINTER_NOTIFI.CONNECT_FAIL : PRINTER_NOTIFI.BACKGROUND_CONNECT_FAIL object:dictionary];
+//    for (id obj in identifier) {
+//        NSLog(@"remove element: %@", obj);
+//    }
     
+    if (_printMode == PRINT_FOREGROUND){
+        [[NSNotificationCenter defaultCenter] postNotificationName:PRINTER_NOTIFI.CONNECT_FAIL object:dictionary];
+    }else{
+        [[NSNotificationCenter defaultCenter] postNotificationName:PRINTER_NOTIFI.BACKGROUND_CONNECT_FAIL object:dictionary];
+    }
+    
+
     [self wifiDisconnect];
+    
 }
-
-
 
 
 -(void)wifiConnect:(Printer*)printer Id:(NSDictionary*)Id{
     _printer = printer;
     [_ids insertObject:Id atIndex:0];
-    
+   
+    NSLog(@"%@ - %@: %@ (%@)", printer.name,printer.printer_ip_address,@"wifi connect", _isPrintLive == YES ? @"print live" : @"print background");
+//    for (id obj in self.ids) {
+//        NSLog(@"add element: %@", obj);
+//    }
+    // Helper block for creating and sending error
+    void (^sendError)(NSString*) = ^(NSString *msg) {
+        NSError *err = [NSError
+            errorWithDomain:[NSString stringWithFormat:@"%d", kCFStreamErrorDomainNetDB]
+            code:8
+            userInfo:@{ NSLocalizedDescriptionKey : [NSString stringWithFormat:@"%@: %@", printer.name, msg]}
+        ];
+        [self sendNotifiErr:err printer:_printer];
+    };
     
     if ([_printer.printer_port length] == 0) {
         
-        [self sendNotifiErr:@"port is invalid" printer:_printer];
+        sendError(@"port is invalid");
+        return;
         
     }else if ([_printer.printer_ip_address length] == 0){
         
-        [self sendNotifiErr:@"ip address is invalid" printer:_printer];
+        sendError(@"ip address is invalid");
+        return;
         
     }else if ([_printer.printer_ip_address length] == 0 && [_printer.printer_port length] == 0){
         
-        [self sendNotifiErr:@"ip address and port are invalid" printer:_printer];
+        sendError(@"ip address and port are invalid");
+        return;
         
     }else if(_printer.connection_type != CONNECTION_TYPEWifi){
         
-        [self sendNotifiErr:@"Thiết bị đang sử dụng chỉ hỗ trợ đối với máy in rời" printer:_printer];
+        sendError(@"Thiết bị đang sử dụng chỉ hỗ trợ đối với máy in rời");
+        return;
         
     }else{
     
@@ -123,14 +142,11 @@ static TSCPrinter *shared = nil;
             [_wifiManager disconnect];
         }
         
-
         NSNumberFormatter* formatter = [[NSNumberFormatter alloc] init];
         UInt16 portNumber = [[formatter numberFromString:_printer.printer_port] unsignedShortValue];
         
         [_wifiManager connectWithHost:_printer.printer_ip_address port:portNumber];
     }
- 
- 
 }
 
 - (void)wifiDisconnect{
@@ -148,6 +164,8 @@ static TSCPrinter *shared = nil;
             break;
     }
 }
+
+
 
 
 -(void)printWithData:(NSMutableData *)printData ids:(NSDictionary*)ids{
@@ -181,22 +199,67 @@ static TSCPrinter *shared = nil;
 -(void)printPicture:(UIImage *)image ids:(NSDictionary*)ids{
     [_ids insertObject:ids atIndex:0];
     NSMutableData *dataM = [[NSMutableData alloc] init];
-
+    
     [dataM appendData:[TSCCommand cls]];
     [dataM appendData:[TSCCommand initialPrinter]];
-    [dataM appendData:[TSCCommand referenceWithX:0 andY:0]];
     
-    _printer.printer_paper_size == 30
-    ? [dataM appendData:[TSCCommand sizeBymmWithWidth:68 andHeight:20]]
-    : [dataM appendData:[TSCCommand sizeBymmWithWidth:48 andHeight:28]];
-
+    if (_printer.printer_paper_size == 60) {
+        [dataM appendData:[TSCCommand sizeBymmWithWidth:60 andHeight:40]];
+    }else if (_printer.printer_paper_size == 50) {
+        [dataM appendData:[TSCCommand sizeBymmWithWidth:48 andHeight:30]];
+    } else if (_printer.printer_paper_size == 40){
+        [dataM appendData:[TSCCommand sizeBymmWithWidth:38 andHeight:30]];
+    }else{
+        [dataM appendData:[TSCCommand sizeBymmWithWidth:68 andHeight:20]];
+    }
+    
+    [dataM appendData:[TSCCommand direction:_printer.direction]];
+    [dataM appendData:[TSCCommand referenceWithX:0 andY:0]];
     [dataM appendData:[TSCCommand bitmapWithX:0 andY:0 andMode:0 andImage:image]];
-//    [dataM appendData:[TSCCommand formFeed]];
     [dataM appendData:[TSCCommand print:1]];
-//    [dataM appendData:[TSCCommand cut]];
     [_wifiManager writeCommandWithData:dataM];
-
 }
+
+- (void)printPictures:(NSArray<UIImage *> *)images withInfo:(NSDictionary *)info{
+    [_ids insertObject:info atIndex:0];
+    NSMutableData *dataM = [[NSMutableData alloc] init];
+    
+    [dataM appendData:[TSCCommand cls]];
+//    [dataM appendData:[TSCCommand initialPrinter]];
+    
+    for (NSInteger i = 0; i < images.count; i++) {
+        [dataM appendData:[TSCCommand cls]];
+        UIImage *img = images[i];
+          // Do something with each image
+   
+        if (_printer.printer_paper_size == 60) {
+
+            [dataM appendData:[TSCCommand sizeBymmWithWidth:60 andHeight:40]];
+            
+        }else if (_printer.printer_paper_size == 50) {
+            
+            [dataM appendData:[TSCCommand sizeBymmWithWidth:48 andHeight:30]];
+            
+        } else if (_printer.printer_paper_size == 40){
+         
+            [dataM appendData:[TSCCommand sizeBymmWithWidth:38 andHeight:30]];
+            
+        }else{
+            
+            [dataM appendData:[TSCCommand sizeBymmWithWidth:68 andHeight:20]];
+        }
+
+        [dataM appendData:[TSCCommand direction:_printer.direction]];
+        [dataM appendData:[TSCCommand referenceWithX:0 andY:0]];
+        [dataM appendData:[TSCCommand bitmapWithX:0 andY:0 andMode:0 andImage:img]];
+        [dataM appendData:[TSCCommand print:1]];
+    }
+    
+    [_wifiManager writeCommandWithData:dataM];
+}
+
+
+
 
 #pragma mark - POSBLEManagerDelegate
 
@@ -219,15 +282,20 @@ static TSCPrinter *shared = nil;
     NSMutableDictionary *dictionary =  [[NSMutableDictionary alloc] init];
    
     NSMutableDictionary *identifier = [_ids lastObject];
-    [_ids removeLastObject];
-    [dictionary setValue:[identifier valueForKey:@"id"]  forKey:@"id"];
-    
+    [_ids removeAllObjects];
+    [dictionary setValue:[identifier valueForKey:@"id"] forKey:@"id"];
+    [dictionary setValue:_printer forKey:@"printer"];
+    [dictionary setValue:@(_printMode) forKey:PRINTER_NOTIFI.PRINT_MODE];
     [dictionary setValue:[NSNumber numberWithInteger:PRINTER_METHODTSCPrinter] forKey:PRINTER_NOTIFI.PRINTER_METHOD_KEY];
     
-    NSLog(@"%@", [NSString stringWithFormat:@"phamkhanhhuy %@: ",dictionary]);
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:_isPrintLive ? PRINTER_NOTIFI.CONNECT_SUCCESS : PRINTER_NOTIFI.BACKGROUND_CONNECT_SUCCESS object:dictionary];
-
+    if (_printMode == PRINT_FOREGROUND){
+        [[NSNotificationCenter defaultCenter] postNotificationName:PRINTER_NOTIFI.CONNECT_SUCCESS object:dictionary];
+    }else{
+        [[NSNotificationCenter defaultCenter] postNotificationName:PRINTER_NOTIFI.BACKGROUND_CONNECT_SUCCESS object:dictionary];
+    }
+    
+ 
 }
 /**
  * disconnect error
@@ -238,25 +306,13 @@ static TSCPrinter *shared = nil;
         _connectType = BT;
     } else {
         _connectType = NONE;
-//        [self buttonStateOff];
     }
     
-
-    
     if (error) {
-        
-        [self sendNotifiErr:[NSString stringWithFormat:@"%@: %@",_printer.name, error.localizedDescription] printer:_printer];
+        [self sendNotifiErr:error printer:_printer];
            
     }
     
-//    if (_isPrintLive){
-//        NSLog(@"phamkhanhhuy :YES");
-//    }else{
-//        NSLog(@"phamkhanhhuy: NO");
-//    }
-//    
-    
-
 }
 
 
@@ -267,31 +323,33 @@ static TSCPrinter *shared = nil;
  * when our device print successfully, but the data sent to printer is not in correct format, then the function below return  tag === 0
  */
 - (void)TSCwifiWriteValueWithTag:(long)tag{
-    
-   
-    
+        
     NSLog(@"tsc success %ld",tag);
     
-    if (tag == 1000){
+
+    if (tag == 0){
         
         NSMutableDictionary *dictionary =  [[NSMutableDictionary alloc] init];
         
         NSMutableDictionary *identifier = [_ids lastObject];
         
-        [_ids removeLastObject];
+        [_ids removeAllObjects];
         
         [dictionary setValue:[NSNumber numberWithInteger:PRINTER_METHODTSCPrinter] forKey:PRINTER_NOTIFI.PRINTER_METHOD_KEY];
         [dictionary setValue:[identifier valueForKey:@"id"] forKey:@"id"];
         [dictionary setValue:[identifier valueForKey:@"isLastItem"] forKey:@"isLastItem"];
 
-        [[NSNotificationCenter defaultCenter] postNotificationName:_isPrintLive ? PRINTER_NOTIFI.PRINT_SUCCESS : PRINTER_NOTIFI.BACKGROUND_PRINT_SUCCESS object:dictionary];
-            
+        if (_printMode == PRINT_FOREGROUND){
+            [[NSNotificationCenter defaultCenter] postNotificationName:PRINTER_NOTIFI.PRINT_SUCCESS object:dictionary];
+        }else{
+            [[NSNotificationCenter defaultCenter] postNotificationName:PRINTER_NOTIFI.BACKGROUND_PRINT_SUCCESS object:dictionary];
+        }
+        
     }else if (tag == 1001){
         
     }else{
         NSLog(@"Phạm Khánh huy tsc else");
     }
-    
     
 }
 

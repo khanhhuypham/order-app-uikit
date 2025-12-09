@@ -15,7 +15,7 @@ class BranchViewModel: BaseViewModel {
    
     public var key_word : BehaviorRelay<String> = BehaviorRelay(value: "")
     public var status : BehaviorRelay<Int> = BehaviorRelay(value: -1)
-    public var brand_id : BehaviorRelay<Int> = BehaviorRelay(value: -1)
+    public var brand : BehaviorRelay<Brand> = BehaviorRelay(value: Brand())
     
     // MARK: - Variable -
     // listing data array observe by rxswift
@@ -29,28 +29,12 @@ class BranchViewModel: BaseViewModel {
 }
 extension BranchViewModel{
     func getBranches() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.branches(brand_id: brand_id.value, status: ACTIVE))
+        return appServiceProvider.rx.request(.branches(brand_id: brand.value.id, status: ACTIVE))
                .filterSuccessfulStatusCodes()
                .mapJSON().asObservable()
                .showAPIErrorToast()
                .mapObject(type: APIResponse.self)
     }
     
-    
-//    func getBranch() -> Observable<APIResponse> {
-//        return appServiceProvider.rx.request(.getBranchRights(restaurant_brand_id: brand_id.value, employee_id: ManageCacheObject.getCurrentUser().id))
-//               .filterSuccessfulStatusCodes()
-//               .mapJSON().asObservable()
-//               .showAPIErrorToast()
-//               .mapObject(type: APIResponse.self)
-//    }
-//    
-//    
-//    func getCashAmountApplication(branchId:Int) -> Observable<APIResponse> {
-//        return appServiceProvider.rx.request(.getApplyOnlyCashAmount(branchId: branchId))
-//               .filterSuccessfulStatusCodes()
-//               .mapJSON().asObservable()
-//               .showAPIErrorToast()
-//               .mapObject(type: APIResponse.self)
-//    }
+
 }

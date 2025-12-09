@@ -22,9 +22,9 @@ class SocketIOManager: NSObject {
     }
     
     
-    var managerRealTime: SocketManager?
+    private var managerOrderRealTime:SocketManager?
     
-    var socketRealTime:SocketIOClient?
+    var socketOrderRealTime:SocketIOClient?
     
     private var managerRealTimeOfLogin:SocketManager?
 
@@ -38,15 +38,14 @@ class SocketIOManager: NSObject {
             
             let auth = ["token": String(format: "Bearer %@", ManageCacheObject.getCurrentUser().access_token)]
 //      
-            self.managerRealTime = SocketManager(socketURL: url, config: [.log(false), .compress, .reconnects(true), .extraHeaders(auth)])
+            self.managerOrderRealTime = SocketManager(socketURL: url, config: [.log(false), .compress, .reconnects(true), .extraHeaders(auth)])
             
             let namespace = "/"
            
-                
-            self.socketRealTime = self.managerRealTime!.socket(forNamespace: namespace)
-            self.managerRealTime?.connectSocket(self.socketRealTime!, withPayload: auth)
+            self.socketOrderRealTime = self.managerOrderRealTime!.socket(forNamespace: namespace)
+            self.managerOrderRealTime?.connectSocket(self.socketOrderRealTime!, withPayload: auth)
             
-            self.socketRealTime?.connect()
+            self.socketOrderRealTime?.connect()
             
         }
         
@@ -65,38 +64,38 @@ class SocketIOManager: NSObject {
     
     
     func initSocketInstance(_ namespace: String) {
-        if let url = URL(string: ManageCacheObject.isLogin() ? ManageCacheObject.getConfig().realtime_domain : APIEndPoint.REALTIME_SERVER) {
-            let auth = ["token": String(format: "Bearer %@", ManageCacheObject.getCurrentUser().access_token)]
+
+        if let url = URL(string: environmentMode.realTimeUrl) {
+            let auth = ["token": String(format: "Bearer %@", Constants.user.access_token)]
             let cofig:SocketIOClientConfiguration = [
-                .log(false),
+                .log(true),
                 .compress,
                 .reconnects(true),
                 .extraHeaders(auth),
                 .forceWebsockets(true),
             ]
             
-            self.managerRealTime = SocketManager(socketURL: url, config: cofig)
-//            let namespace = "/"
-            self.socketRealTime =  self.managerRealTime!.socket(forNamespace: namespace)
-            self.managerRealTime?.connectSocket(self.socketRealTime!, withPayload: auth)
-            self.socketRealTime?.connect()
+            self.managerOrderRealTime = SocketManager(socketURL: url, config: cofig)
+            self.socketOrderRealTime =  self.managerOrderRealTime!.socket(forNamespace: namespace)
+            self.managerOrderRealTime?.connectSocket(self.socketOrderRealTime!, withPayload: auth)
+            self.socketOrderRealTime?.connect()
         }
         
     }
     
     func establishConnection() {
       
-        socketRealTime?.on("connect") {data, ack in
+        socketOrderRealTime?.on("connect") {data, ack in
             dLog("connected==============: \(data.description)")
             dLog("connected==============: \(data.description)")
         }
-        self.socketRealTime?.connect()
+        self.socketOrderRealTime?.connect()
 
     }
     
     func closeConnection() {
-        self.socketRealTime!.disconnect()
-        socketRealTime?.on("disconnect") {data, ack in
+        self.socketOrderRealTime!.disconnect()
+        socketOrderRealTime?.on("disconnect") {data, ack in
             dLog("disconnect: \(data.description)")
             
         }

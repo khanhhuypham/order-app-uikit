@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="UIMenu" message="Requires Xcode 11 or later." minToolsVersion="11.0" requiredIntegratedClassName="UICommandDiff"/>
@@ -18,11 +18,18 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DetailedPrinterViewController" customModule="TECHRES_ORDER" customModuleProvider="target">
             <connections>
                 <outlet property="btn_choose_connection_type" destination="Paf-3h-SCX" id="r9f-U7-f1u"/>
-                <outlet property="btn_of_option1" destination="JZH-P0-MN9" id="XGz-yl-GIN"/>
-                <outlet property="btn_of_option2" destination="JCL-94-xWm" id="zdr-lh-sle"/>
+                <outlet property="btn_of_0_degree" destination="3w1-hT-BSF" id="oWy-Fr-dxq"/>
+                <outlet property="btn_of_180_degree" destination="xCg-Ri-Dwr" id="DmF-vh-Cdp"/>
+                <outlet property="btn_of_30_x_20" destination="JCL-94-xWm" id="zdr-lh-sle"/>
+                <outlet property="btn_of_40_x_30" destination="6yO-8g-IpD" id="mJg-9m-7Lc"/>
+                <outlet property="btn_of_50_x_30" destination="JZH-P0-MN9" id="XGz-yl-GIN"/>
+                <outlet property="btn_of_60_x_40" destination="o3L-4K-oDS" id="vOw-38-OIi"/>
+                <outlet property="btn_of_print_each_food" destination="u3u-Ln-vGz" id="g69-A4-d5i"/>
+                <outlet property="btn_of_print_many_foods" destination="1gN-Q9-2U2" id="LeI-8p-dLi"/>
                 <outlet property="btn_show_printing_queue" destination="HaI-IP-ITX" id="j1w-jN-8aa"/>
                 <outlet property="lbl_header_options" destination="YdF-Ac-hC8" id="aOh-RM-S6c"/>
                 <outlet property="printerSwitch" destination="6A8-xh-mDf" id="wvk-yY-av0"/>
+                <outlet property="stackview_of_stamp_direction" destination="zez-aW-EtT" id="QEt-Yr-cLh"/>
                 <outlet property="textfield_of_BLE_device_name" destination="Q0s-0D-2cM" id="3qn-kn-pUm"/>
                 <outlet property="textfield_print_ipaddress" destination="UIZ-tK-1pt" id="YqG-74-lwA"/>
                 <outlet property="textfield_print_number" destination="Lsx-WO-c7P" id="8ZZ-S5-nho"/>
@@ -40,7 +47,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eC9-fo-OPs">
-                    <rect key="frame" x="0.0" y="59" width="393" height="759"/>
+                    <rect key="frame" x="0.0" y="118" width="393" height="666"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EHB-Kn-jzZ">
                             <rect key="frame" x="0.0" y="0.0" width="393" height="50"/>
@@ -323,24 +330,38 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B7g-1e-R9k">
-                            <rect key="frame" x="0.0" y="262" width="393" height="437"/>
+                            <rect key="frame" x="0.0" y="262" width="393" height="344"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="fyI-ej-Pzr">
-                                    <rect key="frame" x="30" y="30.000000000000014" width="333" height="215.33333333333337"/>
+                                    <rect key="frame" x="30" y="10" width="333" height="380"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="kích thước khổ giấy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YdF-Ac-hC8">
-                                            <rect key="frame" x="0.0" y="0.0" width="333" height="30"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="333" height="25"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="30" id="CVG-Id-QqZ"/>
+                                                <constraint firstAttribute="height" constant="25" id="CVG-Id-QqZ"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
                                             <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JZH-P0-MN9">
-                                            <rect key="frame" x="0.0" y="38" width="333" height="35"/>
+                                        <button opaque="NO" tag="60" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o3L-4K-oDS" userLabel="60x40(mm)">
+                                            <rect key="frame" x="0.0" y="33" width="333" height="25"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="35" id="UZH-mS-UH0"/>
+                                                <constraint firstAttribute="height" constant="25" id="nsT-2w-AOw"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                            <state key="normal" title="  60x40(mm)" image="icon-radio-uncheck">
+                                                <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="actionChooseOption1:" destination="-1" eventType="touchUpInside" id="sA8-j2-MSm"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" tag="50" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JZH-P0-MN9">
+                                            <rect key="frame" x="0.0" y="66" width="333" height="25"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="25" id="UZH-mS-UH0"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -348,13 +369,27 @@
                                                 <color key="titleColor" systemColor="labelColor"/>
                                             </state>
                                             <connections>
-                                                <action selector="actionChooseOption1:" destination="-1" eventType="touchUpInside" id="DuC-HJ-7OA"/>
+                                                <action selector="actionChooseOption1:" destination="-1" eventType="touchUpInside" id="LMH-Ht-f3C"/>
                                             </connections>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JCL-94-xWm" userLabel="30x20(mm)">
-                                            <rect key="frame" x="0.0" y="81" width="333" height="35"/>
+                                        <button opaque="NO" tag="40" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6yO-8g-IpD" userLabel="40x30(mm)">
+                                            <rect key="frame" x="0.0" y="99" width="333" height="25"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="35" id="6CD-o0-Hec"/>
+                                                <constraint firstAttribute="height" constant="25" id="zus-AN-fq3"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                            <state key="normal" title="  40x30(mm)" image="icon-radio-uncheck">
+                                                <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="actionChooseOption1:" destination="-1" eventType="touchUpInside" id="tNL-3E-AC1"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" tag="30" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JCL-94-xWm" userLabel="30x20(mm)">
+                                            <rect key="frame" x="0.0" y="132" width="333" height="25"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="25" id="6CD-o0-Hec"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -362,11 +397,81 @@
                                                 <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </state>
                                             <connections>
-                                                <action selector="actionChooseOption2:" destination="-1" eventType="touchUpInside" id="y0w-oD-fvI"/>
+                                                <action selector="actionChooseOption1:" destination="-1" eventType="touchUpInside" id="drg-jc-0it"/>
                                             </connections>
                                         </button>
+                                        <button opaque="NO" tag="30" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1gN-Q9-2U2" userLabel="print many foods">
+                                            <rect key="frame" x="0.0" y="165" width="333" height="25"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="25" id="lwm-Ft-4vg"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                            <state key="normal" title="  In order trên 1 phiếu" image="icon-radio-uncheck">
+                                                <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="actionChooseOption2:" destination="-1" eventType="touchUpInside" id="mWc-Un-T1K"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" tag="30" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u3u-Ln-vGz" userLabel="print each food">
+                                            <rect key="frame" x="0.0" y="198" width="333" height="25"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="25" id="S3h-03-XR7"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                            <state key="normal" title="  In riêng từng món" image="icon-radio-uncheck">
+                                                <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="actionChooseOption2:" destination="-1" eventType="touchUpInside" id="md2-zw-Hv2"/>
+                                            </connections>
+                                        </button>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="zez-aW-EtT">
+                                            <rect key="frame" x="0.0" y="231" width="333" height="91"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Chiều khổ giấy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G4I-iq-8lj">
+                                                    <rect key="frame" x="0.0" y="0.0" width="333" height="25"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="25" id="Upu-4M-ttC"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
+                                                    <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3w1-hT-BSF" userLabel="0(degree)">
+                                                    <rect key="frame" x="0.0" y="33" width="333" height="25"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="25" id="J17-MH-B1Q"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                    <state key="normal" title="  0(degree)" image="icon-radio-uncheck">
+                                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="actionChooseStampDirection:" destination="-1" eventType="touchUpInside" id="leM-Kv-j42"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xCg-Ri-Dwr" userLabel="180(degree)">
+                                                    <rect key="frame" x="0.0" y="66" width="333" height="25"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="25" id="1tX-Tg-nhx"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                    <state key="normal" title="  180(degree)" image="icon-radio-uncheck">
+                                                        <color key="titleColor" systemColor="labelColor"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="actionChooseStampDirection:" destination="-1" eventType="touchUpInside" id="XFe-cE-LUe"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                        </stackView>
                                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FQL-p3-i9r">
-                                            <rect key="frame" x="0.0" y="124" width="333" height="50"/>
+                                            <rect key="frame" x="0.0" y="330" width="333" height="50"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hOf-5t-pi9">
                                                     <rect key="frame" x="0.0" y="0.0" width="150" height="50"/>
@@ -384,7 +489,7 @@
                                                             </userDefinedRuntimeAttributes>
                                                         </textField>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Số giấy in" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ho3-81-pzK">
-                                                            <rect key="frame" x="50" y="15.333333333333313" width="100" height="19.333333333333329"/>
+                                                            <rect key="frame" x="50" y="15.333333333333369" width="100" height="19.333333333333329"/>
                                                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                                                             <color key="textColor" systemColor="systemGrayColor"/>
                                                             <nil key="highlightedColor"/>
@@ -405,13 +510,13 @@
                                                     <rect key="frame" x="150" y="0.0" width="183" height="50"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bật/Tắt máy in" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xZ2-te-HNj">
-                                                            <rect key="frame" x="59" y="15.333333333333313" width="124" height="19.333333333333329"/>
+                                                            <rect key="frame" x="59" y="15.333333333333369" width="124" height="19.333333333333329"/>
                                                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                                                             <color key="textColor" systemColor="systemGrayColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6A8-xh-mDf">
-                                                            <rect key="frame" x="0.0" y="9.6666666666666856" width="51" height="31"/>
+                                                            <rect key="frame" x="0.0" y="9.6666666666666288" width="51" height="31"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="49" id="NNL-Oo-htK"/>
                                                                 <constraint firstAttribute="height" constant="31" id="YTA-uN-Pb6"/>
@@ -436,8 +541,8 @@
                                                 <constraint firstAttribute="height" constant="50" id="gHa-Zs-XL5"/>
                                             </constraints>
                                         </stackView>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HaI-IP-ITX">
-                                            <rect key="frame" x="0.0" y="182" width="333" height="33.333333333333343"/>
+                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HaI-IP-ITX">
+                                            <rect key="frame" x="0.0" y="380" width="333" height="0.0"/>
                                             <state key="normal" title="Button"/>
                                             <buttonConfiguration key="configuration" style="filled" title="Danh sách chờ in">
                                                 <fontDescription key="titleFontDescription" type="system" weight="semibold" pointSize="16"/>
@@ -453,11 +558,11 @@
                             <constraints>
                                 <constraint firstAttribute="trailing" secondItem="fyI-ej-Pzr" secondAttribute="trailing" constant="30" id="7XG-qz-JQT"/>
                                 <constraint firstItem="fyI-ej-Pzr" firstAttribute="leading" secondItem="B7g-1e-R9k" secondAttribute="leading" constant="30" id="LLV-mL-1DN"/>
-                                <constraint firstItem="fyI-ej-Pzr" firstAttribute="top" secondItem="B7g-1e-R9k" secondAttribute="top" constant="30" id="nof-r0-zBs"/>
+                                <constraint firstItem="fyI-ej-Pzr" firstAttribute="top" secondItem="B7g-1e-R9k" secondAttribute="top" constant="10" id="nof-r0-zBs"/>
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YPP-98-jdu" userLabel="btn-bar">
-                            <rect key="frame" x="0.0" y="699" width="393" height="60"/>
+                            <rect key="frame" x="0.0" y="606" width="393" height="60"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="gpC-Rj-3vq">
                                     <rect key="frame" x="16" y="5" width="361" height="50"/>

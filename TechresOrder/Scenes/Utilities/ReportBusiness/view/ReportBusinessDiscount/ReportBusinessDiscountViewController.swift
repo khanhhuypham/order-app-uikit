@@ -13,21 +13,8 @@ import RxRelay
 import RxCocoa
 class ReportBusinessDiscountViewController: BaseViewController {
     
-    
-    // MARK: Biến của button filter
-    @IBOutlet weak var btn_today: UIButton!
-    @IBOutlet weak var btn_yesterday: UIButton!
-    @IBOutlet weak var btn_this_week: UIButton!
-    @IBOutlet weak var btn_this_month: UIButton!
-    @IBOutlet weak var btn_last_month: UIButton!
-    @IBOutlet weak var btn_last_three_month: UIButton!
-    @IBOutlet weak var btn_this_year: UIButton!
-    @IBOutlet weak var btn_last_year: UIButton!
-    @IBOutlet weak var btn_last_three_year: UIButton!
-    @IBOutlet weak var btn_all_year: UIButton!
-    
-
-    
+    @IBOutlet weak var reportFilter: ReportFilter!
+    var datePicker: DatePickerUtils = DatePickerUtils()
     @IBOutlet weak var line_chart_view: LineChartView!
     
     @IBOutlet weak var view_no_data: UIView!
@@ -44,36 +31,15 @@ class ReportBusinessDiscountViewController: BaseViewController {
         registerCell()
         bindTableViewData()
         
-        btnArray = [btn_today, btn_yesterday, btn_this_week, btn_this_month, btn_last_month, btn_last_three_month, btn_this_year, btn_last_year, btn_last_three_year, btn_all_year]
-        
-        Utils.changeBgBtn(btn: btn_this_month, btnArray: btnArray)
-        for btn in self.btnArray{
-            btn.rx.tap.asDriver().drive(onNext: { [weak self] in
-                Utils.changeBgBtn(btn: btn, btnArray: self?.btnArray ?? [])
-            }).disposed(by: rxbag)
-            
-            if btn.tag == viewModel?.discountReport.value.reportType{
-                Utils.changeBgBtn(btn: btn, btnArray: btnArray)
-            }
-        }
-        
-        
+
+    
         
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         getReportDiscountedFood()
     }
-    @IBAction func actionChooseReportType(_ sender: UIButton) {
-        guard let viewModel = self.viewModel else {return}
-        var report = viewModel.discountReport.value
-        report.reportType = sender.tag
-        report.dateString = Constants.REPORT_TYPE_DICTIONARY[sender.tag] ?? ""
-        report.discountReportData = []
-        viewModel.discountReport.accept(report)
-        getReportDiscountedFood()
-    }
-    
+ 
     var viewModel: ReportBusinessViewModel?
 }
 
@@ -87,6 +53,8 @@ extension ReportBusinessDiscountViewController{
                 if var report = Mapper<DiscountReport>().map(JSONObject: response.data) {
                     report.reportType = viewModel.discountReport.value.reportType
                     report.dateString = viewModel.discountReport.value.dateString
+                    report.fromDate = viewModel.discountReport.value.fromDate
+                    report.toDate = viewModel.discountReport.value.toDate
                     viewModel.discountReport.accept(report)
                 }
             }else{
@@ -107,9 +75,91 @@ extension ReportBusinessDiscountViewController:UITableViewDelegate{
         tableView.register(reportBusinessDiscountTableViewCell, forCellReuseIdentifier: "ReportBusinessDiscountTableViewCell")
         tableView.rx.setDelegate(self).disposed(by: rxbag)
     }
+    
+    
+    private func handleChooseDate(date:Date,tag:Int){
+        guard let viewModel = self.viewModel else {return}
+        
+        
+        let dateString = TimeUtils.convertDateToString(from: date, format: .dd_mm_yyyy)
+        var report = viewModel.discountReport.value
+     
+        if tag == -2{
+            
+            if TimeUtils.isDateValid(fromDateStr: dateString,toDateStr: report.toDate){
+                self.reportFilter.setFromDateTitle(dateString)
+                report.fromDate = dateString
+                report.reportType = 13
+                viewModel.discountReport.accept(report)
+                self.getReportDiscountedFood()
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+          
+        }else if tag == -1{
+            
+            if TimeUtils.isDateValid(fromDateStr: report.fromDate,toDateStr: dateString){
+                self.reportFilter.setToDateTitle(dateString)
+                report.toDate = dateString
+                report.reportType = 13
+                viewModel.discountReport.accept(report)
+                self.getReportDiscountedFood()
+                
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+        }
+        
+    }
 
     private func bindTableViewData() {
         guard let viewModel = self.viewModel else {return}
+        
+        datePicker.chooseDate = { [weak self] (date,tag) in
+            
+            self?.handleChooseDate(date: date, tag: tag)
+            
+        }
+        
+        reportFilter.defaultReportType = viewModel.discountReport.value.reportType
+        reportFilter.chooseReportType = { [weak self] reportType in
+           var report = viewModel.discountReport.value
+           
+           if reportType == -1{
+               
+               if let view = viewModel.view{
+                   
+                   self?.datePicker.showDatePicker(
+                        view,
+                        date:TimeUtils.convertStringToDate(from: report.toDate, format: .dd_mm_yyyy),
+                        tag:reportType
+                   )
+                
+               }
+            
+           }else if reportType == -2{
+               
+               if let view = viewModel.view{
+                   
+                   self?.datePicker.showDatePicker(
+                        view,
+                        date:TimeUtils.convertStringToDate(from: report.fromDate, format: .dd_mm_yyyy),
+                        tag:reportType
+                   )
+                
+               }
+            
+               
+           }else if reportType > 0{
+               report.discountReportData = []
+               report.reportType = reportType
+               report.dateString = Constants.REPORT_TYPE_DICTIONARY[reportType] ?? ""
+               viewModel.discountReport.accept(report)
+               self?.getReportDiscountedFood()
+               
+           }
+           
+       }
         
         viewModel.discountReport.subscribe(onNext: { [self] report in
             total_amount.text = Utils.stringVietnameseMoneyFormatWithNumberInt(amount: report.total_amount)
@@ -139,7 +189,8 @@ extension ReportBusinessDiscountViewController:UITableViewDelegate{
             chartView: line_chart_view,
             entries: lineChartItems,
             x_label: x_label,
-            labelCount: ChartUtils.setLabelCountForChart(reportType: reportType, totalDataPoint: data.count)
+            labelCount: ChartUtils.setLabelCountForChart(reportType: reportType, totalDataPoint: data.count),
+            horizontalScroll: reportType == REPORT_TYPE_OPTION_DAY ? true : false
         )
 
     }

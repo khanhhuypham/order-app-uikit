@@ -33,7 +33,7 @@ extension PrinterUtils {
         let printer = tscQueuedItem.printer
         
         let connectionWork = DispatchWorkItem(block: { [self] in
-            TSCPrinterUtility?.isPrintLive = false
+            TSCPrinterUtility?.printMode = PRINT_MODE_(rawValue: tscQueuedItem.printMode.rawValue) ?? PRINT_MODE_.BACKGROUND_WITH_RETRY
             TSCPrinterUtility?.wifiConnect(tscQueuedItem.printer,id:["id":id,"isLastItem":true])
         })
         
@@ -61,9 +61,9 @@ extension PrinterUtils {
             }
             
             if isErrorOccur{
-                LocalDataBaseUtils.UpdateRetryNumberOfTSCQueuedItem(id: id)
+                LocalDataBaseUtils.shared.UpdateRetryNumberOfTSCQueuedItem(id: id)
             }else{
-                LocalDataBaseUtils.UpdateTSCQueuedItemToFinish(id: workItem.objectId)
+                LocalDataBaseUtils.shared.UpdateTSCQueuedItemToFinish(id: workItem.objectId)
             }
             
             tscWorkItem = nil
@@ -76,24 +76,87 @@ extension PrinterUtils {
     
     func printTSCData(printer:Printer,id:String,images:[UIImage]){
         
-        let width:CGFloat = printer.printer_paper_size == 50 ? CGFloat(360) : CGFloat(540)
+        var width:CGFloat = CGFloat(360)
         
-        
-        for (index,img) in images.enumerated(){
-            
-            let scaledRatio = width/img.size.width
-           
-            guard
-                let image = MediaUtils.resizeImage(image: img, targetSize:CGSize(width: img.size.width*scaledRatio, height: img.size.height*scaledRatio)),
-                let _ = image.cgImage else {
-                  return
-            }
-            
-            let dictionaryItem:[String : Any] = ["id":id,"isLastItem": index == images.count - 1 ? true : false]
-
-            TSCPrinterUtility?.printPicture(image,ids:dictionaryItem)
+        if printer.printer_paper_size == 60{
+            width = CGFloat(430)
+        }else if printer.printer_paper_size == 50{
+            width = CGFloat(360)
+        }else if printer.printer_paper_size == 40{
+            width = CGFloat(300)
+        }else{
+            width = CGFloat(540)
         }
         
+        
+        var array:[UIImage] = []
+        
+        for img in images{
+            
+            let scaledRatio = width/img.size.width
+            
+            if let image = MediaUtils.resizeImage(image: img, targetSize:CGSize(width:width, height: img.size.height*scaledRatio)){
+                array.append(image)
+            }
+        }
+
+        let dictionaryItem:[String : Any] = ["id":id,"isLastItem": true]
+        TSCPrinterUtility?.printPictures(array,withInfo: dictionaryItem)
     }
+
+    
+    func changeTextColorForTSCPrinter(printer:Printer,parentView:UIView,textColor:UIColor,bgColor:UIColor) {
+     
+        var fontSize:CGFloat = 22
+        
+        if printer.printer_paper_size == 60{
+            fontSize = 25
+        }else if printer.printer_paper_size == 50{
+            fontSize = 25
+        }else if printer.printer_paper_size == 40{
+            fontSize = 25
+        }else{
+            fontSize = 12
+        }
+        
+        parentView.backgroundColor = .white
+        
+        if parentView.subviews.count > 0{
+            
+            parentView.subviews.forEach{(view) in
+                
+                view.backgroundColor = bgColor
+                
+                if let label = view as? UILabel {
+                    label.textColor = textColor
+                   
+                    switch label.tag{
+                        case 1:
+                            label.font = UIFont.systemFont(ofSize:fontSize,weight: .bold)
+
+                        default:
+                            label.font = UIFont.systemFont(ofSize:fontSize,weight:printer.printer_paper_size == 30 ? .semibold : .regular)
+                    }
+                }
+                self.changeTextColorForTSCPrinter(printer:printer,parentView:view, textColor:textColor, bgColor:bgColor)
+            }
+        }
+    }
+    
+    func getMaximumLineOfStampForTSCPrinter(printer:Printer) -> Int {
+        var maximumLine = 0
+        if printer.printer_paper_size == 60{
+            maximumLine = 8
+        }else if printer.printer_paper_size == 50{
+            maximumLine = 7
+        }else if printer.printer_paper_size == 40{
+            maximumLine = 9
+        }else{
+            maximumLine = 9
+        }
+        return maximumLine
+     
+    }
+    
     
 }

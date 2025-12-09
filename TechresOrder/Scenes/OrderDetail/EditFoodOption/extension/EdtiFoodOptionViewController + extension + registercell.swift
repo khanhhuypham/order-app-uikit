@@ -13,6 +13,7 @@ extension EditFoodOptionViewController:UITableViewDelegate {
     func registerCellAndBindTableView(){
         registerCell()
         bindTableViewData()
+
     }
 
     private func registerCell() {
@@ -26,7 +27,7 @@ extension EditFoodOptionViewController:UITableViewDelegate {
         
     }
     
-    
+
     private func bindTableViewData() {
 
         let dataSource = RxTableViewSectionedReloadDataSource<SectionModel<OptionOfDetailItem,OptionItem>> (

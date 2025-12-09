@@ -15,24 +15,24 @@ import JonAlert
 
 extension CreateFoodViewController {
     func chooseAvatar() {
-        let config = ZLPhotoConfiguration.default()
-        config.maxSelectCount = 1
-        config.maxVideoSelectCount = 1
-        config.useCustomCamera = false
-        config.allowSelectVideo = false
-        config.allowEditImage = true
-        config.allowEditVideo = false
-        config.allowSlideSelect = false
-        config.maxSelectVideoDuration = 60 * 100//100 phut
-        let ps = ZLPhotoPreviewSheet()
-        ps.selectImageBlock = { [weak self] results, isOriginal in
-            // your code
-            self?.food_avatar.image = results[0].image
-            self?.imagecover.append(results[0].image)
-            self?.selectedAssets.append(results[0].asset)
-            self!.generateFileUpload()
-        }
-        ps.showPhotoLibrary(sender: self)
+//        let config = ZLPhotoConfiguration.default()
+//        config.maxSelectCount = 1
+//        config.maxVideoSelectCount = 1
+//        config.useCustomCamera = false
+//        config.allowSelectVideo = false
+//        config.allowEditImage = true
+//        config.allowEditVideo = false
+//        config.allowSlideSelect = false
+//        config.maxSelectVideoDuration = 60 * 100//100 phut
+//        let ps = ZLPhotoPreviewSheet()
+//        ps.selectImageBlock = { [weak self] results, isOriginal in
+//            // your code
+//            self?.food_avatar.image = results[0].image
+//            self?.imagecover.append(results[0].image)
+//            self?.selectedAssets.append(results[0].asset)
+//            self!.generateFileUpload()
+//        }
+//        ps.showPhotoLibrary(sender: self)
     }
 
     func generateFileUpload(){

@@ -8,6 +8,13 @@
 import UIKit
 
 
+// ========= Define environment value  ============
+//let DEVELOP = 0
+//let STAGING = 1
+//let PRODUCTION = 2
+let ONLINE = 0
+let OFFLINE = 1
+
 //======== Role Name ========
 var OWNER = "OWNER"
 var FOOD_MANAGER = "FOOD_MANAGER"
@@ -32,6 +39,7 @@ var REACHABLE_NETWORK = "REACHABLE_NETWORK"
 var ACTION_ON_FOOD_AND_TABLE = "ACTION_ON_FOOD_AND_TABLE"
 var ORDER_FOOD = "ORDER_FOOD"
 var SHARE_POINT = "SHARE_POINT_IN_BILL"
+var CUSTOMIZE_PRICE_PER_KG = "CUSTOMIZE_PRICE_PER_KG"
 
 var VIEW_ALL = "VIEW_ALL"
 // ========= Define ORDER STATUS ============
@@ -108,6 +116,8 @@ var ACTIVE = 1
 var DEACTIVE = 0
 
 
+
+
 // ========= Define MEDIA TYPE  ============
 var TYPE_VIDEO = 1
 var TYPE_IMAGE = 0
@@ -135,7 +145,7 @@ let STATUS_BOOKING_CONFIRMED = 7 // Đã xác nhận
 
 //=========== Config Printer ========
 var KEY_PRINTER_BILL = "KEY_PRINTER_BILL"
-var KEY_CHEF_BARS = "KEY_CHEF_BARS"
+var KEY_PRINTERS = "KEY_CHEF_BARS"
 //var KEY_FOOD_APP_PRINTER = "KEY_FOOD_APP_PRINTER"
 //var KEY_CHEF_BAR_STATUS_ACTIVE = "KEY_CHEF_BAR_STATUS_ACTIVE"
 //var KEY_PRINTER_BILL_STATUS_ACTIVE = "KEY_PRINTER_BILL_STATUS_ACTIVE"
@@ -161,6 +171,8 @@ var REPORT_TYPE_LAST_YEAR = 11//Lấy theo năm trước
 var REPORT_TYPE_THREE_YEAR = 6// lấy theo 3 năm gần nhất
 var REPORT_TYPE_LAST_MONTH = 10 // lấy theo tháng trước
 var REPORT_TYPE_ALL_YEAR = 8 // lấy tất cả thời gian
+
+var REPORT_TYPE_OPTION_DAY = 13 // Tuỳ chọn theo ngày
 
 var APP_STORE_URL = "https://apps.apple.com/vn/app/techres-order-g%E1%BB%8Di-m%C3%B3n/id1468724786"
 

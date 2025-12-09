@@ -17,7 +17,7 @@ extension RevenueDetailViewController {
             chartView: barChartView,
             barChartItems: data.enumerated().map{(i,value) in BarChartDataEntry(x: Double(i), y: Double(value.total_revenue))},
             xLabel: x_label,
-            isDateXLabel: true
+            isDateXLabel: reportType == REPORT_TYPE_OPTION_DAY ? false : true
         )
         barChartView.isUserInteractionEnabled = true
         
@@ -45,7 +45,7 @@ extension RevenueDetailViewController {
         viewModel.saleReport.map{$0.saleReportData}.bind(to: tableView.rx.items(cellIdentifier: "ItemRevenueDetailTableViewCell", cellType: ItemRevenueDetailTableViewCell.self))
            {  (row, revenue, cell) in
                cell.index = row + 1
-               cell.lbl_total_revenue.text = Utils.stringVietnameseMoneyFormatWithNumberInt(amount: revenue.total_revenue)
+               cell.lbl_total_revenue.text = revenue.total_revenue.toString
                cell.lbl_report_date.text = ChartUtils.getXLabel(dateTime: revenue.report_time, reportType: self.viewModel.saleReport.value.reportType, dataPointnth: row)
            }.disposed(by: rxbag)
     }
@@ -67,8 +67,10 @@ extension RevenueDetailViewController {
 
                     report.reportType = viewModel.saleReport.value.reportType
                     report.dateString = viewModel.saleReport.value.dateString
+                    report.fromDate = viewModel.saleReport.value.fromDate
+                    report.toDate = viewModel.saleReport.value.toDate
                     viewModel.saleReport.accept(report)
-                    lbl_total_revenue.text = Utils.stringVietnameseMoneyFormatWithNumberInt(amount: report.total_revenue)
+                    lbl_total_revenue.text = report.total_revenue.toString
                     setupBarChart(data: report.saleReportData, reportType: report.reportType)
                 }
             } else {

@@ -6,11 +6,11 @@
 //
 
 import UIKit
-import ZLPhotoBrowser
 import Photos
+import PhotosUI
 import JonAlert
 import RxSwift
-class UpdateProfileViewController: BaseViewController {
+class UpdateProfileViewController: BaseViewController,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     var viewModel = UpdateProfileViewModel()
     var router = UpdateProfileRouter()
     var account = Account()
@@ -51,12 +51,10 @@ class UpdateProfileViewController: BaseViewController {
 
         // Do any additional setup after loading the view.
         viewModel.bind(view: self, router: router)
-        
+        textView_address.withDoneButton()
         mappingData()
        
-        
-        textView_address.withDoneButton()
-        
+
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillChangeFrameNotification , object:nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification , object:nil)
         
@@ -99,15 +97,22 @@ class UpdateProfileViewController: BaseViewController {
         }
     }
     
-    
-    
+
     @IBAction func actionChooseAvatar(_ sender: Any) {
-        chooseAvatar()
+//        chooseAvatar()
+        // Request photo library access
+        var config = PHPickerConfiguration(photoLibrary: .shared())
+        config.selectionLimit = 0 // 0 = no limit (allow multiple)
+        config.filter = .images // only images
+
+        let picker = PHPickerViewController(configuration: config)
+        picker.delegate = self
+        picker.modalPresentationStyle = .pageSheet // fits inside safe area
+        present(picker, animated: true)
     }
     
-    
-    @IBAction func actionEditGender(_ sender: Any) {
-    }
+ 
+    @IBAction func actionEditGender(_ sender: Any) {}
     
     
     @IBAction func actionEditPhoneNumber(_ sender: Any) {
@@ -152,6 +157,27 @@ class UpdateProfileViewController: BaseViewController {
         
     }
     
-    
-  
+}
+
+
+extension UpdateProfileViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true)
+        
+        // Clear previous selections
+        self.imagecover.removeAll()
+        
+        for result in results {
+            let itemProvider = result.itemProvider
+            if itemProvider.canLoadObject(ofClass: UIImage.self) {
+                itemProvider.loadObject(ofClass: UIImage.self) { [weak self] image, error in
+                    guard let self = self, let uiImage = image as? UIImage else { return }
+                    DispatchQueue.main.async {
+                        self.imagecover.append(uiImage)
+                        self.avatar.image = uiImage // optional: show the first one
+                    }
+                }
+            }
+        }
+    }
 }

@@ -26,7 +26,6 @@ extension OrderDetailViewController{
             guard let self = self else { return }
             self.lbl_number_need_to_print.text = String(list.count)
             self.view_send_chef_bar.isHidden = list.count > 0 ? false : true
-            
             self.view_print_and_save.isHidden = self.view_update_food.isHidden && self.view_send_chef_bar.isHidden
         }).disposed(by: rxbag)
         
@@ -62,16 +61,22 @@ extension OrderDetailViewController{
                 btnPaymentFood.setImage(UIImage(named: "icon-order-detail-payment-takeaway"), for: .normal)
                 lbl_title_total_amount.text = "TỔNG THANH TOÁN"
                 
-      
-                lbl_customer_name.text = order.shipping_receiver_name
-                lbl_customer_phone.text =  order.shipping_phone
-                lbl_customer_address.text =  order.shipping_address
-                if order.customer_id > 0{
+    
+                if environmentMode == .online{
+                    if order.customer_id > 0{
+                        lbl_customer_name.text = order.customer_name
+                        lbl_customer_phone.text =  order.customer_phone
+                        lbl_customer_address.text =  order.customer_address
+                    }else{
+                        lbl_customer_name.text = order.shipping_receiver_name
+                        lbl_customer_phone.text =  order.shipping_phone
+                        lbl_customer_address.text =  order.shipping_address
+                    }
+                }else{
                     lbl_customer_name.text = order.customer_name
                     lbl_customer_phone.text =  order.customer_phone
                     lbl_customer_address.text =  order.customer_address
                 }
-                    
             }
             
             lbl_order_code.textColor = ColorUtils.blue_brand_700()
@@ -79,7 +84,7 @@ extension OrderDetailViewController{
             btnAddOtherFood.isEnabled = order.booking_status == STATUS_BOOKING_SET_UP ? false : true
             btnSplitFood.isEnabled = order.booking_status == STATUS_BOOKING_SET_UP ? false : true
             btnAddGiftFood.isEnabled = order.booking_status == STATUS_BOOKING_SET_UP ? false : true
-            view_print_bill_and_payment.isHidden = order.is_take_away == ACTIVE ? false : true
+            view_print_bill_and_payment.isHidden = order.order_method == .TAKE_AWAY ? false : true
             
             view_customer_info.isHidden = order.is_take_away == ACTIVE ? false : true
             btn_add_customer_info.isHidden = order.is_take_away == ACTIVE ? false : true
@@ -90,18 +95,17 @@ extension OrderDetailViewController{
 
             lbl_total_estimate.text = order.amount > 1000
             ? Utils.hideTotalAmount(amount: Float(order.amount))
-            : Utils.stringVietnameseMoneyFormatWithNumberDouble(amount: order.amount)
+            : order.amount.toString
             
             lbl_total_amount.text = order.total_amount > 1000
             ? Utils.hideTotalAmount(amount: Float(order.total_amount))
-            : Utils.stringVietnameseMoneyFormatWithNumberDouble(amount: order.total_amount)
+            : order.total_amount.toString
             
         }else{
-            lbl_total_estimate.text = Utils.stringVietnameseMoneyFormatWithNumberDouble(amount: order.amount)
-            lbl_total_amount.text = Utils.stringVietnameseMoneyFormatWithNumberDouble(amount: order.total_amount)
+            lbl_total_estimate.text = order.amount.toString
+            lbl_total_amount.text = order.total_amount.toString
         }
         
-    
         
         if(order.status == ORDER_STATUS_REQUEST_PAYMENT){
             btnBack.setImage(UIImage(named: "icon-prev"), for: .normal)
@@ -114,21 +118,35 @@ extension OrderDetailViewController{
     
     
     
-    func repairUpdateFoods(items:[OrderItem]){
-        var foodArrayNeedToUpdate = [FoodUpdate]()
+    func repairAndUpdateFoods(items:[OrderItem]) -> [FoodUpdate]{
+        var list:[FoodUpdate] = []
         let foods = items.filter{Int($0.isChange) == ACTIVE}
         
         for food in foods{
+            
             var foodNeedToUpdate = FoodUpdate.init()
             foodNeedToUpdate.order_detail_id = food.id
             foodNeedToUpdate.quantity = food.quantity
             foodNeedToUpdate.note = food.note
+            foodNeedToUpdate.price = food.price
             foodNeedToUpdate.discount_percent = food.discount_percent
-            foodArrayNeedToUpdate.append(foodNeedToUpdate)
+            
+            for option in food.order_detail_options{
+                for optionItem in option.food_option_foods{
+                    let optionDetail = OptionUpdate.init(
+                        food_option_id:option.id,
+                        id: optionItem.id,
+                        quantity: optionItem.quantity,
+                        status: optionItem.status)
+                    
+                    foodNeedToUpdate.order_detail_food_options.append(optionDetail)
+                }
+            }
+            
+            list.append(foodNeedToUpdate)
         }
-        viewModel.foodsNeedToUpdate.accept(foodArrayNeedToUpdate)
+        return list
+
     }
     
-
-
 }

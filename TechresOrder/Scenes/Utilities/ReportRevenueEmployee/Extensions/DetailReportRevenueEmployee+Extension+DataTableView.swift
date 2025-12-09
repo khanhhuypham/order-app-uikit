@@ -20,6 +20,8 @@ extension ReportRevenueEmployeeViewController {
                     
                     report.dateString = viewModel.report.value.dateString
                     report.reportType = viewModel.report.value.reportType
+                    report.fromDate = viewModel.report.value.fromDate
+                    report.toDate = viewModel.report.value.toDate
                     setupBarChart(dataChart: report.reportData)
                     viewModel.report.accept(report)
                     lbl_total_amout.text = Utils.stringVietnameseMoneyFormatWithNumberInt(amount: report.total_revenue)

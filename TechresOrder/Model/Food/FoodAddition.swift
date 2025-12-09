@@ -26,7 +26,6 @@ struct FoodAddition:Mappable {
     var unit_type = ""
     var is_selected = 0
     
-    
     /*
         this variable below is used for food optional
     */
@@ -44,18 +43,18 @@ struct FoodAddition:Mappable {
  
 
     mutating func mapping(map: Map) {
-        id                                      <- map["id"]
-        avatar                                  <- map["avatar"]
-        name                                    <- map["name"]
-        food_name                               <- map["food_name"]
-        price                                   <- map["price"]
-        quantity                                <- map["quantity"]
-        combo_quantity                          <- map["combo_quantity"]
-        is_selected                                <- map["is_selected"]
-        is_out_stock                                      <- map["is_out_stock"]
+        id                                  <- map["id"]
+        avatar                              <- map["avatar"]
+        name                                <- map["name"]
+        food_name                           <- map["food_name"]
+        price                               <- map["price"]
+        quantity                            <- map["quantity"]
+        combo_quantity                      <- map["combo_quantity"]
+        is_selected                         <- map["is_selected"]
+        is_out_stock                        <- map["is_out_stock"]
         price_with_temporary                <- map["price_with_temporary"]
-        temporary_price <- map["temporary_price"]
-        unit_type <- map["unit_type"]
+        temporary_price                     <- map["temporary_price"]
+        unit_type                           <- map["unit_type"]
     }
     
     

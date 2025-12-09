@@ -37,6 +37,11 @@ class SettingAccountRouter {
         sourceView?.navigationController?.pushViewController(changePasswordViewController, animated: true)
     }
     
+    func navigateToCodeAuthenticationViewController(){
+        let vc = CodeAuthenticationViewController()
+        sourceView?.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func navigateToChatChannelViewController(){
         let vc = ChatChannelRouter().viewController as! ChatChannelViewController
         sourceView?.navigationController?.pushViewController(vc, animated: true)

@@ -61,8 +61,8 @@ extension ReportBusinessViewModel{
                     branch_id: branch_id.value,
                     report_type: categoryReport.value.reportType,
                     date_string: categoryReport.value.dateString,
-                    from_date: from_date.value,
-                    to_date: to_date.value
+                    from_date: categoryReport.value.fromDate,
+                    to_date: categoryReport.value.toDate
                 ))
                .filterSuccessfulStatusCodes()
                .mapJSON().asObservable()
@@ -78,19 +78,20 @@ extension ReportBusinessViewModel{
                     branch_id: branch_id.value,
                     report_type: foodReport.value.reportType,
                     date_string: foodReport.value.dateString,
-                    from_date:from_date.value,
-                    to_date:to_date.value,
+                    from_date:foodReport.value.fromDate,
+                    to_date:foodReport.value.toDate,
                     category_id: category_id.value,
+                    category_types: "1",
                     is_combo:-1,
-                    is_goods:-1,
+                    is_goods:DEACTIVE,
                     is_cancelled_food:is_cancelled_food.value,
                     is_gift:is_gift.value,
                     is_take_away_food:-1
-                ))
-               .filterSuccessfulStatusCodes()
-               .mapJSON().asObservable()
-               .showAPIErrorToast()
-               .mapObject(type: APIResponse.self)
+        ))
+           .filterSuccessfulStatusCodes()
+           .mapJSON().asObservable()
+           .showAPIErrorToast()
+           .mapObject(type: APIResponse.self)
        }
     
     func getReportFoodOther() -> Observable<APIResponse>{
@@ -102,8 +103,8 @@ extension ReportBusinessViewModel{
             is_goods: 0,
             report_type: otherFoodReport.value.reportType,
             date_string: otherFoodReport.value.dateString,
-            from_date: from_date.value,
-            to_date: to_date.value
+            from_date: otherFoodReport.value.fromDate,
+            to_date: otherFoodReport.value.toDate
         ))
             .filterSuccessfulStatusCodes()
             .mapJSON().asObservable()
@@ -121,8 +122,8 @@ extension ReportBusinessViewModel{
                     branch_id: branch_id.value,
                     report_type: cancelFoodReport.value.reportType,
                     date_string: cancelFoodReport.value.dateString,
-                    from_date:from_date.value,
-                    to_date:to_date.value,
+                    from_date:cancelFoodReport.value.fromDate,
+                    to_date:cancelFoodReport.value.toDate,
                     category_id: category_id.value,
                     is_combo:-1,
                     is_goods:-1,
@@ -144,8 +145,8 @@ extension ReportBusinessViewModel{
                     branch_id: branch_id.value,
                     report_type: giftedFoodReport.value.reportType,
                     date_string: giftedFoodReport.value.dateString,
-                    from_date:from_date.value,
-                    to_date:to_date.value,
+                    from_date:giftedFoodReport.value.fromDate,
+                    to_date:giftedFoodReport.value.toDate,
                     category_id: category_id.value,
                     is_combo:-1,
                     is_goods:-1,
@@ -167,8 +168,8 @@ extension ReportBusinessViewModel{
                 branch_id: branch_id.value,
                 report_type: discountReport.value.reportType,
                 date_string: discountReport.value.dateString,
-                from_date:from_date.value,
-                to_date:to_date.value
+                from_date:discountReport.value.fromDate,
+                to_date:discountReport.value.toDate
             ))
             .filterSuccessfulStatusCodes()
             .mapJSON().asObservable()
@@ -182,8 +183,8 @@ extension ReportBusinessViewModel{
                     branch_id: branch_id.value,
                     report_type: vatReport.value.reportType,
                     date_string: vatReport.value.dateString,
-                    from_date:from_date.value,
-                    to_date:to_date.value
+                    from_date:vatReport.value.fromDate,
+                    to_date:vatReport.value.toDate
                 ))
                .filterSuccessfulStatusCodes()
                .mapJSON().asObservable()
@@ -198,8 +199,8 @@ extension ReportBusinessViewModel{
                     branch_id: branch_id.value,
                     report_type: areaRevenueReport.value.reportType,
                     date_string: areaRevenueReport.value.dateString,
-                    from_date:from_date.value,
-                    to_date:to_date.value
+                    from_date:areaRevenueReport.value.fromDate,
+                    to_date:areaRevenueReport.value.toDate
                 ))
                .filterSuccessfulStatusCodes()
                .mapJSON().asObservable()
@@ -215,8 +216,8 @@ extension ReportBusinessViewModel{
                     area_id: -1,
                     report_type: tableRevenueReport.value.reportType,
                     date_string: tableRevenueReport.value.dateString,
-                    from_date:from_date.value,
-                    to_date:to_date.value
+                    from_date:tableRevenueReport.value.fromDate,
+                    to_date:tableRevenueReport.value.toDate
                 ))
                .filterSuccessfulStatusCodes()
                .mapJSON().asObservable()

@@ -25,7 +25,7 @@ class DialogChooseTableViewController: BaseViewController {
     
     @IBOutlet weak var view_no_data: UIView!
     
-    var order:Order = Order()!
+    var order:Order = Order()
     var delegate:TechresDelegate?
     var moveTableDelegate:OrderMoveFoodDelegate?
     var option:OrderAction = .moveTable
@@ -52,7 +52,7 @@ class DialogChooseTableViewController: BaseViewController {
     }
     
     @IBAction func actionCancel(_ sender: Any) {
-        dismiss(animated: true)
+        dismiss(animated: true,completion: {})
     }
     
     @IBAction func actionConfirm(_ sender: Any) {

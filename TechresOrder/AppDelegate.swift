@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         performBackgroundTask()
         NotificationService.shared.requestAuthorizationForPushNotifications()
         Wormholy.shakeEnabled = ManageCacheObject.isDevMode()
-        Wormholy.limit = 10
+        Wormholy.limit = 20
         
         window = UIWindow(frame: UIScreen.main.bounds)
         navigationController = UINavigationController(rootViewController: SplashScreenViewController())
@@ -38,12 +38,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         registerBGTask()
         
-        
-//        // define firebase
-//        FirebaseApp.configure()
-//        registerForFirebaseNotification(application: application)
-//        FirebaseConfiguration.shared.setLoggerLevel(.debug)
-//        Messaging.messaging().delegate = self
+        // define firebase
+        FirebaseApp.configure()
+        registerForFirebaseNotification(application: application)
+        FirebaseConfiguration.shared.setLoggerLevel(.debug)
+        Messaging.messaging().delegate = self
         
         return true
     }
@@ -99,9 +98,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         SocketIOManager.shared().establishConnection()
-        
-        
-        
     }
 
     
@@ -121,13 +117,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     
-    
-    
     private func performBackgroundTask(){
         
        if ManageCacheObject.isLogin(){
             SocketIOManager.shared().establishConnection()
-            LocalDataBaseUtils.removeAllQueuedItem()
+            LocalDataBaseUtils.shared.removeAllQueuedItem()
             PrinterUtils.shared.clearWorkItemUnderBackGround()
             PrinterUtils.shared.getBLEDevice()
             PrinterUtils.shared.performPrintBackGround()
@@ -137,7 +131,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     private func stopBackgroundTask(){
-        LocalDataBaseUtils.removeAllQueuedItem()
+        LocalDataBaseUtils.shared.removeAllQueuedItem()
         PrinterUtils.shared.clearWorkItemUnderBackGround()
         FoodAppPrintUtils.shared.stopPrintOrderForFoodAppOnBackground()
         SocketIOManager.shared().closeConnection()
@@ -191,7 +185,6 @@ extension AppDelegate{
         } catch {
            print("Could not schedule image fetch: (error)")
         }
-
     }
     
 }
@@ -204,7 +197,7 @@ extension AppDelegate{
 
 extension AppDelegate: MessagingDelegate, UNUserNotificationCenterDelegate {
 
-//MessagingDelegate
+    //MessagingDelegate
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         dLog("Firebase token: \(fcmToken ?? "")")
         if let newFcmToken = fcmToken {
@@ -219,9 +212,7 @@ extension AppDelegate: MessagingDelegate, UNUserNotificationCenterDelegate {
      }
     
     // Handle tap on notification
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                didReceive response: UNNotificationResponse,
-      withCompletionHandler completionHandler: @escaping () -> Void) {
+    func userNotificationCenter(_ center: UNUserNotificationCenter,didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         
         _ = UIApplication.shared.applicationIconBadgeNumber + 1
         UIApplication.shared.applicationIconBadgeNumber = 0
@@ -239,7 +230,6 @@ extension AppDelegate: MessagingDelegate, UNUserNotificationCenterDelegate {
             let object_type = userInfo["object_type"] as? String
             let avatar = userInfo["avatar"] as? String
             let json_addition_data = userInfo["json_addition_data"] as? String
-            
             
             
             let contentNotification = UNMutableNotificationContent()
@@ -273,17 +263,18 @@ extension AppDelegate: MessagingDelegate, UNUserNotificationCenterDelegate {
         if let notificationInfo = (notification.request.content.userInfo as? [String : Any]) {
             let userInfo = (notificationInfo["aps"] as? [String : Any]) ?? [:]
             let notification_type = (userInfo["notification_type"]) as? String ?? ""
-            dLog(notificationInfo)
+            
             
             if #available(iOS 14.0, *) {
                 if (ManageCacheObject.getSettingNotify().is_turn_it_all_off == 0) {
                     switch notification_type {
-                    case NOTIFICATION_TYPE_STRING.NOTIFICATION_COMPLETED_FOOD.rawValue:
+                        case NOTIFICATION_TYPE_STRING.NOTIFICATION_COMPLETED_FOOD.rawValue:
                             completionHandler([[.banner, .badge, .sound]])
-                        break
-                    default:
-                        completionHandler([[.banner, .badge, .sound]])
-                        break
+                            break
+                        
+                        default:
+                            completionHandler([[.banner, .badge, .sound]])
+                            break
                     }
                 }
             }

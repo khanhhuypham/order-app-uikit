@@ -90,11 +90,7 @@ class SplitFoodViewController: BaseViewController {
             
           
             
-           
-          
-            
-            
-            
+        
             dismiss(animated: true)
         }else{
             JonAlert.showError(message: "Hãy chọn món cần tách trước khi lưu lại!", duration: 2.0)

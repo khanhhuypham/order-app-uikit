@@ -56,13 +56,15 @@ extension Double {
 
 extension Float {
     
-    
     var toString:String{
         let number = NumberFormatter()
         number.usesGroupingSeparator = true
+        number.numberStyle = .decimal
         number.groupingSeparator = ","
+        number.decimalSeparator = "."
         number.groupingSize = 3
-        
+        number.maximumFractionDigits = 2
+    
         return number.string(from: NSNumber(value: self)) ?? "0"
     }
 }

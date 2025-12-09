@@ -25,28 +25,7 @@ private extension UITextField {
         }
     }
     
-//    func setBorderAndCorner(){
-//        DispatchQueue.main.async {
-//            self.layer.borderWidth = 1.0
-//            self.layer.borderColor = ExFunction.hexStringToUIColor(hex: "61906B").cgColor
-//            self.layer.cornerRadius = 5
-//        }
-//    }
-    
-    
-//    func setLeftPaddingPointsTextField(_ amount:CGFloat){
-//        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
-//        self.leftView = paddingView
-//        self.leftViewMode = .always
-//    }
-    
 
-    
-//    func setRightPaddingPointsTextField(_ amount:CGFloat) {
-//        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
-//        self.rightView = paddingView
-//        self.rightViewMode = .always
-//    }
     
     
     
@@ -116,55 +95,7 @@ extension UITextField{
     }
     
     
-//    func addConfirmAndCancelButtonOnKeyboard(){
-//        let doneToolbar: UIToolbar = UIToolbar(frame: CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50))
-//        doneToolbar.barStyle = .default
-//
-//        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-//        let cancelBtn: UIBarButtonItem = UIBarButtonItem(title: "Huỷ", style: .done, target: self, action: #selector(self.canceluttonAction))
-//        let confirmBtn: UIBarButtonItem = UIBarButtonItem(title: "Đồng ý", style: .done, target: self, action: #selector(self.confirmButtonAction))
-//       
-//
-//        let items = [confirmBtn,flexSpace,cancelBtn]
-//        doneToolbar.items = items
-//        doneToolbar.sizeToFit()
-//        self.inputAccessoryView = doneToolbar
-//    }
-    
-    
-//
-//    private struct Holder {
-//        static var _myComputedProperty:(String) -> Void = {_ in }
-//    }
-//    
-//    fileprivate var didComfirmCompletion:(String) -> Void{
-//       
-//        get{
-//            return UITextField.Holder._myComputedProperty
-//        }
-//        
-//        set(closure){
-//            UITextField.Holder._myComputedProperty = closure
-//        }
-//       
-//    }
-    
 
- 
-//    // MARK: Actions Methods
-//    public func didConfirm(completion: @escaping (String) -> Void) {
-//        didComfirmCompletion = completion
-//    }
-//
-//    @objc func confirmButtonAction(){
-//        didComfirmCompletion(self.text ?? "")
-//        self.resignFirstResponder()
-//    }
-//    @objc func canceluttonAction(){
-//        self.resignFirstResponder()
-//    }
-
-    
     @objc func doneButtonAction(){
         self.resignFirstResponder()
     }

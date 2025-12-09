@@ -70,6 +70,8 @@ struct Constants {
         static let KEY_BRANCH_RIGHTS = "KEY_BRAND_RIGHTS"
         static let KEY_BRAND = "KEY_BRAND"
         static let KEY_BRANCH = "KEY_BRANCH"
+        static let KEY_ENVIRONMENT_MODE = "KEY_ENVIRONMENT_MODE"
+        static let KEY_SAVED_LOGIN_INFOR = "KEY_SAVED_LOGIN_INFOR"
         static let KEY_RESTAURANT_NAME = "KEY_RESTAURANT_NAME"
         static let KEY_PAYMENT_METHOD = "KEY_PAYMENT_METHOD"
         static let KEY_ORDER_METHOD = "KEY_ORDER_METHOD"
@@ -77,7 +79,7 @@ struct Constants {
         static let KEY_IDLE_TIMER = "KEY_IDLE_TIMER"
         static let KEY_BANK_ACCOUNT = "KEY_BANK_ACCOUNT"
         static let KEY_SETTING_NOTIFY = "KEY_SETTING_NOTIFY"
-
+        static let KEY_CONFIRM_ORDER_WHEN_HAVING_DRIVER = "KEY_CONFIRM_ORDER_WHEN_HAVING_DRIVER"
     }
     
     struct LOGIN_FORM_REQUIRED{
@@ -197,8 +199,13 @@ struct Constants {
             ManageCacheObject.isLogin()
         }
     }
-        
     
+    static var savedLoginInfor:SavedLoginInfor{
+         get{
+             ManageCacheObject.getSavedLoginInfo()
+         }
+     }
+        
     
     static var branch:Branch{
         get{
@@ -246,18 +253,12 @@ struct Constants {
     
     static var printers:[Printer]{
         get{
-//            var printerArray:[Printer] = ManageCacheObject.getChefBarConfigs(cache_key: KEY_CHEF_BARS)
-//            printerArray.append(ManageCacheObject.getPrinterBill(cache_key: KEY_PRINTER_BILL))
-            return ManageCacheObject.getPrinters(cache_key: KEY_CHEF_BARS)
+            return ManageCacheObject.getPrinters(cache_key: KEY_PRINTERS)
         }
     }
     
     
-//    static var foodAppPrinters:[Printer]{
-//        get{
-//            return ManageCacheObject.getAppFoodPrinter(cache_key: KEY_FOOD_APP_PRINTER)
-//        }
-//    }
+
     
     static var BLEPrinter:[CBPeripheral] = []
 
@@ -284,13 +285,15 @@ struct Constants {
 
 @objc(PRINTER_NOTIFI)
 class PRINTER_NOTIFI : NSObject {
-    
+    @objc static let PRINT_METHOD = "vn.techres.printer_method"
+    @objc static let PRINT_MODE = "vn.techres.print_mode"
     @objc static let PRINTER_METHOD_KEY = "vn.techres.printer_method_key"
     @objc static let PRINT_SUCCESS = "vn.techres.print.success"
     @objc static let PRINT_FAIL = "vn.techres.print.fail"
     @objc static let CONNECT_SUCCESS = "vn.techres.printer.connect.success"
     @objc static let CONNECT_FAIL = "vn.techres.printer.connect.fail"
-    
+//    @objc static let CHECK_PRINTER_CONNECTION = "vn.techres.check.printer.connection"
+//    @objc static let CHECK_PRINTER_CONNECTION_SUCCESSFULL = "vn.techres.check.printer.connection.successfull"
     @objc static let ERROR_FROM_PRINT_FUNCTION_OF_FOOD_APP = "vn.techres.printer.foodApp.fail"
     
     
@@ -302,5 +305,7 @@ class PRINTER_NOTIFI : NSObject {
     
     static let SETUP_LOCALDATABASE_LISTENER = "vn.techres.print.setup_local_database_listener"
     static let REMOVE_LOCALDATABASE_LISTENER = "vn.techres.print.remove_local_database_listener"
+    
+    static let UNCONNECTED_PRINTERS = "vn.techres.unconnected_printers"
     
 }

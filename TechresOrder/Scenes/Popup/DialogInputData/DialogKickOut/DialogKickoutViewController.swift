@@ -25,12 +25,7 @@ class DialogKickoutViewController: UIViewController {
         
         // clean all data local store befored logout
 
-        ManageCacheObject.saveCurrentPoint(NextPoint()!)
-        ManageCacheObject.saveCurrentBrand(Brand())
-        ManageCacheObject.saveCurrentBranch(Branch())
-        ManageCacheObject.setSetting(Setting()!)
-        ManageCacheObject.saveCurrentUser(Account())
-        ManageCacheObject.setConfig(Config()!)
+        Utils.resetConfig()
         let loginViewController = LoginRouter().viewController
         (UIApplication.shared.delegate as? AppDelegate)?.changeRootViewController(loginViewController)
         dismiss(animated: true)

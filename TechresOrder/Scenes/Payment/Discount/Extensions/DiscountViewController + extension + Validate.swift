@@ -33,24 +33,20 @@ extension DiscountViewController {
             var p = viewModel.APIParameter.value
  
             switch viewModel.APIParameter.value.discountType{
+                
                 case .number:
 
                     if (discount + p.drink_discount_amount) >= Int(order.total_final_amount){
                         showWarningMessage(content: "Số tiền giảm giá món ăn không được vượt quá số tiền tổng thanh toán")
                         discount = Int(order.total_final_amount) - p.drink_discount_amount
                     }
-                
-//                    if textfield_discount_percent_of_food.isEditing{
-//                        textfield_discount_percent_of_food.text = discount.toString
-//                    }
-                   
+
                     p.food_discount_amount = discount
                 
                 case .percent:
                     if discount > 100{
                         showWarningMessage(content: "Phần trăm giảm giá món ăn không được quá 100%")
                         discount = 100
-//                        textfield_discount_percent_of_food.text = String(discount)
                     }
                     p.food_discount_percent = discount
             }
@@ -74,9 +70,6 @@ extension DiscountViewController {
                         discount = Int(order.total_final_amount) - p.food_discount_amount
                     }
                 
-//                    if textfield_discount_percent_of_drink.isEditing{
-//                        textfield_discount_percent_of_drink.text = discount.toString
-//                    }
                     
                     p.drink_discount_amount = discount
                 
@@ -86,7 +79,6 @@ extension DiscountViewController {
                     if discount > 100{
                         showWarningMessage(content: "Phần trăm giảm giá thức uống không được quá 100%")
                         discount = 100
-//                        textfield_discount_percent_of_drink.text = String(discount)
                     }
                     p.drink_discount_percent = discount
                                     

@@ -10,7 +10,6 @@
 #include "TSCPrinterSDK.h"
 
 #import "TSCPrinter.h"
-
 #import "CustomPOSPrinter.h"
 #import "BLEPrinter/BLEPrinter.h"
 

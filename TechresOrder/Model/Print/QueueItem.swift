@@ -16,6 +16,7 @@ struct WIFIQueuedItem{
     var printer:Printer
     var isLastItem:Bool
     var isFinished:Bool
+    var printMode:PRINT_MODE
     
     init(wifiQueuedItem:WIFIQueuedItemObject){
         
@@ -35,6 +36,7 @@ struct WIFIQueuedItem{
        
         self.isLastItem = wifiQueuedItem.isLastItem
         self.isFinished = wifiQueuedItem.isFinished
+        self.printMode = wifiQueuedItem.printMode
     }
 }
 
@@ -46,6 +48,7 @@ struct TSCQueuedItem{
     var printer:Printer
     var isLastItem:Bool
     var isFinished:Bool
+    var printMode:PRINT_MODE
     
     init(tscQueuedItem:TSCQueuedItemObject){
         self.id = tscQueuedItem.id
@@ -62,6 +65,7 @@ struct TSCQueuedItem{
        
         self.isLastItem = tscQueuedItem.isLastItem
         self.isFinished = tscQueuedItem.isFinished
+        self.printMode = tscQueuedItem.printMode
     }
 }
 

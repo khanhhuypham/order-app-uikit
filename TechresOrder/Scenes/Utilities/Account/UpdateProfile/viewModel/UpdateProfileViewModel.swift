@@ -25,10 +25,6 @@ class UpdateProfileViewModel: BaseViewModel {
 
     var selectedArea = BehaviorRelay<[String:Area]>(value:[String:Area]())
         
-    
-    
-
-    
     func bind(view: UpdateProfileViewController, router: UpdateProfileRouter){
         self.view = view
         self.router = router

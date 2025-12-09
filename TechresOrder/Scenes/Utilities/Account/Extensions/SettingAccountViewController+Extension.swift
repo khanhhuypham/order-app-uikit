@@ -120,20 +120,28 @@ extension SettingAccountViewController {
                                            self!.viewModel.makeChangePasswordViewController()
                                        }).disposed(by: rxbag)
                     
-                    cell.btnChangeLanguage.rx.tap.asDriver()
+                        cell.btnChangeLanguage.rx.tap.asDriver()
                                    .drive(onNext: { [weak self] in
                                        dLog("Change ngôn ngữ app ........")
                                      
                                    }).disposed(by: rxbag)
                     
                     
-                        cell.btnChatChannel.rx.tap.asDriver()
-                                       .drive(onNext: { [weak self] in
-        
-                                           self!.viewModel.makeChatChannelViewController()
-                                       }).disposed(by: rxbag)
+                        cell.btnChatChannel.rx.tap.asDriver().drive(onNext: { [weak self] in
+    
+                            self!.viewModel.makeChatChannelViewController()
+                            
+                        }).disposed(by: rxbag)
+                    
+                    
+                        cell.btnGetTokenLogin.rx.tap.asDriver().drive(onNext: { [weak self] in
+    
+                            self!.viewModel.makeCodeAuthenticationViewController()
+                            
+                        }).disposed(by: rxbag)
              
                         checkExistingFaceIdFunctionality(settingLoginSwitch: cell.settingSwitch)
+                    
                         cell.settingSwitch.rx.controlEvent(.valueChanged).withLatestFrom(cell.settingSwitch.rx.value)
                             .subscribe(onNext : { _ in
                                     setLogin(settingLoginSwitch: cell.settingSwitch)
@@ -240,7 +248,7 @@ extension SettingAccountViewController: DialogConfirmClosedWorkingSessionDelegat
 
 
 extension SettingAccountViewController{
-    //dialog_type = 0 logout
+
     func presentModalDialogConfirm(title:String, content:String) {
         let vc = DialogConfirmViewController()
         vc.view.backgroundColor = ColorUtils.blackTransparent()
@@ -259,7 +267,7 @@ extension SettingAccountViewController:UITableViewDelegate{
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
             switch indexPath.row{
                 case 0:
-                    return 240
+                    return 300
                     
                 case 1:
                     return 380

@@ -32,18 +32,24 @@ enum Order_Method:Int {
         switch self {
         case .EAT_IN:
             return ""
+            
         case .TAKE_AWAY:
             return "MV"
+            
         case .ONLINE_DELIVERY:
             return ""
+            
         case .SHOPEE_FOOD:
-            return "SHF-"
+            return ""
+            
         case .GRAB_FOOD:
             return ""
+            
         case .GO_FOOD:
             return ""
+            
         case .BE_FOOD:
-            return "BEF-"
+            return ""
         }
     }
     
@@ -68,14 +74,8 @@ enum Order_Method:Int {
 }
 
 
-enum Bill_TYPE:Int{
-    case bill1 = 0
-    case bill2 = 1
-    case bill3 = 2
-    case bill4 = 3
-}
 
-
+//MARK: enum for food
 enum CATEGORY_TYPE:CaseIterable{
     case processed
     case nonProcessed
@@ -145,6 +145,9 @@ enum FOOD_STATUS:Int{
     case cancel = 4; // Huy mon
     case servic_block_using = 7 // dịch vụ đang sử dụng
     case servic_block_stopped = 8 //  dịch vụ đã ngưng
+    case wait_fish_tank_confirm = 9 //  Chờ hồ hải sản xác nhận
+    case wait_customer_confirm_seafood = 10 //  chờ khách xác nhận hải sản
+    case customer_confirmed_seafood = 11 //  Khách hàng đã xác nhận hải sản
     
     
     static func setValue(value: Int) -> Self {
@@ -170,10 +173,106 @@ enum FOOD_STATUS:Int{
             case 8:
                 return .servic_block_stopped
             
+            case 9:
+                return .wait_fish_tank_confirm
+            
+            case 10:
+                return .wait_customer_confirm_seafood
+            
+            case 11:
+                return .customer_confirmed_seafood
+            
             default:
                 return .pending
         }
     }
+    
+    var description: String {
+        switch self {
+            case .pending:
+                return "CHỜ CHẾ BIẾN"
+            
+            case .cooking:
+                return "ĐANG CHẾ BIẾN"
+            
+            case .done:
+                return "HOÀN TẤT"
+            
+            case .not_enough:
+                return "HẾT MÓN"
+            
+            case .cancel:
+                return "ĐÃ HỦY"
+            
+            case .servic_block_using:
+                return "ĐANG SỬ DỤNG"
+            
+            case .servic_block_stopped:
+                return "ĐANG TẠM DỪNG"
+            
+            case .wait_fish_tank_confirm:
+                return "CHỜ HỒ HẢI SẢN XÁC NHẬN"
+            
+            case .wait_customer_confirm_seafood:
+                return "CHỜ KHÁCH HÀNG XÁC NHẬN HẢI SẢN"
+            
+            case .customer_confirmed_seafood:
+                return "KHÁCH HÀNG ĐÃ XÁC NHẬN HẢI SẢN"
+        }
+    }
+    
+    
+    var fgColor: UIColor {
+        
+        switch self {
+            case .pending:
+                return ColorUtils.orange_brand_900()
+            
+            case .cooking:
+                return ColorUtils.blue_brand_700()
+                
+            case .done:
+                return ColorUtils.green_600()
+            
+            case .not_enough:
+                return ColorUtils.red_500()
+            
+            case .cancel:
+                return ColorUtils.red_500()
+            
+            case .servic_block_using:
+                return ColorUtils.green_600()
+            
+            case .servic_block_stopped:
+                return ColorUtils.red_500()
+            
+            case .wait_fish_tank_confirm:
+                return ColorUtils.blue_brand_700()
+            
+            case .wait_customer_confirm_seafood:
+                return ColorUtils.blue_brand_700()
+            
+            case .customer_confirmed_seafood:
+                return ColorUtils.blue_brand_700()
+        }
+    }
+    
+    var bgColor: UIColor {
+        switch self {
+            case .pending,.cooking,.done,.servic_block_using,.servic_block_stopped,.wait_fish_tank_confirm,.wait_customer_confirm_seafood,.customer_confirmed_seafood:
+                return ColorUtils.white()
+            
+            case .not_enough:
+                return ColorUtils.red_000()
+            
+            case .cancel:
+                return ColorUtils.red_000()
+            
+        }
+    }
+    
+    
+    
 }
 
 enum BOOKING_STATUS:Int{
@@ -187,13 +286,20 @@ enum BOOKING_STATUS:Int{
     case booking_confirmed = 7 // Đã xác nhận
 }
 
+//MARK: enum for payment process
 enum PAYMENT_METHOD:Int{
     case cash = 1
     case transfer = 6 //Chuyển khoản
     case atm_card = 2 //sử dụng thẻ
 }
 
+enum PAYMENT_TYPE:Int{
+    case viet_qr = 0
+    case payos = 2
+}
 
+
+//MARK: enum for printer
 enum PRINTER_TYPE:Int,PersistableEnum{
     case bar = 0
     case chef = 1
@@ -211,7 +317,6 @@ enum CONNECTION_TYPE:Int,PersistableEnum{
     case sunmi = 2
     case usb = 3
     case blueTooth = 4
-    
     
     var name: String {
         switch self {
@@ -232,46 +337,184 @@ enum CONNECTION_TYPE:Int,PersistableEnum{
 
 
 @objc(PRINTER_METHOD)
-enum PRINTER_METHOD:Int{
+public enum PRINTER_METHOD:Int{
     case POSPrinter = 1
     case TSCPrinter = 2
     case BLEPrinter = 3
 }
 
+@objc(PRINT_MODE)
+enum PRINT_MODE:Int,PersistableEnum{
+    case printBackgroundWithRetry = 0
+    case printBackgroundWithoutRetry = 1
+    case printForeground = 2
+}
 
-enum APP_PARTNER:String{
+enum Bill_TYPE:Int{
+    case bill1 = 0
+    case bill2 = 1
+    case bill3 = 2
+    case bill4 = 3
+}
+
+enum KITCHEN_TICKET_TYPE {
+    case new_item
+    case cancel_item
+    case return_item
+    case print_test
+
+
+    // 2- Hủy món | 3- trả bia | 1- món mới
+    var value: Int {
+        switch self {
+        case .print_test:
+            return 0
+        case .new_item:
+            return 1
+        case .cancel_item:
+            return 2
+        case .return_item:
+            return 3
+        
+        }
+    }
+}
+
+
+
+
+//MARK: enum for food app
+enum APP_PARTNER:String,CaseIterable{
     case shoppee = "SHF"
     case grabfood = "GRF"
     case gofood = "GOF"
     case befood = "BEF"
     
     
-   
-    
-    var quantyAccount:Int{
+    var maximumQuantityAccount:Int{
         switch self {
             case .shoppee:
                 return Constants.brand.setting?.maximum_shf_account ?? 0
+            
             case .grabfood:
                 return Constants.brand.setting?.maximum_grf_account ?? 0
+            
             case .gofood:
                 return 0
+            
             case .befood:
                 return Constants.brand.setting?.maximum_bef_account ?? 0
         }
     }
+    
+    var logo:UIImage{
+        switch self {
+            case .shoppee:
+                return UIImage(named: "image-shopeefood-logo") ?? UIImage()
+            
+            case .grabfood:
+                return UIImage(named: "image-grabfood-logo") ?? UIImage()
+            
+            case .gofood:
+                return UIImage(named: "") ?? UIImage()
+            
+            case .befood:
+                return UIImage(named: "image-befood-logo") ?? UIImage()
+        }
+    }
+    
+    var value:Int{
+        switch self {
+            case .shoppee:
+                return 1
+            
+            case .grabfood:
+                return 2
+            
+            case .gofood:
+                return 3
+            
+            case .befood:
+                return 4
+        }
+    }
+    
+    
+    var description:String{
+        switch self {
+            case .shoppee:
+                return "ShopeeFood"
+            
+            case .grabfood:
+                return "GrabFood"
+            
+            case .gofood:
+                return "GoFood"
+            
+            case .befood:
+                return "BeFood"
+        }
+    }
+    
+    
+    func displayOrderCode(displayId: String) -> String {
+        switch self {
+            case .shoppee:
+                return String(format:"SHOPEE-%@", displayId)
+            
+            case .grabfood:
+                return String(format:"GRAB-%@",  displayId)
+            
+            case .gofood:
+                return String(format:"GO-%@", displayId)
+            
+            case .befood:
+                return String(format:"BE-%@", displayId)
+        }
+    }
+    
+    
 }
 
 
-//enum ReportAppFoodConstants {
-//    case ALL = -1
-//    case GO = 3
-//    case BE = 4
-//    case GRAB = 2
-//    case SHOPEE = 1
-//    
-//    
-//}
+
+
+//MARK: enum for food e-invoice
+enum PARTNER_INVOICE_TYPE:Int,CaseIterable{
+    case minvoice = 1
+    case fpt = 2
+    case mifi = 3
+    case vnpt = 4
+    case misa = 5
+    case hilo = 6
+    case viettel = 7
+    
+    var name: String {
+        switch self {
+            case .minvoice:
+                return "MINVOICE"
+    
+            case .fpt:
+                return "FPT"
+            
+            case .mifi:
+                return "MIFI"
+                
+            case .vnpt:
+                return "VNPT"
+            
+            case .misa:
+                return "MISA"
+            
+            case .hilo:
+                return "HILO"
+            
+            case .viettel:
+                return "VIETTEL"
+          
+        }
+    }
+}
 
 
 
@@ -320,7 +563,7 @@ enum PaymentStatusOfTechresShop:Int {
 
 enum DISCOUNT_TYPE:Int{
     case percent = 1
-    case  number = 2
+    case number = 2
 }
 
 
@@ -330,8 +573,10 @@ enum Gender:Int,CaseIterable{
     
     var name: String {
         switch self {
+            
             case .male:
                 return "Nam"
+            
             case .female:
                 return "Nữ"
           

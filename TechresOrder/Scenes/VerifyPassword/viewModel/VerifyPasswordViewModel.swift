@@ -22,8 +22,8 @@ class VerifyPasswordViewModel: BaseViewModel {
    // Khai báo viến Bool để lắng nghe sự kiện và trả về kết quả thoả mãn điều kiện
    var isValidConfirmPassword: Observable<Bool> {
        return self.confirm_new_password.asObservable().map { confirm_new_password in
-           confirm_new_password.count >= Constants.LOGIN_FORM_REQUIRED.requiredPasswordLengthMin &&
-           confirm_new_password.count <= Constants.LOGIN_FORM_REQUIRED.requiredPasswordLengthMax
+           confirm_new_password.count >= 4 &&
+           confirm_new_password.count <= 20
        }
    }
     

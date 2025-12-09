@@ -21,7 +21,7 @@ class OrderHistoryViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.bind(view: self)
-        viewModel.order.accept(order ?? Order()!)
+        viewModel.order.accept(order ?? Order())
         bindTableViewAndRegisterCell()
         
        

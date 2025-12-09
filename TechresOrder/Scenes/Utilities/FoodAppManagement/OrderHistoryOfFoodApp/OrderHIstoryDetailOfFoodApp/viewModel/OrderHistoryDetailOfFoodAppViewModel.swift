@@ -12,22 +12,14 @@ import RxRelay
 class OrderHistoryDetailOfFoodAppViewModel: BaseViewModel {
     
     private(set) weak var view: OrderHistoryDetailOfFoodAppViewController?
-    private var router: OrderHistoryDetailOfFoodAppRouter?
-    public var order : BehaviorRelay<FoodAppOrder> = BehaviorRelay(value: FoodAppOrder())
+    public var order : BehaviorRelay<OrderHistoryDetailOfFoodApp> = BehaviorRelay(value: OrderHistoryDetailOfFoodApp())
     
-    
-  
-    func bind(view: OrderHistoryDetailOfFoodAppViewController, router: OrderHistoryDetailOfFoodAppRouter){
+    func bind(view: OrderHistoryDetailOfFoodAppViewController){
         self.view = view
-        self.router = router
-        self.router?.setSourceView(self.view)
+
     }
-    
     
 
-    func makePopViewController(){
-        router?.navigateToPopViewController()
-    }
     
     
 }

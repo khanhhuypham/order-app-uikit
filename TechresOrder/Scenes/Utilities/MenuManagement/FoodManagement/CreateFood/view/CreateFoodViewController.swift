@@ -8,7 +8,10 @@
 import UIKit
 import TagListView
 import Photos
+import PhotosUI
 class CreateFoodViewController: BaseViewController {
+ 
+    
     
     var viewModel = CreateFoodViewModel()
     var router = CreateFooddRouter()
@@ -150,7 +153,16 @@ class CreateFoodViewController: BaseViewController {
     }
     
     @IBAction func actionChooseAvatar(_ sender: Any) {
-        chooseAvatar()
+//        chooseAvatar()
+        
+        var config = PHPickerConfiguration(photoLibrary: .shared())
+        config.selectionLimit = 0 // 0 = no limit (allow multiple)
+        config.filter = .images // only images
+
+        let picker = PHPickerViewController(configuration: config)
+        picker.delegate = self
+        picker.modalPresentationStyle = .pageSheet // fits inside safe area
+        present(picker, animated: true)
     }
     
     @IBAction func actionShowCalculator(_ sender: Any) {
@@ -305,29 +317,22 @@ class CreateFoodViewController: BaseViewController {
         var model = viewModel.createFoodModel.value
         switch sender.tag{
             case 1:
-//                model.temporary_percent = 0
-//                textfield_enter_increasing_percent.text = ""
                 btn_enter_increasing_price.isSelected = true
                 textfield_enter_increasing_price.isUserInteractionEnabled = true
                 break
                 
             case 2:
-//                model.temporary_price = 0
-//                textfield_enter_increasing_price.text = ""
                 btn_enter_increasing_percent.isSelected = true
                 textfield_enter_increasing_percent.isUserInteractionEnabled = true
                 break
                
             case 3:
-//                model.temporary_percent = 0
-//                textfield_enter_decreasing_percent.text = ""
                 btn_enter_decreasing_price.isSelected = true
                 textfield_enter_decreasing_price.isUserInteractionEnabled = true
                 break
             
             case 4:
-//                model.temporary_price = 0
-//                textfield_enter_decreasing_price.text = ""
+
                 btn_enter_decreasing_percent.isSelected = true
                 textfield_enter_decreasing_percent.isUserInteractionEnabled = true
                 break
@@ -431,4 +436,38 @@ class CreateFoodViewController: BaseViewController {
         }
     }
     
+}
+
+
+extension CreateFoodViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true)
+        self.imagecover.removeAll()
+        
+        for result in results {
+            let itemProvider = result.itemProvider
+            
+            // ✅ Get the PHAsset identifier (if it exists)
+            if let assetIdentifier = result.assetIdentifier {
+                let fetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [assetIdentifier], options: nil)
+                if let asset = fetchResult.firstObject {
+                    // Get the filename via PHAssetResource
+                    if let resource = PHAssetResource.assetResources(for: asset).first {
+                        print("📸 Original filename: \(resource.originalFilename)")
+                    }
+                }
+            }
+
+            // ✅ Load the UIImage for display
+            if itemProvider.canLoadObject(ofClass: UIImage.self) {
+                itemProvider.loadObject(ofClass: UIImage.self) { [weak self] image, error in
+                    guard let self = self, let uiImage = image as? UIImage else { return }
+                    DispatchQueue.main.async {
+                        self.food_avatar.image = uiImage
+                    }
+                }
+            }
+        }
+    }
+
 }

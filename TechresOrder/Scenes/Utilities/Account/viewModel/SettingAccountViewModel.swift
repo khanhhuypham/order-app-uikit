@@ -31,8 +31,11 @@ class SettingAccountViewModel: BaseViewModel {
     func makeChangePasswordViewController(){
         router?.navigateToChangePasswordViewController()
     }
-   
     
+    func makeCodeAuthenticationViewController(){
+        router?.navigateToCodeAuthenticationViewController()
+    }
+   
     func makeChatChannelViewController(){
         router?.navigateToChatChannelViewController()
     }

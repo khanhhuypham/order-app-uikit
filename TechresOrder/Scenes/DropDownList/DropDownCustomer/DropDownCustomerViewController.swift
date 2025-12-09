@@ -19,10 +19,9 @@ class DropDownCustomerViewController<Element> : UITableViewController {
     private let onSelect : SelectionHandler?
     
     var delegate: DropDownCustomerViewControllerDelegate?
-    
+
     var list:[Customer] = []
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
         let nib = UINib.init(nibName: "DropDownCustomerTableViewCell", bundle: nil)

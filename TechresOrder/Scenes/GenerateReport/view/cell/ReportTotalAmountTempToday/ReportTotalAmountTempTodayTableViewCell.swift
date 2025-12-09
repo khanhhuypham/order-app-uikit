@@ -47,24 +47,25 @@ class ReportTotalAmountTempTodayTableViewCell: UITableViewCell {
        didSet {
            guard let viewModel = self.viewModel else {return}
             viewModel.dailyOrderReport.subscribe(onNext: { [self] (dailyOrderReport) in
-                lbl_total_amout_in_day.text =  Utils.stringVietnameseMoneyFormatWithNumberInt(amount: dailyOrderReport.total_amount)
-                lbl_total_cash.text =  Utils.stringVietnameseMoneyFormatWithNumberInt(amount: dailyOrderReport.cash_amount)
-                lbl_total_atm.text = Utils.stringVietnameseMoneyFormatWithNumberInt(amount: dailyOrderReport.bank_amount)
-                lbl_total_transfer.text = Utils.stringVietnameseMoneyFormatWithNumberInt(amount: dailyOrderReport.transfer_amount)
+                
+                lbl_total_amout_in_day.text =  dailyOrderReport.total_amount.toString
+                lbl_total_cash.text =  dailyOrderReport.cash_amount.toString
+                lbl_total_atm.text = dailyOrderReport.bank_amount.toString
+                lbl_total_transfer.text = dailyOrderReport.transfer_amount.toString
 
-                lbl_total_sell.text =  Utils.stringVietnameseMoneyFormatWithNumberInt(amount: dailyOrderReport.revenue_paid)
-                lbl_total_debit.text =  Utils.stringVietnameseMoneyFormatWithNumberInt(amount: dailyOrderReport.deposit_amount)
+                lbl_total_sell.text = dailyOrderReport.revenue_paid.toString
+                lbl_total_debit.text =  dailyOrderReport.deposit_amount.toString
+                
             }).disposed(by: disposeBag)
            
            
            
            viewModel.foodAppReport.subscribe(onNext: { [self] (report) in
-               total_amount.text = report.total_revenue.toString
-               total_amount_GOF.text = report.total_revenue_GOF.toString
-               total_amount_BEF.text = report.total_revenue_BEF.toString
-               total_amount_GRF.text = report.total_revenue_GRF.toString
-               total_amount_SHF.text = report.total_revenue_SHF.toString
-              
+               total_amount.text = report.total_revenue_amount.toString
+               total_amount_GOF.text = report.total_amount_GOF.toString
+               total_amount_BEF.text = report.total_amount_BEF.toString
+               total_amount_GRF.text = report.total_amount_GRF.toString
+               total_amount_SHF.text = report.total_amount_SHF.toString
            }).disposed(by: disposeBag)
            
        }

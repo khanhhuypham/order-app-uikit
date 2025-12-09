@@ -13,14 +13,13 @@ class TabbarViewController: UITabBarController, UITabBarControllerDelegate {
     var workingSession = WorkingSession.init()
     let disposeBag = DisposeBag()
     var generateReportVC:GenerateReportViewController!
-    var orderRebuildVC:OrderRebuildViewController!
+    var orderVC:OrderViewController!
     var areaVC:AreaViewController!
     var reportVC:ReportViewController!
     var feeRebuildVC:FeeRebuildViewController!
     var utilitiesVC:UtilitiesViewController!
     
     
-
     private let imageView: UIImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
@@ -88,20 +87,19 @@ class TabbarViewController: UITabBarController, UITabBarControllerDelegate {
         // Do any additional setup after loading the view.
         navigationController?.isNavigationBarHidden = true
         generateReportVC = GenerateReportViewController()
-        orderRebuildVC = OrderRebuildViewController()
+        orderVC = OrderViewController()
         areaVC = AreaViewController()
         feeRebuildVC = FeeRebuildViewController()
         reportVC = ReportViewController()
         utilitiesVC = UtilitiesViewController()
         
-        
-        
+    
         generateReportVC.tabBarItem.image = UIImage(named: "icon-general-tabbar")
         generateReportVC.tabBarItem.title = "Tổng quan"
 //        generateReportVC.tabBarItem.selectedImage = UIImage(named: "home-selected")
         
-        orderRebuildVC.tabBarItem.image = UIImage(named: "icon-order-tabbar")
-        orderRebuildVC.tabBarItem.title = "Đơn hàng"
+        orderVC.tabBarItem.image = UIImage(named: "icon-order-tabbar")
+        orderVC.tabBarItem.title = "Đơn hàng"
 //        orderRebuildVC.tabBarItem.selectedImage = UIImage(named: "second-selected")
         
         areaVC.tabBarItem.image = UIImage(named: "icon-area-tabbar")
@@ -130,40 +128,37 @@ class TabbarViewController: UITabBarController, UITabBarControllerDelegate {
         
         if permissionUtils.GPBH_1{
             
-            viewControllers = [generateReportVC,orderRebuildVC,areaVC,feeRebuildVC,utilitiesVC]
+            viewControllers = [generateReportVC,orderVC,areaVC,feeRebuildVC,utilitiesVC]
             
         }else if permissionUtils.GPBH_2{
             
             
             if permissionUtils.GPQT_2_and_above {
-                viewControllers = [orderRebuildVC,areaVC,reportVC,utilitiesVC]
+                viewControllers = [orderVC,areaVC,reportVC,utilitiesVC]
             }else{
                 if permissionUtils.Owner {
-                    viewControllers = [generateReportVC,orderRebuildVC,areaVC,reportVC,utilitiesVC]
+                    viewControllers = [generateReportVC,orderVC,areaVC,reportVC,utilitiesVC]
                 }else{
-                    viewControllers = [orderRebuildVC,areaVC,reportVC,utilitiesVC]
+                    viewControllers = [orderVC,areaVC,reportVC,utilitiesVC]
                 }
             }
-            
+          
         }else{
 
             
             if permissionUtils.GPQT_2_and_above {
-                viewControllers = [orderRebuildVC,areaVC,reportVC,utilitiesVC]
+                viewControllers = [orderVC,areaVC,reportVC,utilitiesVC]
             }else{
                 if permissionUtils.Owner {
-                    viewControllers = [generateReportVC,orderRebuildVC,areaVC,reportVC,utilitiesVC]
+                    viewControllers = [generateReportVC,orderVC,areaVC,reportVC,utilitiesVC]
                 }else{
-                    viewControllers = [orderRebuildVC,areaVC,reportVC,utilitiesVC]
+                    viewControllers = [orderVC,areaVC,reportVC,utilitiesVC]
                 }
             }
-
+            
         }
 
 
-            
-        
-        
         tabBar.tintColor = .white
         tabBar.unselectedItemTintColor = .systemGray4
         tabBar.backgroundColor = ColorUtils.orange_brand_900()

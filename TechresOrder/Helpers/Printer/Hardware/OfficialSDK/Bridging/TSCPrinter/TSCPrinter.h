@@ -23,6 +23,8 @@
 
 @property (nonatomic, readwrite) BOOL isPrintLive; //is app printing live or under background
 
+@property (nonatomic, assign) PRINT_MODE_ printMode;
+
 // connect type
 @property (assign, nonatomic) ConnectType connectType;
 
@@ -44,7 +46,11 @@
 
 -(void)printPicture:(UIImage *)image ids:(NSDictionary*)ids;
 
--(void)sendNotifiErr:(NSString *)message printer:(Printer*)printer;
+- (void)printPictures:(NSArray<UIImage *> *)images withInfo:(NSDictionary *)info;
+
+-(void)sendNotifiErr:(NSError *)error printer:(Printer*)printer;
+
+-(void)checkConnection:(Printer*)printer;
 
 @end
 

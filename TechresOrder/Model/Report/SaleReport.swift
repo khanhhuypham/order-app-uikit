@@ -13,6 +13,7 @@ struct SaleReport:Mappable{
     var reportType = 0
     var dateString = ""
     var fromDate = ""
+    var toDate = ""
     var saleReportData:[SaleReportData] = []
     var total_revenue = 0
     var total_revenue_without_vat = 0
@@ -24,10 +25,11 @@ struct SaleReport:Mappable{
     
     init?(){}
     
-    init(reportType:Int, dateString:String,fromDate:String){
+    init(reportType:Int, dateString:String,fromDate:String,toDate:String){
         self.reportType = reportType
         self.dateString = dateString
         self.fromDate = fromDate
+        self.toDate = toDate
     }
     
     init(reportType:Int, dateString:String){

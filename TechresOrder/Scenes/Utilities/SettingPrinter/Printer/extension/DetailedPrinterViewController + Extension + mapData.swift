@@ -11,17 +11,16 @@ import UIKit
 extension DetailedPrinterViewController{
     
     func firstSetup(){
-        btn_show_printing_queue.isHidden = true
+//        btn_show_printing_queue.isHidden = true
     
-
         _ = textfield_print_ipaddress.rx.text.map{[self] str in
-            var printer = viewModel.printer.value
+            let printer = viewModel.printer.value
             printer.printer_ip_address = str ?? ""
             return printer
         }.bind(to:viewModel.printer).disposed(by: rxbag)
         
         _ = textfield_print_port.rx.text.map{[self] str in
-            var printer = viewModel.printer.value
+            let printer = viewModel.printer.value
             printer.printer_port = str ?? ""
             return printer
         }.bind(to:viewModel.printer).disposed(by: rxbag)
@@ -39,6 +38,7 @@ extension DetailedPrinterViewController{
         printerSwitch.isOn = printer.is_have_printer == ACTIVE ? true : false
         
         textfield_print_port.isUserInteractionEnabled = true
+        
         if printer.type == .cashier || printer.type == .cashier_of_food_app{
             setupInterfaceForBillPrinter()
         }else if printer.type == .stamp || printer.type == .stamp_of_food_app{
@@ -57,7 +57,6 @@ extension DetailedPrinterViewController{
                 view_of_device_name.isHidden = true
                 break
             
-
             default:
                 view_of_ip_address.isHidden = true
                 view_of_port.isHidden = true
@@ -90,11 +89,9 @@ extension DetailedPrinterViewController{
             }
             
             options.append(option)
-            
         }
         
         btn_choose_connection_type.menu = UIMenu(title: "", children: options)
-     
     }
     
     private func handleSelection(type: CONNECTION_TYPE, menu:UIMenu) -> UIMenu{
@@ -122,32 +119,49 @@ extension DetailedPrinterViewController{
     
     private func setupInterfaceForBillPrinter(){
         lbl_header_options.isHidden = true
-        btn_of_option1.isHidden = true
-        btn_of_option2.isHidden = true
+        btn_of_60_x_40.isHidden = true
+        btn_of_50_x_30.isHidden = true
+        btn_of_40_x_30.isHidden = true
+        btn_of_30_x_20.isHidden = true
+        btn_of_print_many_foods.isHidden = true
+        btn_of_print_each_food.isHidden = true
         view_of_printer_number.isHidden = true
-       
+        stackview_of_stamp_direction.isHidden = true
     }
+    
     private func setupInterfaceForStampPrinter(printer:Printer){
-        btn_of_option1.setTitle("  50x30(mm)", for: .normal)
-        btn_of_option2.setTitle("  30x20(mm)", for: .normal)
-        btn_of_option1.setImage(UIImage(named: printer.printer_paper_size == 50 ? "icon-radio-checked" : "icon-radio-uncheck"), for: .normal)
-        btn_of_option2.setImage(UIImage(named: printer.printer_paper_size == 30 ? "icon-radio-checked" : "icon-radio-uncheck"), for: .normal)
-       
+
+        btn_of_60_x_40.setImage(UIImage(named: printer.printer_paper_size == 60 ? "icon-radio-checked" : "icon-radio-uncheck"), for: .normal)
+        btn_of_50_x_30.setImage(UIImage(named: printer.printer_paper_size == 50 ? "icon-radio-checked" : "icon-radio-uncheck"), for: .normal)
+        btn_of_40_x_30.setImage(UIImage(named: printer.printer_paper_size == 40 ? "icon-radio-checked" : "icon-radio-uncheck"), for: .normal)
+        btn_of_30_x_20.setImage(UIImage(named: printer.printer_paper_size == 30 ? "icon-radio-checked" : "icon-radio-uncheck"), for: .normal)
+        btn_of_0_degree.setImage(UIImage(named: printer.direction == 0 ? "icon-radio-checked" : "icon-radio-uncheck"), for: .normal)
+        btn_of_180_degree.setImage(UIImage(named: printer.direction == 1 ? "icon-radio-checked" : "icon-radio-uncheck"), for: .normal)
+        btn_of_print_many_foods.isHidden = true
+        btn_of_print_each_food.isHidden = true
+        view_of_printer_number.isHidden = true
+        stackview_of_stamp_direction.isHidden = false
     }
+    
+    
     private func setupInterfaceForChefBarPrinter(printer:Printer){
-        btn_of_option1.setTitle("  In order trên 1 phiếu", for: .normal)
-        btn_of_option2.setTitle("  In riêng từng món", for: .normal)
-        btn_of_option1.setImage(UIImage(named: printer.is_print_each_food == DEACTIVE ? "icon-radio-checked" : "icon-radio-uncheck"), for: .normal)
-        btn_of_option2.setImage(UIImage(named: printer.is_print_each_food == ACTIVE ? "icon-radio-checked" : "icon-radio-uncheck"), for: .normal)
+        btn_of_print_many_foods.setImage(UIImage(named: printer.is_print_each_food == DEACTIVE ? "icon-radio-checked" : "icon-radio-uncheck"), for: .normal)
+        btn_of_print_each_food.setImage(UIImage(named: printer.is_print_each_food == ACTIVE ? "icon-radio-checked" : "icon-radio-uncheck"), for: .normal)
+        
+        btn_of_60_x_40.isHidden = true
+        btn_of_50_x_30.isHidden = true  
+        btn_of_40_x_30.isHidden = true
+        btn_of_30_x_20.isHidden = true
+        stackview_of_stamp_direction.isHidden = true
     }
     
     private func getAttribute(content:String) -> NSAttributedString{
         return NSAttributedString(
-                string: content,
-                attributes: [
-                        NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14),
-                        NSAttributedString.Key.foregroundColor: ColorUtils.black(),
-                ]
+            string: content,
+            attributes: [
+                    NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14),
+                    NSAttributedString.Key.foregroundColor: ColorUtils.black(),
+            ]
         )
     }
 }

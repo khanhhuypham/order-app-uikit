@@ -83,44 +83,4 @@ extension UIImage {
         }
     }
     
-    func resize() -> Data? {
-           
-           let maxHeight: CGFloat = 1136
-           let maxWidth: CGFloat = 640
-           
-           var actualHeight = self.size.height
-           var actualWidth = self.size.width
-
-           var imgRatio = actualWidth / actualHeight
-           let maxRatio = maxWidth / maxHeight
-           var compressionQuality : CGFloat = 0.5
-           
-           if actualHeight > maxHeight || actualWidth > maxWidth {
-               if imgRatio < maxRatio {
-                   //adjust width according to maxHeight
-                   imgRatio = maxHeight / actualHeight
-                   actualWidth = imgRatio * actualWidth
-                   actualHeight = maxHeight
-               }
-               else if imgRatio > maxRatio {
-                   //adjust height according to maxWidth
-                   imgRatio = maxWidth / actualWidth
-                   actualHeight = imgRatio * actualHeight
-                   actualWidth = maxWidth
-               }
-               else {
-                   actualHeight = maxHeight
-                   actualWidth = maxWidth
-                   compressionQuality = 1
-               }
-           }
-           
-           let canvas = CGSize(width: actualWidth, height: actualHeight)
-           let format = imageRendererFormat
-           format.opaque = true
-           let result = UIGraphicsImageRenderer(size: canvas, format: format).image {
-               _ in draw(in: CGRect(origin: .zero, size: canvas))
-           }
-           return result.jpegData(compressionQuality: compressionQuality)
-       }
 }

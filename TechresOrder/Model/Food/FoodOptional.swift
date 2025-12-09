@@ -13,7 +13,7 @@ struct FoodOptional:Mappable {
     var id = 0
     var name = ""
     var max_items_allowed = 0
-    var min_items_allowed = 1
+    var min_items_allowed = 0
     var addition_foods:[FoodAddition] = []
     
 

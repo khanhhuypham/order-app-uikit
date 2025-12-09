@@ -46,8 +46,7 @@ struct Table: Mappable {
     var is_selected = 0
  
     
-    init?(map: Map) {
-    }
+    init?(map: Map) {}
     
     init(){}
     

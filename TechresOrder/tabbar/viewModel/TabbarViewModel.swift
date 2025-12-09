@@ -22,8 +22,7 @@ class TabbarViewModel: NSObject {
     
 
     func workingSessions() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.workingSessions(
-            branch_id: branch_id.value, empaloyee_id:emplpoyee_id.value))
+        return appServiceProvider.rx.request(.workingSessions(branch_id: branch_id.value, empaloyee_id:emplpoyee_id.value))
                .filterSuccessfulStatusCodes()
                .mapJSON().asObservable()
                .showAPIErrorToast()

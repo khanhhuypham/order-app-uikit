@@ -48,19 +48,19 @@ struct OrderResponse:Mappable{
 }
 
 struct Order: Mappable {
-
+    var id = 0
     var using_time_minutes_string = ""
     var table_name = ""
     var table_id = 0
-    var table_merged_names = [String]()
+    var table_merge_list_name = [String]()
     var using_slot = 0
     var order_status = 0
     var created_at = ""
     var payment_date = ""
-    var id = 0
+
     var id_in_branch = 0
     var customer_id = 0
-    var total_amount:Double = 0
+    var total_amount:Int = 0
 
     var total_order_detail_customer_request = 0
     var booking_infor_id = 0
@@ -71,6 +71,27 @@ struct Order: Mappable {
     var total_amount_avg_per_customer = 0
     var buffet_ticket_id = 0
     var order_method:Order_Method = .EAT_IN
+    var order_detail_pending_quantity = 0
+    var order_detail_quantity = 0
+    
+    private var order_id = 0{
+        didSet{
+            if self.id == 0{
+                self.id = order_id
+            }
+         
+        }
+    }
+    
+    private var amount:Double = 0{
+        didSet{
+            if self.total_amount == 0{
+                self.total_amount = Int(amount)
+            }
+         
+        }
+    }
+    
     
     init?(map: Map) {
     }
@@ -87,34 +108,38 @@ struct Order: Mappable {
         self.buffet_ticket_id = orderDetail.buffet?.buffet_ticket_id ?? 0
     }
     
-    init?() {}
+    init() {}
 
     mutating func mapping(map: Map) {
-
+        id                                  <- map["id"]
+        id_in_branch                        <- map["id_in_branch"]
         using_time_minutes_string           <- map["using_time_minutes_string"]
         using_slot                          <- map["using_slot"]
         table_name                          <- map["table_name"]
         table_id                            <- map["table_id"]
-        table_merged_names                  <- map["table_merged_names"]
+        table_merge_list_name               <- map["table_merge_list_name"]
         order_status                        <- map["order_status"]
         created_at                          <- map["created_at"]
-        payment_date <- map["payment_date"]
-        id                                  <- map["id"]
-        id_in_branch <- map["id_in_branch"]
-        customer_id <- map["customer_id"]
+        payment_date                        <- map["payment_date"]
+        customer_id                         <- map["customer_id"]
         total_amount                        <- map["total_amount"]
         total_order_detail_customer_request <- map["total_order_detail_customer_request"]
-
-        booking_infor_id <- map["booking_infor_id"]
-        booking_status <- map["booking_status"]
-        is_take_away <- map["is_take_away"]
-        employee <- map["employee"]
-        total_amount_avg_per_customer <- map["total_amount_avg_per_customer"]
-        buffet_ticket_id <- map["buffet_ticket_id"]
-        order_method <- map["order_method"]
-    
+        booking_infor_id                    <- map["booking_infor_id"]
+        booking_status                      <- map["booking_status"]
+        is_take_away                        <- map["is_take_away"]
+        employee                            <- map["employee"]
+        total_amount_avg_per_customer       <- map["total_amount_avg_per_customer"]
+        buffet_ticket_id                    <- map["buffet_ticket_id"]
+        order_method                        <- map["order_method"]
+        order_detail_pending_quantity       <- map["order_detail_pending_quantity"]
+        order_detail_quantity               <- map["order_detail_quantity"]
+        order_id                            <- map["order_id"]
+        amount                              <- map["amount"]
     }
 }
+
+
+
 
 
 struct SplitFoodResponse:Mappable{
@@ -141,3 +166,32 @@ struct OrderMethod: Mappable {
         is_have_take_away <- map["is_have_take_away"]
     }
 }
+
+
+
+//
+//class OfflineRealTimeOrder: Mappable {
+//    var id: Int?
+//    var table_id: Int?
+//    var table_name: String?
+//    var object_data: Order?   // nested order object
+//
+//    required init?(map: Map) {}
+//
+//    func mapping(map: Map) {
+//        id          <- map["id"]
+//        table_id    <- map["table_id"]
+//        table_name  <- map["table_name"]
+//
+//        // Step 1: get string
+//        var objectDataString: String?
+//        objectDataString <- map["object_data"]
+//
+//        // Step 2: convert string → JSON dictionary → map into Order
+//        if let str = objectDataString,
+//           let data = str.data(using: .utf8),
+//           let dict = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+//            object_data = Mapper<Order>().map(JSON: dict)
+//        }
+//    }
+//}

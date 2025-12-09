@@ -7,110 +7,119 @@
 
 import UIKit
 import RxDataSources
+import TagListView
 // MARK: - UITableViewDataSource and UITableViewDelegate
-extension ChooseOptionViewController:UITextViewDelegate {
+extension ChooseOptionViewController:UITextViewDelegate,TagListViewDelegate {
 
     
     
-//    @objc private func keyboardWillShow(notification: NSNotification ) {
-//        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue{
-//            if text_view.isFirstResponder || textfield_quantity.isFirstResponder{
-//                root_view.transform = CGAffineTransform(translationX: 0, y: -keyboardSize.height)
-//            }
-//        }
-//    }
-//        
-//    
-//    @objc private func keyboardWillHide(notification: NSNotification) {
-//        if text_view.isFirstResponder || textfield_quantity.isFirstResponder {
-//            root_view.transform = .identity
-//        }
-//    }
-    
-    
-
     func firstSetup(_ food:Food) {
       
         var item = food
-        item.quantity = item.quantity == 0 ? 1 : item.quantity
         
         
+        if item.quantity == 0{
+            item.quantity = item.is_sell_by_weight == ACTIVE ? 0.01 : 1
+        }
+   
         
         let imageUrl = URL(string: Utils.getFullMediaLink(string: item.avatar))
         food_image.kf.setImage(with: imageUrl, placeholder: UIImage(named: "image_defauft_medium"))
         lbl_name.text = item.name
-        lbl_price.text = (item.price_with_temporary * Int(item.quantity)).toString
+        lbl_price.text = (Float(item.price_with_temporary) * item.quantity).rounded(.up).toString
+        
+
         textfield_quantity.text = item.quantity.toString
+        textfield_quantity.keyboardType = item.is_sell_by_weight == ACTIVE ? .decimalPad : .numberPad
+        textfield_quantity.addTarget(self, action: #selector(textFieldEditingDidEnd(_:)), for: .editingChanged)
+        textfield_quantity.setMaxValue(maxValue: 999)
         text_view.text = item.note
  
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillChangeFrameNotification , object:nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification , object:nil)
         text_view.withDoneButton()
         text_view.delegate = self // Set the delegate
-        
-        
+        tagListView.delegate = self
         
         var sections:[SectionModel<FoodOptional,FoodAddition>] = []
-        
+    
         for option in item.food_options{
-            
+
             var items = option.addition_foods
             
             if option.max_items_allowed > 1 {
                 
                 for (i,item) in items.enumerated(){
-                    
                     if item.is_selected == ACTIVE{
-                        
                         items[i].is_selected = ACTIVE
-                        
                     }
                 }
-                
+        
             }else{
-                
                 if let i = option.addition_foods.firstIndex(where: {$0.is_selected == ACTIVE}){
-                    
                     items[i].is_selected = ACTIVE
-                    items[i].quantity = 1
+                }
+            }
+            sections.append(SectionModel(model: option, items: items))
+        }
+        
+        
+        for (i,section) in sections.enumerated(){
+            let option = section.model
+            var items = section.items
+            
+            
+            if option.min_items_allowed > items.filter{$0.is_selected == ACTIVE}.count{
+                
+                for (j,item) in items.filter{$0.is_selected == DEACTIVE}.enumerated(){
+               
                     
-                }else{
-                    
-                    if (option.min_items_allowed > 0){
-                        items[0].is_selected = ACTIVE
-                        items[0].quantity = 1
+                    if items.filter{$0.is_selected == ACTIVE}.count == option.min_items_allowed{
+                        continue
+                    }else if items.filter{$0.is_selected == ACTIVE}.count > option.max_items_allowed{
+                        items[j].is_selected = DEACTIVE
+                        items[j].quantity = 0
+                    }else{
+                        items[j].is_selected = ACTIVE
+                        items[j].quantity = 1
                     }
-                    
+        
                 }
                 
             }
-            
-            
-            sections.append(SectionModel(model: option, items: items))
-            
+            sections[i].items = items
         }
+        
+        
+        
         viewModel.item.accept(item)
         viewModel.sectionArray.accept(sections)
-        
-        
-
         tableView.reloadData()
-    
-        if item.food_options.count > 0{
-            
-            height_of_table.constant = 200
-            
-            for (i,option) in item.food_options.enumerated(){
-                height_of_table.constant += tableView.rect(forSection: i).height
 
-            }
+        permissionUtils.GPBH_1 ? notes() : notesByFood()
+    }
+    
+    
+    @objc func textFieldEditingDidEnd(_ textField: UITextField) {
         
-            height_of_table.constant -= 200
-            tableView.layoutIfNeeded()
-        }else{
-            height_of_table.constant = 0
+        if var text = textField.text {
+            // Normalize all commas to dots first
+            text = text.replacingOccurrences(of: ",", with: ".")
+
+            // If there's a dot, keep only the first one
+            if let firstDotIndex = text.firstIndex(of: ".") {
+                let prefix = text[..<text.index(after: firstDotIndex)]
+                let suffix = text[text.index(after: firstDotIndex)...].replacingOccurrences(of: ".", with: "").prefix(2).description
+                text = prefix + suffix
+            }
+
+            // Update your model
+            var item = viewModel.item.value
+            item.setQuantity(quantity: Float(text) ?? 0)
+            viewModel.item.accept(item)
+            textfield_quantity.text = text
+            lbl_price.text = (Float(item.price_with_temporary) * item.quantity).rounded(.up).toString
         }
         
+
     }
     
     // UITextViewDelegate method
@@ -118,6 +127,25 @@ extension ChooseOptionViewController:UITextViewDelegate {
         var item = viewModel.item.value
         item.note = textView.text
         viewModel.item.accept(item)
+    }
+    
+    
+    // MARK: TagListViewDelegate
+    func tagPressed(_ title: String, tagView: TagView, sender: TagListView) {
+        print("Tag pressed: \(title), \(sender)")
+
+        var item = viewModel.item.value
+ 
+    
+        if(item.note.count>0){
+            item.note.append(contentsOf: String(format: ", %@", title))
+        }else{
+            item.note.append(contentsOf: title)
+        }
+                
+        viewModel.item.accept(item)
+        text_view.text = item.note
+        
     }
 
 

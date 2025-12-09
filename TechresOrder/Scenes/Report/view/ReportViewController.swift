@@ -75,7 +75,8 @@ class ReportViewController: BaseViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        view_block.isHidden = permissionUtils.GPBH_2_o_3 && Utils.checkRoleOwner(permission: ManageCacheObject.getCurrentUser().permissions) ? false : true
+ 
+        view_block.isHidden = permissionUtils.GPBH_2_o_3 && permissionUtils.Owner ? false : true
         lbl_target_point.text = Utils.stringVietnameseMoneyFormatWithNumberDouble(amount: Double(ManageCacheObject.getCurrentPoint().next_rank_target_point))
         lbl_target_amount.text = Utils.stringVietnameseMoneyFormatWithNumberDouble(amount: Double(ManageCacheObject.getCurrentPoint().next_rank_bonus_salary))
         lbl_branch_name.text = ManageCacheObject.getCurrentBranch().name

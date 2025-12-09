@@ -40,17 +40,20 @@ class UtilitiesViewController: BaseViewController {
     @IBOutlet weak var view_area_manager: UIView!
     @IBOutlet weak var view_food_manager: UIView!
     @IBOutlet weak var view_order_manager: UIView!
+    @IBOutlet weak var view_closed_session: UIView!
     
     @IBOutlet weak var view_report: UIView!
     @IBOutlet weak var view_report_employee: UIView!
     
     
     @IBOutlet weak var stackView_of_food_app: UIStackView!
+    @IBOutlet weak var view_of_connect_food_app_partner: UIView!
     @IBOutlet weak var view_assign_branch_of_food_app: UIView!
     
-    
-    
-    var originalPosition: CGPoint = CGPoint.zero
+    @IBOutlet weak var view_of_food_app_printer_setting: UIView!
+    @IBOutlet weak var stackView_of_e_invoice: UIStackView!
+
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -63,12 +66,11 @@ class UtilitiesViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.mapData()
-
-
     }
  
     
      func mapData(){
+         
         let user = Constants.user
         //map thông tin account
         lbl_employee_code.text = user.username
@@ -80,8 +82,8 @@ class UtilitiesViewController: BaseViewController {
         // map thông tin chi nhanh
         avatar_branch.kf.setImage(with: URL(string: Utils.getFullMediaLink(string: ManageCacheObject.getCurrentBranch().image_logo)), placeholder: UIImage(named: "image_defauft_medium"))
             
-        lbl_branch_name.text = ManageCacheObject.getCurrentBranch().name
-        lbl_branch_address.text =  ManageCacheObject.getCurrentBranch().address
+        lbl_branch_name.text = Constants.branch.name
+        lbl_branch_address.text =  Constants.branch.address
 
         view_member_register.isHidden = permissionUtils.GPQT_3_and_above && ManageCacheObject.getSetting().is_enable_membership_card == ACTIVE ? false : true
 
@@ -93,13 +95,19 @@ class UtilitiesViewController: BaseViewController {
             top_constraint_of_stackview.constant = 0
         }
 
-
         view_area_manager.isHidden = permissionUtils.GPBH_1 ? false : true
-        view_food_manager.isHidden = permissionUtils.GPBH_1 ? false : true
-        view_report_employee.isHidden = permissionUtils.GPBH_1 ? true : false
-        view_assign_branch_of_food_app.isHidden = permissionUtils.GPBH_2_o_2 || permissionUtils.GPBH_2_o_3 || permissionUtils.GPBH_3 ? true : false
-        stackView_of_food_app.isHidden = permissionUtils.isAllowFoodApp ? false : true
          
+        view_food_manager.isHidden = permissionUtils.GPBH_1 ? false : true
+         
+        view_closed_session.isHidden = permissionUtils.GPBH_2 || permissionUtils.GPBH_3  ? false : true
+         
+        view_report_employee.isHidden = permissionUtils.GPBH_1 ? true : false
+         
+        stackView_of_food_app.isHidden = permissionUtils.allowFoodAppManagement ? false : true
+        view_assign_branch_of_food_app.isHidden = permissionUtils.GPBH_1 ? false : true
+        view_of_connect_food_app_partner.isHidden = permissionUtils.allowConnectFoodAppPartner ? false : true
+        view_of_food_app_printer_setting.isHidden = permissionUtils.GPBH_1 || permissionUtils.GPBH_2_o_1 ? false : true
+        stackView_of_e_invoice.isHidden = permissionUtils.GPBH_1 ? false : true
 
         //NẾU LÀ GIẢI PHÁP QUẢN TRỊ THÌ ẨN VIEW NÀY ĐI
         if(ManageCacheObject.getSetting().service_restaurant_level_id >= GPQT_LEVEL_TWO ){
@@ -114,17 +122,13 @@ class UtilitiesViewController: BaseViewController {
     
     @IBAction func actionNavigateToSettingAccount(_ sender: Any) {
         viewModel.makeSettingAccountViewController()
-
     }
     
     @IBAction func actionNavigateToUpdateBranch(_ sender: Any) {
         !permissionUtils.GPBH_1 ? presentModalChooseBrand() : viewModel.makeToUpdateBranchViewController()
-
     }
     
-    
-        
-    
+
     @IBAction func actionNavigateToCustomerRegister(_ sender: Any) {
         viewModel.makeMemberRegisterViewController()
     }
@@ -152,6 +156,10 @@ class UtilitiesViewController: BaseViewController {
         viewModel.makeOrderManagementViewController()
     }
     
+    @IBAction func actionNavigateToClosedSessionHistory(_ sender: Any) {
+        viewModel.makeClosedSessionHistoryViewController()
+    }
+    
     @IBAction func actionNavigateToRevenueDetail(_ sender: Any) {
         viewModel.makeToRevenueDetailViewController()
     }
@@ -172,7 +180,6 @@ class UtilitiesViewController: BaseViewController {
     @IBAction func actionNavigateToEnvironmentManagement(_ sender: Any) {
         viewModel.makeEnvironmentViewController()
     }
-    
     
     
     @IBAction func actionNavigateToTechresShop(_ sender: Any) {
@@ -203,11 +210,23 @@ class UtilitiesViewController: BaseViewController {
         viewModel.makeOrderHistoryOfFoodAppViewController()
     }
     
+    @IBAction func actionNavigateToOrderOfFoodApp(_ sender: Any) {
+        viewModel.makeOrderOfFoodAppViewController()
+    }
+    
     @IBAction func actionNavigateToFoodAppReport(_ sender: Any) {
         viewModel.makeFoodAppReportViewController()
     }
     
     
+    @IBAction func actionNavigateToEReceiptConnection(_ sender: Any) {
+        viewModel.makeAssignToEReceiptConnectionViewController()
+    }
     
+    @IBAction func actionNavigateToEReceiptManagement(_ sender: Any) {
+        viewModel.makeEInvoiceManagementViewController()
+    }
+    
+
    
 }

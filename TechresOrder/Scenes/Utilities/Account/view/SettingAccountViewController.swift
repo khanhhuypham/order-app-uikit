@@ -15,13 +15,12 @@ class SettingAccountViewController: BaseViewController {
     
     @IBOutlet weak var asd: UILabel!
     override func viewDidLoad() {
-            super.viewDidLoad()
-            // Do any additional setup after loading the view.
-            viewModel.bind(view: self, router: router)
-            registerCell()
-            bindTableView()
-            viewModel.dataSectionArray.accept([0,1])
-            
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+        viewModel.bind(view: self, router: router)
+        registerCell()
+        bindTableView()
+        viewModel.dataSectionArray.accept([0,1])
     }
     
   

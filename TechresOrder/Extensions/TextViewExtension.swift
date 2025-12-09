@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import RxSwift
 @IBDesignable class TextViewWithPlaceholder: UITextView {
     
     override var text: String! { // Ensures that the placeholder text is never returned as the field's text

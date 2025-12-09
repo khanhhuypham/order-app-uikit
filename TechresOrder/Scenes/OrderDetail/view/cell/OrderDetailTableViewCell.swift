@@ -33,16 +33,22 @@ class OrderDetailTableViewCell: UITableViewCell {
     @IBOutlet weak var parent_view_of_view_action: UIView!
     @IBOutlet weak var view_relatedQuantity_action: UIView!
     
+    //================ fish tank ==============
+    @IBOutlet weak var stackView_of_fish_tank: UIStackView!
+    @IBOutlet weak var lbl_adjusted_quantity: UILabel!
+    @IBOutlet weak var lbl_reason: UILabel!
+    
+    //================ gift =============
     @IBOutlet weak var lbl_gift_amount: UILabel!
     @IBOutlet weak var view_gift: UIView!
     
+    //================ service =============
     @IBOutlet weak var lbl_service_time_block: UILabel!
     
     @IBOutlet weak var hand_holder: UIView!
     
     @IBOutlet weak var btn_pause_service: UIButton!
     @IBOutlet weak var btn_show_service_popup: UIButton!
-    
     
     
     var timer: Timer?
@@ -61,10 +67,8 @@ class OrderDetailTableViewCell: UITableViewCell {
         super.setSelected(false, animated: false)
         // Configure the view for the selected state
     }
+    
     var viewModel: OrderDetailViewModel?
-    
-    
-    
     
     var data: OrderItem?{
         didSet {
@@ -88,16 +92,40 @@ class OrderDetailTableViewCell: UITableViewCell {
         lbl_quantity_status_completed.isHidden = false
         view_discount.isHidden = data.discount_percent == 0 ? true : false
         view_note.isHidden = data.note.count == 0 ? true : false
+        stackView_of_fish_tank.isHidden = data.status == .wait_customer_confirm_seafood ? false : true
         view_gift.isHidden = data.is_gift == 0 ? true : false
         lbl_status.isHidden = false
+        lbl_status.text = data.status.description
+        lbl_status.textColor = data.status.fgColor
         btn_pause_service.isHidden = true
         btn_show_service_popup.isHidden = true
-        
+        self.backgroundColor = data.status.bgColor
+ 
         
         avatar_food.kf.setImage(with: URL(string: Utils.getFullMediaLink(string: data.food_avatar)), placeholder: UIImage(named: "image_defauft_medium"))
         lbl_food_name.text = data.name
         lbl_discount_percent.text = String(format: "Giảm giá %d%%", data.discount_percent)
         lbl_note.text = data.note
+        
+      
+        
+        lbl_adjusted_quantity.attributedText = Utils.setAttributesForLabel(
+            label: lbl_adjusted_quantity,
+            attributes:[
+                (str:"SL điều chỉnh: ",properties:[.font: UIFont.systemFont(ofSize: 12, weight: .regular)]),
+                (str:data.seafood_tank_quantity.toString,properties:[.font: UIFont.systemFont(ofSize: 12, weight: .bold)])
+            ]
+        )
+        
+        lbl_reason.attributedText = Utils.setAttributesForLabel(
+            label: lbl_reason,
+            attributes:[
+                (str:"Lý do: ",properties:[.font: UIFont.systemFont(ofSize: 12, weight: .bold)]),
+                (str:data.seafood_tank_note,properties:[.font: UIFont.systemFont(ofSize: 12, weight: .regular)])
+            ]
+        )
+   
+        
         lbl_quantity_status_completed.attributedText = Utils.setAttributesForLabel(
             label: lbl_quantity_status_completed,
             attributes:[
@@ -108,9 +136,7 @@ class OrderDetailTableViewCell: UITableViewCell {
    
         lbl_quantity.text = String(format: data.is_sell_by_weight == ACTIVE ? "%.2f" : "%.0f ", data.quantity)
       
-        lbl_service_time_block.text = String(format: "%@ giờ đầu tiên: %@/giờ",
-                                             Utils.stringVietnameseMoneyFormatWithNumberInt(amount: data.time_block_price),
-                                             Utils.stringVietnameseMoneyFormatWithNumberInt(amount: data.block_price))
+        lbl_service_time_block.text = String(format: "%@ giờ đầu tiên: %@/giờ", data.time_block_price.toString,data.block_price.toString)
         lbl_service_time_block.isHidden = data.is_enable_block == ACTIVE ? false : true
         
         
@@ -149,13 +175,16 @@ class OrderDetailTableViewCell: UITableViewCell {
 
                 view_relatedQuantity_action.isHidden = true
                 lbl_quantity_status_completed.isHidden = false
-                self.backgroundColor = ColorUtils.white()
                 hand_holder.isHidden = false
             
                 if data.category_type == .buffet_ticket{
+                    
                     hand_holder.backgroundColor = ColorUtils.blue_brand_700()
+                    
                 }else{
+                    
                     hand_holder.backgroundColor = data.buffet_ticket_id > 0 ? ColorUtils.red_500() : ColorUtils.green_600()
+                    
                 }
          
         
@@ -194,39 +223,28 @@ class OrderDetailTableViewCell: UITableViewCell {
                 break
             
             case .cooking:
-                lbl_status.text = "ĐANG CHẾ BIẾN"
-                lbl_status.textColor = ColorUtils.blue_brand_700()
                 view_relatedQuantity_action.isHidden = true
                 lbl_quantity_status_completed.isHidden = false
-                self.backgroundColor = ColorUtils.white()
                 hand_holder.backgroundColor = ColorUtils.green_600()
                 break
             
             case .pending:
                 lbl_status.text = data.category_type == .drink || data.category_type == .other ? "CHỜ XUẤT KHO" : "CHỜ CHẾ BIẾN"
-                lbl_status.textColor = ColorUtils.orange_brand_900()
                 view_relatedQuantity_action.isHidden = false
                 lbl_quantity_status_completed.isHidden = true
-                self.backgroundColor = ColorUtils.white()
                 hand_holder.backgroundColor = ColorUtils.gray_600()
                 hand_holder.isHidden = false
                 break
             
             case .not_enough:
-                lbl_status.text = "HẾT MÓN"
-                lbl_status.textColor = ColorUtils.red_500()
                 view_relatedQuantity_action.isHidden = true
                 lbl_quantity_status_completed.isHidden = false
-                self.backgroundColor = ColorUtils.red_000()
                 hand_holder.isHidden = true
                 break
             
             case .cancel:
-                lbl_status.text = "ĐÃ HỦY"
-                lbl_status.textColor = ColorUtils.red_500()
                 view_relatedQuantity_action.isHidden = true
                 lbl_quantity_status_completed.isHidden = false
-                self.backgroundColor = ColorUtils.red_000()
                 hand_holder.isHidden = true
             
                 if data.category_type == .service{
@@ -240,14 +258,11 @@ class OrderDetailTableViewCell: UITableViewCell {
             
             case .servic_block_using:
                 avatar_food.image = UIImage(named:"icon-service-block-using")
-                lbl_status.text = "ĐANG SỬ DỤNG"
-                lbl_status.textColor = ColorUtils.green_600()
                 view_relatedQuantity_action.isHidden = true
                 lbl_quantity_status_completed.isHidden = false
 
                 btn_pause_service.isHidden = false
                 btn_show_service_popup.isHidden = false
-                self.backgroundColor = .white
                 hand_holder.backgroundColor = ColorUtils.blue_brand_700()
                 hand_holder.isHidden = false
             
@@ -275,23 +290,26 @@ class OrderDetailTableViewCell: UITableViewCell {
                 break
             
             case .servic_block_stopped:
-            
                 avatar_food.image = UIImage(named:"icon-service-block-stop")
-                lbl_status.text = "ĐANG TẠM DỪNG"
-                lbl_status.textColor = ColorUtils.red_500()
                 view_relatedQuantity_action.isHidden = true
                 lbl_quantity_status_completed.isHidden = false
                 lbl_quantity_status_completed.attributedText = Utils.setAttributesForLabel(
-                                label: lbl_quantity_status_completed,
-                                attributes:[
-                                    (str:TimeUtils.ConvertMinutetoHourMinuteFormat(data.service_time_used),properties:[color:ColorUtils.red_600()]),
-                                ])
+                    label: lbl_quantity_status_completed,
+                    attributes:[
+                        (str:TimeUtils.ConvertMinutetoHourMinuteFormat(data.service_time_used),properties:[color:ColorUtils.red_600()]),
+                    ]
+                )
                 btn_pause_service.isHidden = false
                 btn_show_service_popup.isHidden = false
-                self.backgroundColor = .white
                 hand_holder.backgroundColor = ColorUtils.blue_brand_700()
                 hand_holder.isHidden = false
                 break
+            
+            case .wait_fish_tank_confirm,.wait_customer_confirm_seafood,.customer_confirmed_seafood:
+                view_relatedQuantity_action.isHidden = false
+                lbl_quantity_status_completed.isHidden = true
+                hand_holder.backgroundColor = ColorUtils.gray_600()
+                hand_holder.isHidden = false
             
             default:
                 break
@@ -334,22 +352,18 @@ class OrderDetailTableViewCell: UITableViewCell {
             attr.append((str:"[Món bán kèm]\n", properties:[color:ColorUtils.orange_brand_900()]))
             lbl_addition_food.isHidden = false
             data.order_detail_additions.enumerated().forEach{(i,value) in
-                
                 attr.append((str:String(format:"+ %@ ",value.name),properties:[color:ColorUtils.gray_600()]))
                 attr.append((str:String(format:"x %.0f",value.quantity),properties:[color:ColorUtils.orange_brand_900()]))
                 attr.append((str:String(format:" = %@\n",value.total_price.toString),properties:[color:ColorUtils.gray_600()]))
-                
             }
 
         }else if data.order_detail_combo.count > 0 {
 
             lbl_addition_food.isHidden = false
             data.order_detail_combo.enumerated().forEach{(i,value) in
-                
                 attr.append((str:String(format:"+ %@ ",value.name),properties:[color:ColorUtils.gray_600()]))
                 attr.append((str:String(format:"x %.0f",value.quantity),properties:[color:ColorUtils.orange_brand_900()]))
                 attr.append((str:" phần\n",properties:[color:ColorUtils.gray_600()]))
-                
             }
             
 
@@ -357,10 +371,8 @@ class OrderDetailTableViewCell: UITableViewCell {
             attr.append((str:"[Quà tặng kèm]\n", properties:[color:ColorUtils.orange_brand_900()]))
             lbl_addition_food.isHidden = false
             data.order_detail_promotion_foods.enumerated().forEach{(i,value) in
-                
                 attr.append((str:String(format:"+ %@ ",value.name),properties:[color:ColorUtils.gray_600()]))
                 attr.append((str:String(format:"x %.0f\n",value.quantity),properties:[color:ColorUtils.orange_brand_900()]))
-                
             }
 
         }else if data.order_detail_buffetTicket.count > 0 {
@@ -373,16 +385,16 @@ class OrderDetailTableViewCell: UITableViewCell {
                     attr.append((str:String(format:"x %.0f",value.quantity),properties:[color:ColorUtils.orange_brand_900()]))
                     
                     attr.append((
-                        str:" = " + Utils.stringVietnameseMoneyFormatWithNumberInt(amount:value.discountPrice) + " ",
+                        str:" = " + value.discountPrice.toString + " ",
                         properties:[color:ColorUtils.gray_600()]
                     ))
                     
                     attr.append((
-                        str: Utils.stringVietnameseMoneyFormatWithNumberInt(amount:value.total_price),
+                        str: value.total_price.toString,
                         properties:[color:ColorUtils.gray_600(),crossLineKey:crossLineValue]
                     ))
-
-                    attr.append((str:String(format:"\n   (Giảm giá %d%%)",value.discountPercent),properties:[color:ColorUtils.blue_brand_700()]))
+                    
+                    attr.append((str:String(format:"\n   (Giảm giá %d%%)\n",value.discountPercent),properties:[color:ColorUtils.blue_brand_700()]))
                     
                 }else{
                     
@@ -410,15 +422,25 @@ class OrderDetailTableViewCell: UITableViewCell {
                 value.food_option_foods.filter{$0.status == ACTIVE}.enumerated().forEach{(j,opt) in
                     
                     if opt.price > 0 {
-                        let total_amount = (opt.price * Int(data.quantity)).toString
-                        attr.append((str:String(format:"+ %@ ",opt.food_name),properties:[color:ColorUtils.gray_600()]))
-                        attr.append((str:String(format:"x %.0f",data.quantity),properties:[color:ColorUtils.orange_brand_900()]))
-                        attr.append((str:String(format: " = %@\n" ,total_amount),properties:[color:ColorUtils.gray_600()]))
+                        
+                        if opt.quantity >= 1{
+                            attr.append((str:String(format:"+ %@ ",opt.food_name),properties:[color:ColorUtils.gray_600()]))
+                            attr.append((str:String(format:"x %.0f",opt.quantity),properties:[color:ColorUtils.orange_brand_900()]))
+                            attr.append((str:String(format: " = %@\n",(opt.price * Int(opt.quantity)).toString),properties:[color:ColorUtils.gray_600()]))
+                        }else{
+                            attr.append((str:String(format:"+ %@\n",opt.food_name),properties:[color:ColorUtils.gray_600()]))
+                        }
+                        
                     }else{
-                        attr.append((str:String(format:"+ %@\n",opt.food_name),properties:[color:ColorUtils.gray_600()]))
+
+                        if opt.quantity >= 1{
+                            attr.append((str:String(format:"+ %@ ",opt.food_name),properties:[color:ColorUtils.gray_600()]))
+                            attr.append((str:String(format:"x %.0f\n",opt.quantity),properties:[color:ColorUtils.orange_brand_900()]))
+                        }else{
+                            attr.append((str:String(format:"+ %@\n",opt.food_name),properties:[color:ColorUtils.gray_600()]))
+                        }
                     }
                 }
-                
             }
         }
         
@@ -430,6 +452,8 @@ class OrderDetailTableViewCell: UITableViewCell {
         if attr.count > 0{
             lbl_addition_food.attributedText = Utils.setAttributesForLabel(label: lbl_addition_food, attributes: attr)
         }
+        
+        
     }
     
     
@@ -474,7 +498,7 @@ class OrderDetailTableViewCell: UITableViewCell {
         guard let viewModel = viewModel else {return}
         
         // món tặng và món khuyến mãi không được phép chỉnh sửa số lượng
-        if data?.is_gift == DEACTIVE  &&  data?.order_detail_promotion_foods.count == 0{
+        if data?.is_gift == DEACTIVE  && data?.order_detail_promotion_foods.count == 0{
             var order = viewModel.order.value
             if let position = order.order_details.firstIndex(where:{$0.id == data?.id}){
                 

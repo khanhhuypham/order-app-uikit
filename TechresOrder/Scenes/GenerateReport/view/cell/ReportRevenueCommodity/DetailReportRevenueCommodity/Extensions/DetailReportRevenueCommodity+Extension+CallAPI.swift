@@ -20,6 +20,8 @@ extension DetaiRevenueCommodityViewController {
                     
                     report.reportType = viewModel.report.value.reportType
                     report.dateString = viewModel.report.value.dateString
+                    report.fromDate = viewModel.report.value.fromDate
+                    report.toDate = viewModel.report.value.toDate
                     setupBarChart(data: report.foods, barChart: bar_chart)
                     viewModel.report.accept(report)
                     lbl_total_amount.text = report.total_amount.toString

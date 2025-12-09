@@ -7,8 +7,7 @@
 
 import UIKit
 import ObjectMapper
-import ZLPhotoBrowser
-//import ActionSheetPicker_3_0
+//import ZLPhotoBrowser
 import JonAlert
 import RxRelay
 
@@ -24,8 +23,6 @@ extension UpdateProfileViewController{
         
         lbl_id.text = account.identity_card
         lbl_birthday.text = account.birthday
-//        lbl_gender.text = account.gender == ACTIVE ? "Nam" : "Nữ"
-        
       
         textfield_email.text = account.email
         textfield_phone.text = account.phone_number
@@ -85,26 +82,26 @@ extension UpdateProfileViewController{
     
 
     func chooseAvatar() {
-        let config = ZLPhotoConfiguration.default()
-        config.maxSelectCount = 1
-        config.maxVideoSelectCount = 1
-        config.useCustomCamera = false
-        config.allowSelectVideo = false
-        config.allowEditImage = true
-        config.allowEditVideo = false
-        config.allowSlideSelect = true
-        config.allowSelectGif = true
-        config.maxSelectVideoDuration = 60 * 100//100 phut
-        
-
-        let ps = ZLPhotoPreviewSheet()
-        ps.selectImageBlock = { [weak self] results, isOriginal in
-            self?.avatar.image = results[0].image
-            self?.imagecover.append(results[0].image)
-            self?.selectedAssets.append(results[0].asset)
-            self!.generateFileUpload()
-        }
-        ps.showPhotoLibrary(sender: self)
+//        let config = ZLPhotoConfiguration.default()
+//        config.maxSelectCount = 1
+//        config.maxVideoSelectCount = 1
+//        config.useCustomCamera = false
+//        config.allowSelectVideo = false
+//        config.allowEditImage = true
+//        config.allowEditVideo = false
+//        config.allowSlideSelect = true
+//        config.allowSelectGif = true
+//        config.maxSelectVideoDuration = 60 * 100//100 phut
+//        
+//
+//        let ps = ZLPhotoPreviewSheet()
+//        ps.selectImageBlock = { [weak self] results, isOriginal in
+//            self?.avatar.image = results[0].image
+//            self?.imagecover.append(results[0].image)
+//            self?.selectedAssets.append(results[0].asset)
+//            self!.generateFileUpload()
+//        }
+//        ps.showPhotoLibrary(sender: self)
     }
 
     

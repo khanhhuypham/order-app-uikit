@@ -18,7 +18,7 @@ class DialogChooseTableViewModel {
 
     public var table_array = BehaviorRelay<[Table]>(value: [])
     public var area_array = BehaviorRelay<[Area]>(value: [])
-    var order = BehaviorRelay<Order>(value: Order()!)
+    var order = BehaviorRelay<Order>(value: Order())
     var status = BehaviorRelay<String>(value: "")
 //    
     var isAPICalling = BehaviorRelay<Bool>(value: false)

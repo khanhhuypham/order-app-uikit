@@ -21,21 +21,10 @@ class DetaiRevenueCommodityViewController: BaseViewController {
     
     @IBOutlet weak var lbl_total_amount: UILabel!
 
-    // MARK: Biến của button filter
-    @IBOutlet weak var btn_today: UIButton!
-    @IBOutlet weak var btn_yesterday: UIButton!
-    @IBOutlet weak var btn_this_week: UIButton!
-    @IBOutlet weak var btn_this_month: UIButton!
-    @IBOutlet weak var btn_last_month: UIButton!
-    @IBOutlet weak var btn_last_three_month: UIButton!
-    @IBOutlet weak var btn_this_year: UIButton!
-    @IBOutlet weak var btn_last_year: UIButton!
-    @IBOutlet weak var btn_last_three_year: UIButton!
-    @IBOutlet weak var btn_all_year: UIButton!
+    @IBOutlet weak var reportFilter: ReportFilter!
+    var datePicker: DatePickerUtils = DatePickerUtils()
         
 
-    
-    var btnArray:[UIButton] = []
 
     var detailedReport:FoodReportData = FoodReportData.init()!
     
@@ -48,18 +37,47 @@ class DetaiRevenueCommodityViewController: BaseViewController {
         viewModel.report.accept(detailedReport)
         registerCellAndBindTableView()
         
-        
-        btnArray = [btn_today, btn_yesterday, btn_this_week, btn_this_month, btn_last_month, btn_last_three_month, btn_this_year, btn_last_year, btn_last_three_year, btn_all_year]
-        for btn in self.btnArray{
-            btn.rx.tap.asDriver().drive(onNext: { [weak self] in
-                self?.changeBgBtn(btn: btn)
-            }).disposed(by: rxbag)
-            
-            if btn.tag == detailedReport.reportType{
-                changeBgBtn(btn: btn)
-                
-            }
+        datePicker.chooseDate = { [weak self] (date,tag) in
+            self?.handleChooseDate(date: date, tag: tag)
         }
+        
+        reportFilter.defaultReportType = viewModel.report.value.reportType
+        
+        reportFilter.chooseReportType = { [weak self] reportType in
+            guard let self = self else { return }
+            var report = self.viewModel.report.value
+           
+            if reportType == -1{
+               
+               
+               self.datePicker.showDatePicker(
+                    self,
+                    date:TimeUtils.convertStringToDate(from: report.fromDate, format: .dd_mm_yyyy),
+                    tag:reportType
+               )
+
+
+            }else if reportType == -2{
+               
+               self.datePicker.showDatePicker(
+                    self,
+                    date:TimeUtils.convertStringToDate(from: report.toDate, format: .dd_mm_yyyy),
+                    tag:reportType
+               )
+
+               
+            }else if reportType > 0{
+
+               report.reportType = reportType
+               report.dateString = Constants.REPORT_TYPE_DICTIONARY[reportType] ?? ""
+               viewModel.report.accept(report)
+               getRevenueReportCommodity()
+            }
+           
+       }
+
+        
+    
         
     }
     
@@ -74,30 +92,37 @@ class DetaiRevenueCommodityViewController: BaseViewController {
         router.navigatePopViewController()
     }
     
-    
 
-    @IBAction func actionChooseReportType(_ sender: UIButton) {
-        var report = viewModel.report.value
-        report.reportType = sender.tag
-        report.dateString = Constants.REPORT_TYPE_DICTIONARY[sender.tag] ?? ""
-        viewModel.report.accept(report)
-        getRevenueReportCommodity()
-    }
     
-    private func changeBgBtn(btn:UIButton){
-        for button in self.btnArray{
-            button.backgroundColor = ColorUtils.white()
-            button.setTitleColor(ColorUtils.orange_brand_900(),for: .normal)
-            
-            let btnTxt = NSMutableAttributedString(string: button.titleLabel?.text ?? "",attributes: [NSAttributedString.Key.font :UIFont.systemFont(ofSize: 12, weight: .semibold)])
-        
-            button.setAttributedTitle(btnTxt,for: .normal)
-            button.borderWidth = 1
-            button.borderColor = ColorUtils.orange_brand_900()
+    
+    private func handleChooseDate(date:Date,tag:Int){
+      
+        let dateString = TimeUtils.convertDateToString(from: date, format: .dd_mm_yyyy)
+        var report = viewModel.report.value
+     
+        if tag == -2{
+            if TimeUtils.isDateValid(fromDateStr: dateString,toDateStr: report.toDate){
+                self.reportFilter.setFromDateTitle(dateString)
+                report.fromDate = dateString
+                report.reportType = 13
+                viewModel.report.accept(report)
+                getRevenueReportCommodity()
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+          
+        }else if tag == -1{
+            if TimeUtils.isDateValid(fromDateStr: report.fromDate,toDateStr: dateString){
+                self.reportFilter.setToDateTitle(dateString)
+                report.toDate = dateString
+                report.reportType = 13
+                viewModel.report.accept(report)
+                getRevenueReportCommodity()
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
         }
-        btn.borderWidth = 0
-        btn.backgroundColor = ColorUtils.orange_brand_900()
-        btn.setTitleColor(ColorUtils.white(),for: .normal)
+        
     }
     
     

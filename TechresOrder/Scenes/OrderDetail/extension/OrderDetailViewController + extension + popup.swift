@@ -9,6 +9,7 @@ import UIKit
 import JonAlert
 
 extension OrderDetailViewController:CaculatorInputQuantityDelegate{
+    
     func presentModalInputQuantityViewController(currentQuantity:Float,is_sell_by_weight:Int,position:Int) {
         let inputQuantityViewController = QuantityInputViewController()
         inputQuantityViewController.max_quantity = 999
@@ -89,8 +90,6 @@ extension OrderDetailViewController: ReasonCancelFoodDelegate {
                 : cancelFood(item: item)
                 
         }
-        
-      
     }
 
     
@@ -193,15 +192,14 @@ extension  OrderDetailViewController: ReturnBeerDelegate {
     
     
     func presentModalReturnBeerViewController(order_id:Int, order_detail_id:Int, quantity:Int) {
-        let returnFoodViewController = ReturnFoodViewController()
-        returnFoodViewController.order_id = order_id
-        returnFoodViewController.order_detail_id = order_detail_id
-
-        returnFoodViewController.total = Float(quantity)
-        returnFoodViewController.type = 1
-        returnFoodViewController.delegateReturnBeer = self
-        returnFoodViewController.view.backgroundColor = ColorUtils.blackTransparent()
-            let nav = UINavigationController(rootViewController: returnFoodViewController)
+        let vc = ReturnFoodViewController()
+        vc.order_id = order_id
+        vc.order_detail_id = order_detail_id
+        vc.total = Float(quantity)
+        vc.type = 1
+        vc.delegateReturnBeer = self
+        vc.view.backgroundColor = ColorUtils.blackTransparent()
+            let nav = UINavigationController(rootViewController: vc)
             // 1
             nav.modalPresentationStyle = .overCurrentContext
 
@@ -229,7 +227,7 @@ extension  OrderDetailViewController: ReturnBeerDelegate {
 extension OrderDetailViewController {
     
     
-    func presentModalDialogConfirmViewController(content:String,confirmClosure:(()-> Void)? = nil,cancelClosure:(()-> Void)? = nil) {
+    func presentPopupConfirmViewController(content:String,confirmClosure:(()-> Void)? = nil,cancelClosure:(()-> Void)? = nil) {
         let vc = PopupConfirmViewController()
         vc.confirmClosure = confirmClosure
         vc.cancelClosure = cancelClosure
@@ -245,7 +243,9 @@ extension OrderDetailViewController {
     func presentServicePopupViewController(orderItem:OrderItem) {
         let vc = ServicePopupViewController()
         vc.view.backgroundColor = ColorUtils.blackTransparent()
-        vc.completion = getOrder
+        vc.completion = {
+            self.getOrder()
+        }
         vc.orderItem = orderItem
         vc.modalTransitionStyle = .crossDissolve
         vc.modalPresentationStyle = .overCurrentContext
@@ -258,7 +258,9 @@ extension OrderDetailViewController {
         vc.view.backgroundColor = ColorUtils.blackTransparent()
         vc.orderItem = orderItem
         vc.orderId = viewModel.order.value.id
-        vc.completetion = getOrder
+        vc.completetion = {
+            self.getOrder()
+        }
         vc.modalTransitionStyle = .crossDissolve
         vc.modalPresentationStyle = .overCurrentContext
         present(vc, animated: true, completion: nil)
@@ -270,7 +272,9 @@ extension OrderDetailViewController {
         vc.view.backgroundColor = ColorUtils.blackTransparent()
         vc.buffet = buffet
         vc.order = viewModel.order.value
-        vc.completetion = getOrder
+        vc.completetion = {
+            self.getOrder()
+        }
         vc.modalTransitionStyle = .crossDissolve
         vc.modalPresentationStyle = .overCurrentContext
         present(vc, animated: true, completion: nil)
@@ -311,16 +315,18 @@ extension OrderDetailViewController:EnterPercentDelegate{
 
 //MARK: chọn phương thức thanh toán (dành cho bàn mang về)
 extension OrderDetailViewController:PopupPaymentMethodDelegate{
-    func presentPaymentPopupViewController(totalPayment:Double) {
+    func presentPaymentPopupViewController(totalPayment:Int) {
         let vc = PopupPaymentMethodViewController()
         vc.delegate = self
         vc.totalPayment = totalPayment
         vc.modalPresentationStyle = .pageSheet
         present(vc, animated: true, completion: nil)
     }
+    
     func callBackToGetPaymentMethod(paymentMethod: Int) {
 
         var payment = viewModel.payment.value
+        var order = viewModel.order.value
         payment.payment_method = paymentMethod
         payment.cash_amount = 0
         payment.bank_amount = 0
@@ -333,16 +339,21 @@ extension OrderDetailViewController:PopupPaymentMethodDelegate{
          */
         switch paymentMethod{
             case Constants.PAYMENT_METHOD.CASH:
-                payment.cash_amount = viewModel.order.value.total_amount
+                payment.cash_amount = order.total_amount
+            order.cash_amount = Int(order.total_amount)
             case Constants.PAYMENT_METHOD.TRANSFER:
-                payment.transfer_amount = viewModel.order.value.total_amount
+                payment.transfer_amount = order.total_amount
+            order.transfer_amount = Int(order.total_amount)
             case Constants.PAYMENT_METHOD.ATM_CARD:
-                payment.bank_amount = viewModel.order.value.total_amount
+                payment.bank_amount = order.total_amount
+            order.bank_amount = Int(order.total_amount)
             default:
                 break
         }
         
         viewModel.payment.accept(payment)
+        viewModel.order.accept(order)
+        
         
         completePayment()
         
@@ -375,11 +386,75 @@ extension OrderDetailViewController{
         let vc = EnterInformationViewController()
         vc.orderId = orderId
         vc.customer = customer
-        vc.completion = getOrder
+        vc.completion = {
+            self.getOrder()
+        }
         vc.view.backgroundColor = ColorUtils.blackTransparent()
         vc.modalTransitionStyle = .crossDissolve
         vc.modalPresentationStyle = .overCurrentContext
         present(vc, animated: true, completion: nil)
     }
     
+}
+
+    
+
+//MARK: yc nhập thông tin khách hàng (dành cho bàn mang về)
+extension OrderDetailViewController:PopupEnterPriceViewControllerDelegate{
+    
+    func callbackToAdjustedPrice(id: Int, price: Int) {
+    
+        var order = viewModel.order.value
+        if let position = order.order_details.firstIndex(where:{$0.id == id}){
+            
+            var food = order.order_details[position]
+            food.price = price
+            food.isChange = ACTIVE
+            order.order_details[position] = food
+        }
+
+        let list = repairAndUpdateFoods(items: order.order_details)
+        viewModel.foodsNeedToUpdate.accept(list)
+        updateFoodsToOrder(foods: list)
+    }
+    
+        
+    func presentEnterpricePopupViewController(item:OrderItem) {
+        let vc = PopupEnterPriceViewController()
+        vc.delegate = self
+        vc.id = item.id
+        vc.view.backgroundColor = ColorUtils.blackTransparent()
+        vc.modalTransitionStyle = .crossDissolve
+        vc.modalPresentationStyle = .overCurrentContext
+        present(vc, animated: true, completion: nil)
+    }
+    
+}
+
+
+extension OrderDetailViewController {
+  
+    func presentPreprintPopupViewController(item:OrderItem){
+        let vc = ReprintViewController()
+        vc.order = viewModel.order.value
+        vc.item = item
+        vc.view.backgroundColor = ColorUtils.blackTransparent()
+        vc.modalTransitionStyle = .crossDissolve
+        vc.modalPresentationStyle = .overCurrentContext
+        present(vc, animated: true, completion: nil)
+    }
+    
+    
+    func presentModalDialogConfirm(title:String, content:String,confirmClosure:(()-> Void)? = nil){
+        let vc = DialogConfirmViewController()
+        vc.view.backgroundColor = ColorUtils.blackTransparent()
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.modalTransitionStyle = .crossDissolve
+        vc.completion = confirmClosure
+        vc.dialog_title = title
+        vc.content = content
+        present(vc, animated: true, completion: nil)
+    }
+
+
 }

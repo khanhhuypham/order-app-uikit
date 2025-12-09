@@ -52,7 +52,7 @@ class AppFoodLoginViewModel: BaseViewModel {
             username: infor.username,
             password: infor.password,
             x_merchant_token: infor.x_merchant_token ?? "",
-            quantity_account: infor.partnerType?.quantyAccount ?? 0
+            quantity_account: infor.partnerType?.maximumQuantityAccount ?? 0
         ))
             .filterSuccessfulStatusCodes()
             .mapJSON().asObservable()
@@ -79,7 +79,7 @@ class AppFoodLoginViewModel: BaseViewModel {
     func changeConnect(infor:PartnerCredential) -> Observable<APIResponse> {
         
       
-        return  appServiceProvider.rx.request(.postChangeConnectOfChannelOrderFoodToken(id: infor.id, quantity_account: infor.partnerType?.quantyAccount ?? 0))
+        return  appServiceProvider.rx.request(.postChangeConnectOfChannelOrderFoodToken(id: infor.id, quantity_account: infor.partnerType?.maximumQuantityAccount ?? 0))
         .filterSuccessfulStatusCodes()
         .mapJSON().asObservable()
         .showAPIErrorToast()

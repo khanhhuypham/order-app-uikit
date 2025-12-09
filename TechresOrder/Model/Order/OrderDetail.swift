@@ -8,22 +8,19 @@
 
 import ObjectMapper
 struct OrderDetail: Mappable {
-    
+    var id = 0
     var is_take_away = DEACTIVE
-    
-
     var area_id = 0
     var table_id = 0
-    var id = 0
     var id_in_branch = 0
     var status = 0
-    var amount:Double = 0
+    var amount = 0
     var total_point = 0
     var discount_percent = 0
     var vat_percent = 0
     var vat_amount = 0
-    var total_amount:Double = 0
-    var total_final_amount:Double = 0
+    var total_amount:Int = 0
+    var total_final_amount:Int = 0
     var is_allow_request_payment = 0
     var order_details = [OrderItem]()
     
@@ -43,7 +40,7 @@ struct OrderDetail: Mappable {
             item.status = FOOD_STATUS.setValue(value: buffet.status)
             item.quantity = Float(buffet.adult_quantity + buffet.child_quantity)
             item.price = buffet.adult_price
-            item.total_price = Double(buffet.total_adult_amount + buffet.total_child_amount)
+            item.total_price = Float(buffet.total_adult_amount + buffet.total_child_amount)
             item.category_type = .buffet_ticket
             item.discount_price = buffet.adult_discount_price
             item.discount_amount = buffet.adult_discount_amount
@@ -112,7 +109,9 @@ struct OrderDetail: Mappable {
     var drink_discount_amount = 0
     var total_amount_extra_charge_amount = 0
     var total_amount_extra_charge_percent = 0
-    
+    var coupon_id = 0
+    var coupon_percent = 0
+    var coupon_amount = 0
     //======customer info=======
     var customer_id = 0
     var customer_name = ""
@@ -143,6 +142,12 @@ struct OrderDetail: Mappable {
     var transfer_amount = 0
     var wallet_amount = 0
     var tip_amount = 0
+    var vat_details:[VATInfor] = []
+    var order_method:Order_Method = .EAT_IN
+    var number_of_reprint:Int = 0
+    var channel_order_id:Int = 0
+    
+    
     
     init?(map: Map) {}
     init() {}
@@ -218,6 +223,9 @@ struct OrderDetail: Mappable {
         total_amount_extra_charge_percent <- map["total_amount_extra_charge_percent"]
         total_amount_discount_amount <- map["total_amount_discount_amount"]
         service_charge_amount <- map["service_charge_amount"]
+        coupon_id <- map["coupon_id"]
+        coupon_percent  <- map["coupon_percent"]
+        coupon_amount  <- map["coupon_amount"]
         
         order_customer_beer_inventory_quantity <- map["order_customer_beer_inventory_quantity"]
         membership_point_used <- map["membership_point_used"]
@@ -236,7 +244,10 @@ struct OrderDetail: Mappable {
         transfer_amount <- map["transfer_amount"]
         wallet_amount <- map["wallet_amount"]
         tip_amount <- map["tip_amount"]
-        
+        vat_details <- map["vat_details"]
+        order_method <- map["order_method"]
+        number_of_reprint <- map["number_of_reprint"]
+        channel_order_id <- map["channel_order_id"]
         
     }
 }
@@ -268,5 +279,16 @@ struct NewOrder: Mappable {
     init?(map: Map) {}
     mutating func mapping(map: Map) {
         order_id  <- map["order_id"]
+    }
+}
+
+
+struct VATInfor: Mappable {
+    var vat_amount = 0
+    var vat_percent = 0
+    init?(map: Map) {}
+    mutating func mapping(map: Map) {
+        vat_amount      <- map["vat_amount"]
+        vat_percent     <- map["vat_percent"]
     }
 }

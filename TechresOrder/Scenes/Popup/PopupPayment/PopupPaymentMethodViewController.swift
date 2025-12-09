@@ -10,7 +10,7 @@ import UIKit
 class PopupPaymentMethodViewController: BaseViewController {
     var delegate: PopupPaymentMethodDelegate?
     var paymentMethod:Int = Constants.PAYMENT_METHOD.CASH
-    var totalPayment:Double = 0
+    var totalPayment:Int = 0
     
     
     @IBOutlet weak var main_view: UIView!
@@ -36,7 +36,7 @@ class PopupPaymentMethodViewController: BaseViewController {
         height_of_popup.constant += Utils.getAreaBottomPadding()
         paddingBtm.constant = Utils.getAreaBottomPadding()
         main_view.round(with: .top,radius: 20)
-        total_payment.text = Utils.stringVietnameseMoneyFormatWithNumberDouble(amount: totalPayment)
+        total_payment.text = totalPayment.toString
         changeBtn(btn: cashPayment)
         
     }

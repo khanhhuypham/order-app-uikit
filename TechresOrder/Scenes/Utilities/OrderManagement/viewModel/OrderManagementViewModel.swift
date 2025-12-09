@@ -95,7 +95,6 @@ extension OrderManagementViewModel {
         return appServiceProvider.rx.request(.getTotalAmountOfOrders(
             restaurant_brand_id: ManageCacheObject.getCurrentBrand().id,
             branch_id: ManageCacheObject.getCurrentBranch().id,
-//            is_take_away_table: (permissionUtils.GPBH_1 || permissionUtils.GPBH_2_o_1) ? ALL : DEACTIVE,
             order_status: String(format: "%d,%d,%d", ORDER_STATUS_COMPLETE, ORDER_STATUS_DEBT_COMPLETE, ORDER_STATUS_CANCEL),
             key_search:APIParameter.value.key_search,
             from_date:APIParameter.value.from_date,

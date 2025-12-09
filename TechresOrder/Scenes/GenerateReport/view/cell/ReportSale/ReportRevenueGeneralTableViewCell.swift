@@ -18,18 +18,13 @@ class ReportRevenueGeneralTableViewCell: UITableViewCell {
     @IBOutlet weak var root_view_empty_data: UIView!
     
     @IBOutlet weak var lbl_time: UILabel!
-    // MARK: Biến của button filter
-    @IBOutlet weak var btn_today: UIButton!
-    @IBOutlet weak var btn_yesterday: UIButton!
-    @IBOutlet weak var btn_this_month: UIButton!
-    @IBOutlet weak var btn_last_month: UIButton!
-    @IBOutlet weak var btn_last_three_month: UIButton!
-    @IBOutlet weak var btn_this_year: UIButton!
-    @IBOutlet weak var btn_last_year: UIButton!
-    @IBOutlet weak var btn_last_three_year: UIButton!
-    @IBOutlet weak var btn_all_year: UIButton!
+
     
-    @IBOutlet weak var btn_this_week: UIButton!
+    
+    @IBOutlet weak var reportFilter: ReportFilter!
+    
+    var datePicker: DatePickerUtils = DatePickerUtils()
+    
     var chartItems = [ChartDataEntry]()
     var btnArray:[UIButton] = []
     
@@ -45,55 +40,123 @@ class ReportRevenueGeneralTableViewCell: UITableViewCell {
     }
     
     private(set) var disposeBag = DisposeBag()
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         disposeBag = DisposeBag()
     }
     
-    @IBAction func actionChooseReportType(_ sender: UIButton) {
-        
-        guard let viewModel = self.viewModel else {return}
-        var saleReport = viewModel.saleReport.value
-        saleReport.saleReportData = []
-        saleReport.reportType = sender.tag
-        saleReport.dateString = Constants.REPORT_TYPE_DICTIONARY[sender.tag] ?? ""
-        viewModel.saleReport.accept(saleReport)
-        viewModel.view?.getSaleReport()
-    }
-    
+//    @IBAction func actionChooseReportType(_ sender: UIButton) {
+//        
+//        guard let viewModel = self.viewModel else {return}
+//        var saleReport = viewModel.saleReport.value
+//        saleReport.saleReportData = []
+//        saleReport.reportType = sender.tag
+//        saleReport.dateString = Constants.REPORT_TYPE_DICTIONARY[sender.tag] ?? ""
+//        viewModel.saleReport.accept(saleReport)
+//        viewModel.view?.getSaleReport()
+//    }
+//    
 
     @IBAction func actionDetail(_ sender: Any) {
         guard let viewModel = self.viewModel else {return}
         viewModel.makeRevenueDetailViewController()
     }
     
-    @IBAction func actionShowCalendar(_ sender: Any) {
-
+    private func handleChooseDate(date:Date,tag:Int){
+        guard let viewModel = self.viewModel else {return}
+        let dateString = TimeUtils.convertDateToString(from: date, format: .dd_mm_yyyy)
+        var report = viewModel.saleReport.value
+     
+        if tag == -2{
+            
+            if TimeUtils.isDateValid(fromDateStr: dateString,toDateStr: report.toDate){
+                self.reportFilter.setFromDateTitle(dateString)
+                report.fromDate = dateString
+                report.reportType = 13
+                viewModel.saleReport.accept(report)
+                viewModel.view?.getSaleReport()
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+          
+        }else if tag == -1{
+            
+            if TimeUtils.isDateValid(fromDateStr: report.fromDate,toDateStr: dateString){
+                self.reportFilter.setToDateTitle(dateString)
+                report.toDate = dateString
+                report.reportType = 13
+                viewModel.saleReport.accept(report)
+                viewModel.view?.getSaleReport()
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+            
+        }
+        
+ 
     }
     
     
    
     var viewModel: GenerateReportViewModel? {
-           didSet {
-               guard let viewModel = self.viewModel else {return}
-               btnArray = [btn_today, btn_yesterday, btn_this_week, btn_this_month, btn_last_month, btn_last_three_month, btn_this_year, btn_last_year, btn_last_three_year, btn_all_year]
+        didSet {
+           guard let viewModel = self.viewModel else {return}
+            
+            datePicker.chooseDate = { [weak self] (date,tag) in
+                self?.handleChooseDate(date: date, tag: tag)
+            }
+            
+            reportFilter.defaultReportType = viewModel.saleReport.value.reportType
+            reportFilter.chooseReportType = { [weak self] reportType in
+               var report = viewModel.saleReport.value
                
-               Utils.changeBgBtn(btn: btn_this_month, btnArray: btnArray)
-               for btn in self.btnArray{
-                   btn.rx.tap.asDriver().drive(onNext: { [weak self] in
-                       Utils.changeBgBtn(btn: btn, btnArray: self?.btnArray ?? [])
-                   }).disposed(by: disposeBag)
-
+               if reportType == -1{
+                   
+                   if let view = viewModel.view{
+                       
+                       self?.datePicker.showDatePicker(
+                            view,
+                            date:TimeUtils.convertStringToDate(from: report.toDate, format: .dd_mm_yyyy),
+                            tag:reportType
+                       )
+                    
+                   }
+                
+               }else if reportType == -2{
+                   
+                   if let view = viewModel.view{
+                       
+                       self?.datePicker.showDatePicker(
+                            view,
+                            date:TimeUtils.convertStringToDate(from: report.fromDate, format: .dd_mm_yyyy),
+                            tag:reportType
+                       )
+                    
+                   }
+                
+                   
+               }else if reportType > 0{
+                
+                   report.saleReportData = []
+                   report.reportType = reportType
+                   report.dateString = Constants.REPORT_TYPE_DICTIONARY[reportType] ?? ""
+                   viewModel.saleReport.accept(report)
+                   viewModel.view?.getSaleReport()
                }
                
-               viewModel.saleReport.subscribe(onNext: { [weak self] report in
-                   if report.saleReportData.count > 0{
-                       self?.setupBarChart(data: report.saleReportData, reportType: report.reportType)
-                   }
-                   self?.lbl_revenue_total_amount.text = Utils.stringVietnameseMoneyFormatWithNumberInt(amount: report.total_revenue)
-                   self?.root_view_empty_data.isHidden = report.saleReportData.count > 0 ? true :false
-                 }).disposed(by: disposeBag)
            }
+
+           
+           viewModel.saleReport.subscribe(onNext: { [weak self] report in
+               
+               if report.saleReportData.count > 0{
+                   self?.setupBarChart(data: report.saleReportData, reportType: report.reportType)
+               }
+               self?.lbl_revenue_total_amount.text = Utils.stringVietnameseMoneyFormatWithNumberInt(amount: report.total_revenue)
+               self?.root_view_empty_data.isHidden = report.saleReportData.count > 0 ? true :false
+           }).disposed(by: disposeBag)
+        }
     }
 }
 
@@ -105,7 +168,7 @@ extension ReportRevenueGeneralTableViewCell {
             chartView: barChartView,
             barChartItems: data.enumerated().map{(i,value) in BarChartDataEntry(x: Double(i), y: Double(value.total_revenue))},
             xLabel: x_label,
-            isDateXLabel: true
+            isDateXLabel: reportType == REPORT_TYPE_OPTION_DAY ? false : true
         )
         barChartView.isUserInteractionEnabled = true
         
@@ -116,3 +179,6 @@ extension ReportRevenueGeneralTableViewCell {
         barChartView.frame.size.height = chartHeight
     }
 }
+
+
+

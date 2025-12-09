@@ -111,44 +111,38 @@ extension UIView {
     }
     
     
+
     func addBorder(toEdges edges: UIRectEdge, color: UIColor, thickness: CGFloat) {
-        
-        func addBorder(toEdge edges: UIRectEdge, color: UIColor, thickness: CGFloat) {
+        // Remove existing custom border layers (optional)
+        layer.sublayers?.removeAll(where: { $0.name == "CustomBorder" })
+
+        func addBorderLayer(frame: CGRect) {
             let border = CALayer()
+            border.name = "CustomBorder"
             border.backgroundColor = color.cgColor
-            
-            switch edges {
-                case .top:
-                    border.frame = CGRect(x: 0, y: 0, width: frame.width, height: thickness)
-                case .bottom:
-                    border.frame = CGRect(x: 0, y: frame.height - thickness, width: frame.width, height: thickness)
-                case .left:
-                    border.frame = CGRect(x: 0, y: 0, width: thickness, height: frame.height)
-                case .right:
-                    border.frame = CGRect(x: frame.width - thickness, y: 0, width: thickness, height: frame.height)
-                default:
-                    break
-            }
-            
+            border.frame = frame
             layer.addSublayer(border)
         }
-        
-        if edges.contains(.top) || edges.contains(.all) {
-            addBorder(toEdge: .top, color: color, thickness: thickness)
+
+        if edges.contains(.top) || edges == .all {
+            addBorderLayer(frame: CGRect(x: 0, y: 0, width: bounds.width, height: thickness))
         }
         
-        if edges.contains(.bottom) || edges.contains(.all) {
-            addBorder(toEdge: .bottom, color: color, thickness: thickness)
+ 
+        if edges.contains(.bottom) || edges == .all {
+            addBorderLayer(frame: CGRect(x: 0, y: bounds.height - thickness, width: bounds.width, height: thickness))
         }
         
-        if edges.contains(.left) || edges.contains(.all) {
-            addBorder(toEdge: .left, color: color, thickness: thickness)
+        if edges.contains(.left) || edges == .all {
+            addBorderLayer(frame: CGRect(x: 0, y: 0, width: thickness, height: bounds.height))
         }
         
-        if edges.contains(.right) || edges.contains(.all) {
-            addBorder(toEdge: .right, color: color, thickness: thickness)
+        if edges.contains(.right) || edges == .all {
+            addBorderLayer(frame: CGRect(x: bounds.width - thickness, y: 0, width: thickness, height: bounds.height))
         }
     }
+
+
     
     func addBorder(color: UIColor = ColorUtils.orange_brand_900(), margins: CGFloat = 1, borderLineSize: CGFloat = 1) {
         let border = UIView()
@@ -224,41 +218,10 @@ extension UIView {
                                               toItem: self,
                                               attribute: .trailing,
                                               multiplier: 1, constant: margins))
-    } }
+    }
+}
 
 
-//extension UIButton {
-//    @discardableResult
-//    func applyGradient(colours: [UIColor]) -> CAGradientLayer {
-//        return self.applyGradient(colours: colours, locations: nil)
-//    }
-//
-//    @discardableResult
-//    func applyGradient(colours: [UIColor], locations: [NSNumber]?) -> CAGradientLayer {
-//        let gradient: CAGradientLayer = CAGradientLayer()
-//        gradient.frame = self.bounds
-//        gradient.colors = colours.map { $0.cgColor }
-//        gradient.locations = locations
-//        self.layer.insertSublayer(gradient, at: 0)
-//        return gradient
-//    }
-//}
-
-//extension UITabBar {
-//    
-//    static func setTransparentTabbar() {
-//        UITabBar.appearance().backgroundImage = UIImage()
-//        UITabBar.appearance().shadowImage = UIImage()
-//        UITabBar.appearance().clipsToBounds = true
-//    }
-//    
-//}
-//extension UITabBarController {
-//    func increaseBadge(indexOfTab: Int, num: String) {
-//        let tabItem = tabBar.items![indexOfTab]
-//        tabItem.badgeValue = Int(num)! > 0 ? num : nil
-//    }
-//}
 
 
 extension UIView {
@@ -339,73 +302,6 @@ extension UIView {
     }
 
 }
-//extension UIView{
-//    func animShow(){
-//        UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseIn],
-//                       animations: {
-//                        self.center.y -= self.bounds.height
-//                        self.layoutIfNeeded()
-//        }, completion: nil)
-//        self.isHidden = false
-//        self.alpha = 100
-//    }
-//    func animHide(){
-//        UIView.animate(withDuration: 0.3, delay: 0, options: [.curveLinear],
-//                       animations: {
-//                        self.center.y += self.bounds.height
-//                        self.layoutIfNeeded()
-//
-//        },  completion: {(_ completed: Bool) -> Void in
-//            self.isHidden = true
-//            self.alpha = 0
-//            })
-//    }
-//    
-//  
-//    
-//    func animationHideView(){
-//        UIView.animate(withDuration: 0.6, delay: 0.0, options: [],
-//           animations: {
-//            self.transform =  CGAffineTransform(translationX: 0, y: 900)
-//           },
-//           completion: { _ in
-//
-//           }
-//         )
-//    }
-//    func animationShowView(){
-//        UIView.animate(withDuration: 0.6, delay: 0.0, options: [],
-//           animations: {
-//            self.transform =  CGAffineTransform(translationX: 0, y: 0)
-//           },
-//           completion: { _ in
-//
-//           }
-//         )
-//    }
-//    
-//    
-//    func animShowBottomToTop(){
-//        UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseIn],
-//                       animations: {
-//                        self.center.y = self.bounds.height - 400
-//                        self.layoutIfNeeded()
-//        }, completion: nil)
-//        self.isHidden = false
-//        self.alpha = 1
-//    }
-//    func animHideTopToBottom(){
-//        UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseIn],
-//                       animations: {
-//                        self.center.y += self.bounds.height
-//                        self.layoutIfNeeded()
-//        }, completion: nil)
-//        self.isHidden = true
-//        self.alpha = 1
-//    }
-//    
-//    
-//}
 
 
 extension UIView {
@@ -529,11 +425,7 @@ extension UIView {
         caShapeLayer.lineDashPattern = [7,3] // 7 is the length of dash, 3 is length of the gap.
         let cgPath = CGMutablePath()
 
-        dLog(self.bounds.minY)
-        dLog(self.bounds.maxY)
-        
         let cgPoint = [CGPoint(x: 0, y: self.bounds.midY), CGPoint(x: self.bounds.width, y: self.bounds.midY)]
-
 
         cgPath.addLines(between: cgPoint)
         caShapeLayer.path = cgPath
@@ -542,3 +434,98 @@ extension UIView {
       }
 }
 
+
+extension UIView {
+    func displayTooltip(_ message: String, completion: (() -> Void)? = nil) {
+        let tooltipBottomPadding: CGFloat = 12
+        let tooltipCornerRadius: CGFloat = 6
+        let tooltipAlpha: CGFloat = 0.95
+        let pointerBaseWidth: CGFloat = 14
+        let pointerHeight: CGFloat = 8
+        let padding = CGPoint(x: 18, y: 12)
+        
+        let tooltip = UIView()
+        
+        let tooltipLabel = UILabel()
+        tooltipLabel.numberOfLines = 0
+        tooltipLabel.text = "    \(message)    "
+        tooltipLabel.font = UIFont.systemFont(ofSize: 12)
+        tooltipLabel.contentMode = .center
+        tooltipLabel.textColor = .white
+        tooltipLabel.layer.backgroundColor = UIColor(red: 44 / 255, green: 44 / 255, blue: 44 / 255, alpha: 1).cgColor
+        tooltipLabel.layer.cornerRadius = tooltipCornerRadius
+        
+        tooltip.addSubview(tooltipLabel)
+        tooltipLabel.translatesAutoresizingMaskIntoConstraints = false
+        tooltipLabel.bottomAnchor.constraint(equalTo: tooltip.bottomAnchor, constant: -pointerHeight).isActive = true
+        tooltipLabel.topAnchor.constraint(equalTo: tooltip.topAnchor).isActive = true
+        tooltipLabel.leadingAnchor.constraint(equalTo: tooltip.leadingAnchor).isActive = true
+        tooltipLabel.trailingAnchor.constraint(equalTo: tooltip.trailingAnchor).isActive = true
+        
+        let labelHeight = message.height(withWidth: .greatestFiniteMagnitude, font: UIFont.systemFont(ofSize: 12)) + padding.y
+        let labelWidth = message.width(withHeight: .zero, font: UIFont.systemFont(ofSize: 12)) + padding.x
+        
+        let pointerTip = CGPoint(x: labelWidth / 2, y: labelHeight + pointerHeight)
+        let pointerBaseLeft = CGPoint(x: labelWidth / 2 - pointerBaseWidth / 2, y: labelHeight)
+        let pointerBaseRight = CGPoint(x: labelWidth / 2 + pointerBaseWidth / 2, y: labelHeight)
+        
+        let pointerPath = UIBezierPath()
+        pointerPath.move(to: pointerBaseLeft)
+        pointerPath.addLine(to: pointerTip)
+        pointerPath.addLine(to: pointerBaseRight)
+        pointerPath.close()
+        
+        let pointer = CAShapeLayer()
+        pointer.path = pointerPath.cgPath
+        pointer.fillColor = UIColor(red: 44 / 255, green: 44 / 255, blue: 44 / 255, alpha: 1).cgColor
+        
+        tooltip.layer.addSublayer(pointer)
+        (superview ?? self).addSubview(tooltip)
+        tooltip.translatesAutoresizingMaskIntoConstraints = false
+        tooltip.bottomAnchor.constraint(equalTo: topAnchor, constant: -tooltipBottomPadding + pointerHeight).isActive = true
+        tooltip.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        tooltip.heightAnchor.constraint(equalToConstant: labelHeight + pointerHeight).isActive = true
+        tooltip.widthAnchor.constraint(equalToConstant: labelWidth).isActive = true
+        
+        tooltip.alpha = 0
+        UIView.animate(withDuration: 0.2, animations: {
+            tooltip.alpha = tooltipAlpha
+        }, completion: { _ in
+            UIView.animate(withDuration: 0.5, delay: 0.5, animations: {
+                tooltip.alpha = 0
+            }, completion: { _ in
+                tooltip.removeFromSuperview()
+                completion?()
+            })
+        })
+    }
+}
+
+extension UIView {
+    func setDisabledLayer(_ isDisabled: Bool, color: UIColor = UIColor.black.withAlphaComponent(0.2)) {
+        let layerName = "disabledLayer"
+
+        if isDisabled {
+            // Avoid adding twice
+            if layer.sublayers?.first(where: { $0.name == layerName }) == nil {
+                let overlayLayer = CALayer()
+                overlayLayer.name = layerName
+                overlayLayer.frame = bounds
+                overlayLayer.backgroundColor = color.cgColor
+                overlayLayer.cornerRadius = layer.cornerRadius
+                overlayLayer.masksToBounds = true
+                layer.addSublayer(overlayLayer)
+            }
+        } else {
+            // Remove the disabled layer
+            layer.sublayers?.removeAll(where: { $0.name == layerName })
+        }
+    }
+
+    // Optional — call this in layoutSubviews if your view resizes
+    func updateDisabledLayerFrame() {
+        if let overlay = layer.sublayers?.first(where: { $0.name == "disabledLayer" }) {
+            overlay.frame = bounds
+        }
+    }
+}

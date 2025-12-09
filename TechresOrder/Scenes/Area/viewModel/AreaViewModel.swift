@@ -18,7 +18,7 @@ class AreaViewModel {
 
     var exclude_table_id = BehaviorRelay<Int>(value: 0)
     
-    var table_id = BehaviorRelay<Int>(value: 0)
+    var order_id = BehaviorRelay<Int>(value: 0)
 
     
     func bind(view: AreaViewController, router: AreaRouter){
@@ -64,7 +64,7 @@ extension AreaViewModel{
     }
     
     func closeTable() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.closeTable(table_id: table_id.value))
+        return appServiceProvider.rx.request(.closeTable(order_id: order_id.value))
                .filterSuccessfulStatusCodes()
                .mapJSON().asObservable()
                .showAPIErrorToast()

@@ -30,7 +30,7 @@ class DetailedPrinterViewModel: BaseViewModel {
 // CALL API HERE...
 extension DetailedPrinterViewModel{
     func updateStampPrinter() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.updateKitchen(branch_id: 0, kitchen: printer.value))
+        return appServiceProvider.rx.request(.updatePrinter(branch_id: 0, printer: printer.value))
                .filterSuccessfulStatusCodes()
                .mapJSON().asObservable()
                .showAPIErrorToast()

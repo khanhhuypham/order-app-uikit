@@ -23,15 +23,14 @@ class PaymentRebuildViewController: BaseViewController {
     @IBOutlet weak var lbl_customer_slot: UILabel!
     @IBOutlet weak var lbl_customer_name: UILabel!
     @IBOutlet weak var lbl_customer_phone: UILabel!
-    @IBOutlet weak var lbl_customer_address: UILabel!
+    @IBOutlet weak var lbl_address: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var height_of_table: NSLayoutConstraint!
     
-    @IBOutlet weak var view_of_customer_phone: UIView!
-    @IBOutlet weak var view_of_customer_name: UIView!
-    @IBOutlet weak var view_of_customer_address: UIView!
-    
+    @IBOutlet weak var view_customer_phone: UIView!
+    @IBOutlet weak var view_customer_name: UIView!
+    @IBOutlet weak var view_address: UIView!
     //===================tổng ước tính==================
     @IBOutlet weak var lbl_total_temp_payment: UILabel!
     
@@ -73,9 +72,17 @@ class PaymentRebuildViewController: BaseViewController {
     @IBOutlet weak var lbl_discount_percent_of_food: UILabel!
     
     @IBOutlet weak var lbl_discount_percent_of_drink: UILabel!
+    
+    //====================Coupon=======================
+    
+    @IBOutlet weak var icon_coupon: UIImageView!
+    @IBOutlet weak var lbl_coupon_text: UILabel!
+    
+    @IBOutlet weak var btn_checkbox_coupon: UIButton!
+    @IBOutlet weak var image_checkbox_coupon: UIImageView!
+    @IBOutlet weak var lbl_total_coupon_amount: UILabel!
+    
     //============================================
-    
-    
     
     @IBOutlet weak var btn_checkbox_discount: UIButton!
     @IBOutlet weak var image_checkbox_discount: UIImageView!
@@ -91,11 +98,8 @@ class PaymentRebuildViewController: BaseViewController {
     
     @IBOutlet weak var lbl_order_customer_beer_inventory_quantity: UILabel!
     
-    
     @IBOutlet weak var lbl_membership_point_used: UILabel!
     @IBOutlet weak var lbl_membership_point_used_amount: UILabel!
-    
-    
     
     @IBOutlet weak var lbl_membership_accumulate_point_used: UILabel!
     @IBOutlet weak var lbl_membership_accumulate_point_used_amount: UILabel!
@@ -103,10 +107,8 @@ class PaymentRebuildViewController: BaseViewController {
     @IBOutlet weak var lbl_membership_promotion_point_used: UILabel!
     @IBOutlet weak var lbl_membership_promotion_point_used_amount: UILabel!
     
-    
     @IBOutlet weak var lbl_membership_alo_point_used: UILabel!
     @IBOutlet weak var lbl_membership_alo_point_used_amount: UILabel!
-    
     
     @IBOutlet weak var view_print: UIView!
     @IBOutlet weak var view_payment: UIView!
@@ -116,7 +118,9 @@ class PaymentRebuildViewController: BaseViewController {
     @IBOutlet weak var btn_payment: UIButton!
     
     var order = OrderDetail()
+    var orderHistoryScreen = false
     var real_time_url = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.bind(view: self, router: router)
@@ -130,8 +134,7 @@ class PaymentRebuildViewController: BaseViewController {
         super.viewWillAppear(animated)
         setupSocketIO()
         viewModel.branch_id.accept(ManageCacheObject.getCurrentBranch().id)
-
-        getOrderDetail()
+        getOrder()
     }
     
     
@@ -142,16 +145,22 @@ class PaymentRebuildViewController: BaseViewController {
                                     ManageCacheObject.getCurrentBranch().id,
                                     order.id)
         
-        SocketIOManager.shared().socketRealTime!.emit("leave_room", real_time_url)
-        
+        SocketIOManager.shared().socketOrderRealTime!.emit("leave_room", real_time_url)
 
-        
     }
 
     @IBAction func actionBack(_ sender: Any) {
         viewModel.makePopViewController()
     }
     
+    @IBAction func actionUnassignCustomer(_ sender: Any) {
+        let order = viewModel.order.value
+        if order.customer_id > 0 {
+            self.unassignCustomerFromOrder(orderId: order.id)
+        }else{
+            self.updateCustomer(orderId: order.id, customer: Customer())
+        }
+    }
     
     @IBAction func actionStickExtraChargeCheckBox(_ sender: Any) {
         if viewModel.order.value.total_amount_extra_charge_percent > 0{
@@ -177,32 +186,49 @@ class PaymentRebuildViewController: BaseViewController {
     
 
     @IBAction func actionCheckDiscount(_ sender: Any) {
-        if(Utils.checkRoleDiscountGifFood(permission: ManageCacheObject.getCurrentUser().permissions)){
-            var order = viewModel.order.value
-            
-            let totalDiscount = order.total_amount_discount_amount + order.food_discount_amount + order.drink_discount_amount
-            
-            if(totalDiscount > 0){
-                order.food_discount_percent = 0
-                order.drink_discount_percent = 0
-                order.total_amount_discount_percent = 0
-                viewModel.order.accept(order)
-                applyDiscount()
-            }else{
-                presentModalDiscountViewController(order:order)
-            }
+        
+        guard viewModel.order.value.coupon_id == 0 else {
+            self.showWarningMessage(content: "Đơn hàng đã được áp dụng coupon")
+            return
+        }
+
+        guard permissionUtils.discountOrderItem else {
+            self.showWarningMessage(content: "Bạn chưa được cấp quyền sử dụng tính năng này vui lòng liên hệ quản lý")
+            return
+        }
+        
+        var order = viewModel.order.value
+        
+        let totalDiscount = order.total_amount_discount_amount + order.food_discount_amount + order.drink_discount_amount
+        
+        if(totalDiscount > 0){
+            order.food_discount_percent = 0
+            order.drink_discount_percent = 0
+            order.total_amount_discount_percent = 0
+            viewModel.order.accept(order)
+            applyDiscount()
         }else{
-            JonAlert.showError(message: "Bạn chưa được cấp quyền sử dụng tính năng này vui lòng liên hệ quản lý", duration: 2.0)
+            presentModalDiscountViewController(order:order)
         }
     }
-    
     
     @IBAction func actionShowDiscountDetail(_ sender: Any) {
         btn_show_discount_detail.isSelected = !btn_show_discount_detail.isSelected
         view_of_discount_detail.isHidden = btn_show_discount_detail.isSelected ? false : true
     }
     
-  
+    @IBAction func actionShowCoupon(_ sender: Any) {
+        if viewModel.order.value.coupon_id > 0{
+            applyCoupon(couponId: 0)
+        }else{
+            presentCouponViewController(couponId: 0)
+        }
+    }
+    
+    @IBAction func actionShowCouponDetail(_ sender: Any) {
+        presentCouponViewController(couponId: viewModel.order.value.coupon_id)
+    }
+    
     
     @IBAction func actionShowHistory(_ sender: Any) {
         viewModel.makeOrderHistoryViewController()
@@ -216,6 +242,5 @@ class PaymentRebuildViewController: BaseViewController {
     @IBAction func actionPay(_ sender: Any) {
         executePaymentProcedure(step: 1)
     }
-    
     
 }

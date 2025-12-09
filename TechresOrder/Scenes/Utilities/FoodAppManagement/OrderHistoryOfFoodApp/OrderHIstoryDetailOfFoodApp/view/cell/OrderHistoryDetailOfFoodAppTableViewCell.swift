@@ -55,7 +55,7 @@ class OrderHistoryDetailOfFoodAppTableViewCell: UITableViewCell {
             lbl_children_food.isHidden = false
             
             data.food_options.enumerated().forEach{(i,value) in
-                attr.append((str:String(format:"+ %@ ",value.name),properties:[color:ColorUtils.gray_600()]))
+                attr.append((str:String(format:"+ %@ ",value.food_name),properties:[color:ColorUtils.gray_600()]))
                 attr.append((str:String(format:"x %d",value.quantity),properties:[color:ColorUtils.orange_brand_900()]))
                 attr.append((str:" = " + Utils.stringQuantityFormatWithNumber(amount:value.price*value.quantity),properties:[color:ColorUtils.gray_600()]))
                 if i != data.food_options.count - 1{

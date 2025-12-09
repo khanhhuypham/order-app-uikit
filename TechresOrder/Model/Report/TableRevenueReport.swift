@@ -10,6 +10,8 @@ import ObjectMapper
 struct TableRevenueReport:Mappable{
     var reportType = 0
     var dateString = ""
+    var fromDate = ""
+    var toDate = ""
     var tableRevenueReportData = [TableRevenueReportData]()
     var total_revenue = 0
     
@@ -21,6 +23,13 @@ struct TableRevenueReport:Mappable{
     init(reportType:Int, dateString:String){
         self.reportType = reportType
         self.dateString = dateString
+    }
+    
+    init(reportType:Int, dateString:String,fromDate:String,toDate:String){
+        self.reportType = reportType
+        self.dateString = dateString
+        self.fromDate = fromDate
+        self.toDate = toDate
     }
 
     

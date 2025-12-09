@@ -14,16 +14,17 @@ import RxRelay
 extension PaymentRebuildViewController{
     func getBrandBankAccount(order:OrderDetail){
         viewModel.getBrandBankAccount().subscribe(onNext: { [self] (response) in
-  
-            
             if(response.code == RRHTTPStatusCode.ok.rawValue){
                 if let bankAccount = Mapper<BankAccount>().map(JSONObject: response.data) {
-                    printReceipt(orderDetail:order, bankAccount:bankAccount)
+                    printInvoice(orderDetail:order, bankAccount:bankAccount)
                 }
+            }else{
+                self.showWarningMessage(content: response.message ?? "")
             }
         }).disposed(by: rxbag)
-    }
         
+    }
+        	
     
     func completePayment() {
         //CALL API COMPLETED ORDER
@@ -31,7 +32,8 @@ extension PaymentRebuildViewController{
             if(response.code == RRHTTPStatusCode.ok.rawValue){
 
                 JonAlert.showSuccess(message:"Đã hoàn tất đơn hàng và in bill cho khách.", duration: 2.0)
-                if permissionUtils.BillPrinter{
+                
+                if permissionUtils.InvoicePrinter{
                     getBrandBankAccount(order:viewModel.order.value)
                 }else{
                     self.navigationController?.viewControllers.removeAll(where: { (vc) -> Bool in
@@ -49,11 +51,8 @@ extension PaymentRebuildViewController{
     func requestPayment(paymentMethod:Int){
         viewModel.requestPayment(paymentMethod: paymentMethod).subscribe(onNext: { (response) in
             if(response.code == RRHTTPStatusCode.ok.rawValue){
- 
                 JonAlert.showSuccess(message: "Yêu cầu thanh toán thành công", duration: 2.0)
-                
                 self.viewModel.makePopViewController()
-                
             }else{
                 //Chỉ dành riêng cho giải pháp 2o2
                 if permissionUtils.GPBH_2_o_2{
@@ -69,29 +68,11 @@ extension PaymentRebuildViewController{
     }
     
   
-    
-    //MARK: API gửi in bếp. API này chỉ sử dụng cho GPBH2o2, vì GPBH2o2 print trực tiếp qua máy thu ngân nên ta sẽ gọi API này để gửi tín hiệu SERVER, sau đó server sẽ gửi tín hiệu qua cho WINDOWN để thực hiện quá trình print
-    func requestPrintChefBar(printType:Constants.printType){
-        viewModel.requestPrintChefBar(printType:printType).subscribe(onNext: { (response) in
-            if(response.code == RRHTTPStatusCode.ok.rawValue){
-                
-                /*
-                      sau khi Gửi bếp bar thành công thì ta thực hiện bước thanh toán tiếp theo (step2: yêu cầu nhập số lượng nguời)
-                    */
-                JonAlert.showSuccess(message: "Gửi bếp bar thành công", duration: 1.0)
-                self.executePaymentProcedure(step: 2)
-            }
-            else{
-                JonAlert.showError(message: response.message ?? "", duration: 2.0)
-            }
-        }).disposed(by: rxbag)
-        
-    }
-    
+
     func updateCustomerNumberSlot(){
         viewModel.updateCustomerNumberSlot().subscribe(onNext: { (response) in
             if(response.code == RRHTTPStatusCode.ok.rawValue){
-                self.getOrderDetail()
+                self.getOrder()
             }
         }).disposed(by: rxbag)
     }
@@ -122,64 +103,27 @@ extension PaymentRebuildViewController{
         }).disposed(by: rxbag)
     }
     
-    
-    //MARK: Kiểm tra số món chưa in có ko ? Nếu chưa in thì thông báo in trước khi thanh toán bill
-    func checkFoodNotPrints(){
-        viewModel.getFoodsNeedPrint().subscribe(onNext: { (response) in
-            if(response.code == RRHTTPStatusCode.ok.rawValue){
-                if let items_need_to_print = Mapper<Food>().mapArray(JSONObject: response.data){
-                    
-                    /*
-                        nếu có món cần in thì in
-                        nếu ko có cần in thì ta thực hiện bước thanh toán tiếp theo (step2: yêu cầu người dùng nhập số lượng người)
-                        */
-                    
-                    if (items_need_to_print.count > 0) {
-                        self.viewModel.itemsNeedToPrint.accept(items_need_to_print)
-                        self.presentModalDialogConfirmViewController(
-                            content: "Hiện tại còn món chưa gửi Bếp/Bar bạn có muốn gửi Bếp/Bar trước khi thanh toán không?",
-                            confirmClosure: {
-                                let itemsNeedToPrint = self.viewModel.itemsNeedToPrint.value
 
-                                if(itemsNeedToPrint.count > 0){
-                                    permissionUtils.GPBH_2_o_2
-                                    ? self.requestPrintChefBar(printType: .new_item)
-                                    : self.printItems(items:itemsNeedToPrint,printType: .new_item)
-                                }
-                            }
-                        )
-                    }else{                                              
-                        self.executePaymentProcedure(step: 2)
-                    }
-                }
-            }
-        }).disposed(by: rxbag)
-    }
-    
 
-    
-    func updateReadyPrinted(order_detail_ids:[Int]){
-        viewModel.updateReadyPrinted(order_detail_ids: order_detail_ids).subscribe(onNext: { (response) in
-            if(response.code == RRHTTPStatusCode.ok.rawValue){
-                
-                /*
-                      sau khi cập nhật xong các món cần in thì ta thực hiện bước thanh toán tiếp theo (step2: nhập số lượng người)
-                    */
-                
-                self.getOrderDetail()
-                self.executePaymentProcedure(step:2)
-            }else{
-                JonAlert.showError(message:response.message ?? "Có lỗi xảy ra trong quá trình kết nối tới máy chủ. Vui lòng thử lại.", duration: 2.0)
-            }
-        }).disposed(by: rxbag)
-    }
-    
-    
-    
+//    
+//    func updateReadyPrinted(order_detail_ids:[Int]){
+//        viewModel.updateReadyPrinted(order_detail_ids: order_detail_ids).subscribe(onNext: { (response) in
+//            if(response.code == RRHTTPStatusCode.ok.rawValue){
+//                
+//                /*
+//                      sau khi cập nhật xong các món cần in thì ta thực hiện bước thanh toán tiếp theo (step2: nhập số lượng người)
+//                    */
+//                
+//                self.getOrder()
+//                self.executePaymentProcedure(step:2)
+//                
+//            }else{
+//                JonAlert.showError(message:response.message ?? "Có lỗi xảy ra trong quá trình kết nối tới máy chủ. Vui lòng thử lại.", duration: 2.0)
+//            }
+//        }).disposed(by: rxbag)
+//    }
+//    
 
-    
-    
-    
     func executePaymentProcedure(step:Int){
         let order = viewModel.order.value
         
@@ -209,7 +153,7 @@ extension PaymentRebuildViewController{
                     + if: có món chưa đánh giá thì hiển thị popup yêu cầu nhập đánh giá
                     + if: không có món cần đánh giá thì ta thực hiện bước thanh toán tiếp theo
          
-            step4: chỉ có GPBH1 || GPBH 2o1 với role== cashier, owner thì mới thực hiện bước này
+            step4: chỉ có GPBH1 || GPBH2 với role== cashier, owner thì mới thực hiện bước này
                     + if: nếu setting có bật trường is_apply_only_cash_amount_payment_method -> thì mặc định chọn phương thức thanh toán bằng tiền mặt
                     + if: ko bật thì hiển thị popup chọn phương thức thanh toán
          
@@ -266,7 +210,7 @@ extension PaymentRebuildViewController{
             case 4:
             
                 let condition = permissionUtils.GPBH_1 || (permissionUtils.GPBH_2_o_1 && permissionUtils.OwnerOrCashier)
-                
+          
                 if condition{
                     ManageCacheObject.getPaymentMethod().is_apply_only_cash_amount_payment_method == ACTIVE
                     ? callBackToGetPaymentMethod(paymentMethod: Constants.PAYMENT_METHOD.CASH)
@@ -280,13 +224,17 @@ extension PaymentRebuildViewController{
             
             case 5:
                 if permissionUtils.GPBH_1{
+                    
                     completePayment()
+                    
                 }else if permissionUtils.GPBH_2{
-                    if permissionUtils.GPBH_2_o_1 && permissionUtils.OwnerOrCashier{
+                    
+                    if permissionUtils.GPBH_2_o_1{
                         completePayment()
-                        return
+                    }else{
+                        requestPayment(paymentMethod: 1)
                     }
-                    requestPayment(paymentMethod: 1)
+                   
                 }else if permissionUtils.GPBH_3{
                     requestPayment(paymentMethod: 1)
                 }

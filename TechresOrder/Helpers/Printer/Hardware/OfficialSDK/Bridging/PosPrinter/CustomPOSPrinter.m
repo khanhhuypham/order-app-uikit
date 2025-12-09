@@ -64,74 +64,93 @@ static CustomPOSPrinter *shared = nil;
     _ids = [[NSMutableArray alloc] init];
     
     _isPrintLive = YES;
-
     _wifiManager = [POSWIFIManager sharedInstance];
     _wifiManager.delegate = self;
     return self;
 }
 
 
--(void)sendNotifiErr:(NSString *)message printer:(Printer*)printer{
-    
-    NSError *customErr = [NSError
-        errorWithDomain: [NSString stringWithFormat:@"%d",kCFStreamErrorDomainNetDB]
-        code:8
-        userInfo:@{
-        NSLocalizedDescriptionKey:[NSString stringWithFormat:@"%@: %@",printer.name, message]
-    }];
-    
+-(void)sendNotifiErr:(NSError *)error printer:(Printer*)printer{
+   
     NSMutableDictionary *dictionary =  [[NSMutableDictionary alloc] init];
    
     // Set value for key i.e adding an entry
-    
     NSMutableDictionary *identifier = [_ids lastObject];
+    for (id obj in self.ids) {
+        NSLog(@"remove element: %@", obj);
+    }
     [_ids removeLastObject];
-    
+        
     [dictionary setValue:[identifier valueForKey:@"id"] forKey:@"id"];
-    [dictionary setValue:customErr forKey:@"error"];
+    [dictionary setValue:error forKey:@"error"];
+    [dictionary setValue:@(_printMode) forKey:PRINTER_NOTIFI.PRINT_MODE];
     [dictionary setValue:[NSNumber numberWithInteger:PRINTER_METHODPOSPrinter] forKey:PRINTER_NOTIFI.PRINTER_METHOD_KEY];
+    [dictionary setValue:_printer forKey:@"printer"];
+    
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:_isPrintLive ? PRINTER_NOTIFI.CONNECT_FAIL : PRINTER_NOTIFI.BACKGROUND_CONNECT_FAIL object:dictionary];
+    if (_printMode == PRINT_FOREGROUND){
+        [[NSNotificationCenter defaultCenter] postNotificationName:PRINTER_NOTIFI.CONNECT_FAIL object:dictionary];
+    }else{
+        [[NSNotificationCenter defaultCenter] postNotificationName:PRINTER_NOTIFI.BACKGROUND_CONNECT_FAIL object:dictionary];
+    }
     
     [self wifiDisconnect];
+
 }
 
  
-
 -(void)wifiConnect:(Printer*)printer queuedItem:(NSDictionary*)queuedItem{
     
     _printer = printer;
     [_ids insertObject:queuedItem atIndex:0];
+    NSLog(@"%@ - %@: %@ (%@)", printer.name,printer.printer_ip_address,@"wifi connect", _isPrintLive == YES ? @"print live" : @"print background");
+    for (id obj in self.ids) {
+        NSLog(@"add element: %@", obj);
+    }
+    // Helper block for creating and sending error
+    void (^sendError)(NSString*) = ^(NSString *msg) {
+        NSError *err = [NSError
+            errorWithDomain:[NSString stringWithFormat:@"%d", kCFStreamErrorDomainNetDB]
+            code:8
+            userInfo:@{ NSLocalizedDescriptionKey : [NSString stringWithFormat:@"%@: %@", printer.name, msg]}
+        ];
+        [self sendNotifiErr:err printer:_printer];
+    };
     
     if ([_printer.printer_port length] == 0) {
         
-        [self sendNotifiErr:@"port is invalid" printer:_printer];
-        
+        sendError(@"port is invalid");
+        return;
+    
     }else if ([_printer.printer_ip_address length] == 0){
         
-        [self sendNotifiErr:@"ip address is invalid" printer:_printer];
+        sendError(@"ip address is invalid");
+        return;
         
     }else if ([_printer.printer_ip_address length] == 0 && [_printer.printer_port length] == 0){
         
-        [self sendNotifiErr:@"ip address and port are invalid" printer:_printer];
+        sendError(@"ip address and port are invalid");
+        return;
         
     }else if((_printer.connection_type != CONNECTION_TYPEWifi) && (_printer.connection_type != CONNECTION_TYPEBlueTooth)){
         
-        [self sendNotifiErr:@"Thiết bị đang sử dụng chỉ hỗ trợ đối với máy in rời" printer:_printer];
+        sendError(@"Thiết bị đang sử dụng chỉ hỗ trợ đối với máy in rời");
+        return;
         
     } else{
-    
-//        if (_wifiManager.isConnect) {
-//            [_wifiManager disconnect];
-//        }
+        
+        if (_wifiManager.isConnect) {
+            [_wifiManager disconnect];
+        }
         
         NSNumberFormatter* formatter = [[NSNumberFormatter alloc] init];
         UInt16 portNumber = [[formatter numberFromString:_printer.printer_port] unsignedShortValue];
-        
         [_wifiManager connectWithHost:_printer.printer_ip_address port:portNumber];
     }
  
 }
+
+
 
 - (void)wifiDisconnect{
     
@@ -150,9 +169,9 @@ static CustomPOSPrinter *shared = nil;
 
 -(void)printWithData:(NSData *)printData printedItems:(NSDictionary*)printedItems{
     
-
-    
     [_ids insertObject:printedItems atIndex:0];
+    
+    NSLog(@"pos insertObject %ld",printedItems.count);
     
     switch (self.connectType) {
             
@@ -186,35 +205,46 @@ static CustomPOSPrinter *shared = nil;
 }
 
 
+
 #pragma mark - CodePageViewDelegate
 - (void)codepageView:(nonnull CodePagePopView *)codepagePopView selectValue:(nonnull NSString *)selectValue {
 
 }
 
-
 #pragma mark - POSWIFIManagerDelegate
-
 //connected success
 - (void)POSwifiConnectedToHost:(NSString *)host port:(UInt16)port{
     
-  
     NSMutableDictionary *dictionary =  [[NSMutableDictionary alloc] init];
    
     NSMutableDictionary *identifier = [_ids lastObject];
-    [_ids removeLastObject];
     
-    [dictionary setValue:[identifier valueForKey:@"id"]  forKey:@"id"];
+    [_ids removeAllObjects];
+    
+    [dictionary setValue:[identifier valueForKey:@"id"] forKey:@"id"];
+    [dictionary setValue:_printer forKey:@"printer"];
+    [dictionary setValue:@(_printMode) forKey:PRINTER_NOTIFI.PRINT_MODE];
     [dictionary setValue:[NSNumber numberWithInteger:PRINTER_METHODPOSPrinter] forKey:PRINTER_NOTIFI.PRINTER_METHOD_KEY];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:_isPrintLive ? PRINTER_NOTIFI.CONNECT_SUCCESS : PRINTER_NOTIFI.BACKGROUND_CONNECT_SUCCESS object:dictionary];
+
+    if (_printMode == PRINT_FOREGROUND){
+        [[NSNotificationCenter defaultCenter] postNotificationName:PRINTER_NOTIFI.CONNECT_SUCCESS object:dictionary];
+    }else{
+        [[NSNotificationCenter defaultCenter] postNotificationName:PRINTER_NOTIFI.BACKGROUND_CONNECT_SUCCESS object:dictionary];
+    }
+ 
 }
 /**
  * disconnect error
  */
 - (void)POSwifiDisconnectWithError:(NSError *)error{
-
+    /*
+        code 51: Network is unreachable && Error in connect() function
+        code 3: Attempt to connect to host timed out
+     */
     if (error) {
-        [self sendNotifiErr:[NSString stringWithFormat:@"%@: %@",_printer.name, error.localizedDescription] printer:_printer];
+        [self sendNotifiErr:error printer:_printer];
+        
     }
 
 }
@@ -234,24 +264,33 @@ static CustomPOSPrinter *shared = nil;
         NSMutableDictionary *dictionary =  [[NSMutableDictionary alloc] init];
         
         NSMutableArray *printedItem = [_ids lastObject];
+        
+        NSLog(@"pos insertObject %@",_ids);
+        
         [_ids removeLastObject];
         
 
-        
         if (printedItem.count > 0) {
             [dictionary setValue:[printedItem valueForKey:@"id"] forKey:@"id"];
+            [dictionary setValue:@(_printMode) forKey:PRINTER_NOTIFI.PRINT_MODE];
             [dictionary setValue:[NSNumber numberWithInteger:PRINTER_METHODPOSPrinter] forKey:PRINTER_NOTIFI.PRINTER_METHOD_KEY];
             [dictionary setValue:[printedItem valueForKey:@"isLastItem"] forKey:@"isLastItem"];
         }
         
+
+        if (_printMode == PRINT_FOREGROUND){
+            [[NSNotificationCenter defaultCenter] postNotificationName:PRINTER_NOTIFI.PRINT_SUCCESS object:dictionary];
+        }else{
+            [[NSNotificationCenter defaultCenter] postNotificationName:PRINTER_NOTIFI.BACKGROUND_PRINT_SUCCESS object:dictionary];
+        }
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:_isPrintLive ? PRINTER_NOTIFI.PRINT_SUCCESS : PRINTER_NOTIFI.BACKGROUND_PRINT_SUCCESS object:dictionary];
-     
+
     }else if (tag == 1001){
         
     }else{
         NSLog(@"Phạm Khánh huy pos print fail because we send incorrect format of data");
     }
+    
 }
 
 
@@ -263,15 +302,14 @@ static CustomPOSPrinter *shared = nil;
     NSLog(@"receive data");
     __weak typeof(self) weakSelf = self;
     [weakSelf getStatusWithData:data];
-    
     NSLog(@"Phạm Khánh huy pos error");
-    
 }
 
 
 // check status
 - (void)checkPOSPrinterStatus{
     __weak typeof(self) weakSelf = self;
+    
     if ([_wifiManager printerIsConnect]) {
       
         [_wifiManager printerStatus:^(NSData *status) {
@@ -283,6 +321,11 @@ static CustomPOSPrinter *shared = nil;
     }
 
 }
+
+
+
+
+
 
 
 - (void)getStatusWithData:(NSData *)responseData {
@@ -340,6 +383,7 @@ static CustomPOSPrinter *shared = nil;
             [dictionary setValue:err forKey:@"error"];
             
             [[NSNotificationCenter defaultCenter] postNotificationName:_isPrintLive ? PRINTER_NOTIFI.PRINT_FAIL : PRINTER_NOTIFI.BACKGROUND_PRINT_FAIL object:dictionary];
+            
         }
     }
 }

@@ -30,6 +30,7 @@ extension ChatChannelViewController {
         }else{
             present(controller, animated: true, completion: nil)
         }
+        
     }
     
     

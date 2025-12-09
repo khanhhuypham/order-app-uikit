@@ -15,7 +15,7 @@ extension PaymentRebuildViewController{
     func presentExtraChargePopup(order_id:Int) {
         let vc = ExtraChargeViewController()
         vc.order_id = order_id
-        vc.completion = self.getOrderDetail
+        vc.completion = self.getOrder
         vc.view.backgroundColor = ColorUtils.blackTransparent()
         vc.modalPresentationStyle = .overCurrentContext
         present(vc, animated: true, completion: nil)
@@ -24,7 +24,7 @@ extension PaymentRebuildViewController{
     func presentModalDiscountViewController(order:OrderDetail) {
         let vc = DiscountViewController()
         vc.order = order
-        vc.completion = getOrderDetail
+        vc.completion = getOrder
         vc.view.backgroundColor = ColorUtils.blackTransparent()
         vc.modalPresentationStyle = .overCurrentContext
         present(vc, animated: true, completion: nil)
@@ -106,13 +106,13 @@ extension PaymentRebuildViewController: TechresDelegate{
         /*sau khi đánh giá món thành công ta thực hiện bước thanh toán tiếp theo (step3: kiểm tra các món chưa được in)
             ở bước này ta cứ kết thúc quy trình thanh toán để tránh trường hợp người dùng chưa đánh giá hết món tất cả các món cần đánh,
          */
-        getOrderDetail()
+        getOrder()
     }
 }
 
 
 extension PaymentRebuildViewController:PopupPaymentMethodDelegate{
-    func presentPaymentPopupViewController(totalPayment:Double) {
+    func presentPaymentPopupViewController(totalPayment:Int) {
         let vc = PopupPaymentMethodViewController()
         vc.delegate = self
         vc.totalPayment = totalPayment
@@ -122,7 +122,7 @@ extension PaymentRebuildViewController:PopupPaymentMethodDelegate{
     
     
     func callBackToGetPaymentMethod(paymentMethod: Int) {
-
+        var order = viewModel.order.value
         var payment = viewModel.payment.value
         payment.payment_method = paymentMethod
         payment.cash_amount = 0
@@ -135,17 +135,26 @@ extension PaymentRebuildViewController:PopupPaymentMethodDelegate{
          Constants.PAYMENT_METHOD.ATM_CARD = 2 //sử dụng thẻ
          */
         switch paymentMethod{
+            
             case Constants.PAYMENT_METHOD.CASH:
-                payment.cash_amount = viewModel.order.value.total_amount
+                payment.cash_amount = order.total_amount
+                order.cash_amount = Int(order.total_amount)
+            
+            
             case Constants.PAYMENT_METHOD.TRANSFER:
-                payment.transfer_amount = viewModel.order.value.total_amount
+                payment.transfer_amount = order.total_amount
+                order.transfer_amount = Int(order.total_amount)
+            
             case Constants.PAYMENT_METHOD.ATM_CARD:
-                payment.bank_amount = viewModel.order.value.total_amount
+                payment.bank_amount = order.total_amount
+                order.bank_amount = Int(order.total_amount)
+                
             default:
                 break
         }
         
         viewModel.payment.accept(payment)
+        viewModel.order.accept(order)
         
         /*
             sau khi chọn Phương thức thanh toán xong thì
@@ -154,4 +163,21 @@ extension PaymentRebuildViewController:PopupPaymentMethodDelegate{
         executePaymentProcedure(step: 5)
 
     }
+}
+
+
+//MARK: Coupon
+extension PaymentRebuildViewController{
+        
+    func presentCouponViewController(couponId: Int) {
+        let vc = CouponViewController()
+        vc.order = viewModel.order.value
+        vc.couponId = couponId
+        vc.completion = getOrder
+        vc.view.backgroundColor = ColorUtils.blackTransparent()
+        vc.modalTransitionStyle = .crossDissolve
+        vc.modalPresentationStyle = .overCurrentContext
+        present(vc, animated: true, completion: nil)
+    }
+    
 }

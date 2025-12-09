@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -30,24 +30,24 @@
                                 <rect key="frame" x="0.0" y="10" width="320" height="321"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9rl-Rd-iXd">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="79.666666666666671"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="63.333333333333336"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zVI-OY-JYZ">
-                                                <rect key="frame" x="0.0" y="0.0" width="320" height="79.666666666666671"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="63.333333333333336"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                 <state key="normal">
                                                     <attributedString key="attributedTitle"/>
                                                 </state>
                                             </button>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-setting-account" translatesAutoresizingMaskIntoConstraints="NO" id="Pt0-dC-Tn5">
-                                                <rect key="frame" x="16" y="27.333333333333336" width="25" height="25"/>
+                                                <rect key="frame" x="16" y="19.333333333333332" width="25" height="24.999999999999996"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="25" id="7Sc-ix-Xm7"/>
                                                     <constraint firstAttribute="width" constant="25" id="JwV-w6-T81"/>
                                                 </constraints>
                                             </imageView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EBh-nm-m1v">
-                                                <rect key="frame" x="287" y="27.333333333333336" width="25" height="25"/>
+                                                <rect key="frame" x="287" y="19.333333333333332" width="25" height="24.999999999999996"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="25" id="a15-S0-F19"/>
                                                     <constraint firstAttribute="height" constant="25" id="ukO-ST-hCf"/>
@@ -58,7 +58,7 @@
                                                 </state>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cập nhật tài khoản" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fLe-Qn-eZ1">
-                                                <rect key="frame" x="51" y="0.0" width="228" height="79.666666666666671"/>
+                                                <rect key="frame" x="51" y="0.0" width="228" height="63.333333333333336"/>
                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                                 <color key="textColor" red="0.15686274509803921" green="0.15686274509803921" blue="0.16862745098039217" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -81,21 +81,21 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kUM-zi-eYe">
-                                        <rect key="frame" x="0.0" y="80.666666666666686" width="320" height="79.333333333333314"/>
+                                        <rect key="frame" x="0.0" y="64.333333333333329" width="320" height="63.333333333333329"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lUA-m0-vh4">
-                                                <rect key="frame" x="8" y="8.0000000000000036" width="304" height="63.333333333333343"/>
+                                                <rect key="frame" x="8" y="8" width="304" height="47.333333333333336"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                             </button>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-setting-lang" translatesAutoresizingMaskIntoConstraints="NO" id="GkK-US-3dS">
-                                                <rect key="frame" x="16" y="27" width="25" height="25"/>
+                                                <rect key="frame" x="16" y="19.333333333333343" width="25" height="25"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="25" id="KyO-6k-C1l"/>
                                                     <constraint firstAttribute="width" constant="25" id="LDs-t1-rtf"/>
                                                 </constraints>
                                             </imageView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="64F-5n-bFu">
-                                                <rect key="frame" x="287" y="27" width="25" height="25"/>
+                                                <rect key="frame" x="287" y="19.333333333333343" width="25" height="25"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="25" id="pdj-WT-9cI"/>
                                                     <constraint firstAttribute="height" constant="25" id="zG7-iF-XbC"/>
@@ -106,16 +106,16 @@
                                                 </state>
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YKh-ow-i8F">
-                                                <rect key="frame" x="49" y="19.666666666666657" width="228" height="40"/>
+                                                <rect key="frame" x="49" y="11.666666666666671" width="228" height="40"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Thiết lập ngôn ngữ" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jzz-7L-sQZ">
-                                                        <rect key="frame" x="0.0" y="0.0" width="134.33333333333334" height="19"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="136.33333333333334" height="18.666666666666668"/>
                                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                                         <color key="textColor" red="0.15686274509803921" green="0.15686274509803921" blue="0.16862745098039217" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tiếng việt" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8jp-dw-4RZ">
-                                                        <rect key="frame" x="0.0" y="25.666666666666668" width="52.666666666666664" height="14.333333333333332"/>
+                                                        <rect key="frame" x="0.0" y="26" width="52.333333333333336" height="14"/>
                                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="12"/>
                                                         <color key="textColor" red="0.65490196078431373" green="0.6588235294117647" blue="0.6705882352941176" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
@@ -147,23 +147,23 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HNM-rx-Y2Q">
-                                        <rect key="frame" x="0.0" y="161" width="320" height="79.666666666666686"/>
+                                        <rect key="frame" x="0.0" y="128.66666666666666" width="320" height="63.666666666666657"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-setting-change-pass" translatesAutoresizingMaskIntoConstraints="NO" id="AO3-VA-8qQ">
-                                                <rect key="frame" x="16" y="27.333333333333343" width="25" height="25"/>
+                                                <rect key="frame" x="16" y="19.333333333333343" width="25" height="25"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="25" id="SNI-1C-iQV"/>
                                                     <constraint firstAttribute="width" constant="25" id="yRi-zL-gGL"/>
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Đổi mật khẩu" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f4c-S1-izJ">
-                                                <rect key="frame" x="51" y="0.0" width="228" height="79.666666666666671"/>
+                                                <rect key="frame" x="51" y="0.0" width="228" height="63.666666666666664"/>
                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                                 <color key="textColor" red="0.15686274509803921" green="0.15686274509803921" blue="0.16862745098039217" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Sg-Uw-Qhs">
-                                                <rect key="frame" x="287" y="27.333333333333343" width="25" height="25"/>
+                                                <rect key="frame" x="287" y="19.333333333333343" width="25" height="25"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="25" id="TNe-gR-5QT"/>
                                                     <constraint firstAttribute="height" constant="25" id="ctv-0z-Dtf"/>
@@ -174,7 +174,7 @@
                                                 </state>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iev-M1-G6i">
-                                                <rect key="frame" x="0.0" y="0.0" width="320" height="79.666666666666671"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="63.666666666666664"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                 <state key="normal">
                                                     <attributedString key="attributedTitle"/>
@@ -197,24 +197,72 @@
                                             <constraint firstAttribute="trailing" secondItem="iev-M1-G6i" secondAttribute="trailing" id="po5-hb-IQT"/>
                                         </constraints>
                                     </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oqA-o7-5jo">
+                                        <rect key="frame" x="0.0" y="193.33333333333334" width="320" height="63.333333333333343"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bitcoinsign.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="7TK-Q8-1ir">
+                                                <rect key="frame" x="16" y="19.666666666666664" width="25" height="23.666666666666664"/>
+                                                <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="25" id="KA3-Wx-Dwl"/>
+                                                    <constraint firstAttribute="width" constant="25" id="baV-U2-aMz"/>
+                                                </constraints>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lấy mã hỗ trợ" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="efc-85-Rkr">
+                                                <rect key="frame" x="51.000000000000007" y="0.0" width="100.66666666666669" height="63.333333333333336"/>
+                                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
+                                                <color key="textColor" red="0.15686274510000001" green="0.15686274510000001" blue="0.16862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="chevron.forward" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="mYQ-Xg-wdD">
+                                                <rect key="frame" x="290" y="22.666666666666657" width="22" height="18.333333333333329"/>
+                                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="22" id="J76-g0-DwF"/>
+                                                    <constraint firstAttribute="height" constant="22" id="Yt8-Ku-EEg"/>
+                                                </constraints>
+                                            </imageView>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mwS-Ey-yn3">
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="63.333333333333336"/>
+                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                <state key="normal">
+                                                    <attributedString key="attributedTitle"/>
+                                                </state>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <constraints>
+                                            <constraint firstItem="mwS-Ey-yn3" firstAttribute="leading" secondItem="oqA-o7-5jo" secondAttribute="leading" id="SfB-9N-OEQ"/>
+                                            <constraint firstAttribute="trailing" secondItem="mYQ-Xg-wdD" secondAttribute="trailing" constant="8" id="W7w-7Y-vFH"/>
+                                            <constraint firstItem="7TK-Q8-1ir" firstAttribute="leading" secondItem="oqA-o7-5jo" secondAttribute="leading" constant="16" id="ZzP-tE-Iow"/>
+                                            <constraint firstItem="mwS-Ey-yn3" firstAttribute="top" secondItem="oqA-o7-5jo" secondAttribute="top" id="gOz-AS-AQE"/>
+                                            <constraint firstAttribute="bottom" secondItem="efc-85-Rkr" secondAttribute="bottom" id="gse-pR-aYS"/>
+                                            <constraint firstItem="efc-85-Rkr" firstAttribute="top" secondItem="oqA-o7-5jo" secondAttribute="top" id="hZr-XB-pp9"/>
+                                            <constraint firstAttribute="bottom" secondItem="mwS-Ey-yn3" secondAttribute="bottom" id="hkd-lu-5Dv"/>
+                                            <constraint firstItem="7TK-Q8-1ir" firstAttribute="centerY" secondItem="oqA-o7-5jo" secondAttribute="centerY" id="pAG-2a-Uxp"/>
+                                            <constraint firstAttribute="trailing" secondItem="mwS-Ey-yn3" secondAttribute="trailing" id="pDK-qV-NiA"/>
+                                            <constraint firstItem="efc-85-Rkr" firstAttribute="leading" secondItem="7TK-Q8-1ir" secondAttribute="trailing" constant="10" id="pK9-0f-UxT"/>
+                                            <constraint firstItem="mYQ-Xg-wdD" firstAttribute="centerY" secondItem="oqA-o7-5jo" secondAttribute="centerY" id="qAM-EG-lCm"/>
+                                        </constraints>
+                                    </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4TL-xo-sia">
-                                        <rect key="frame" x="0.0" y="241.66666666666666" width="320" height="79.333333333333343"/>
+                                        <rect key="frame" x="0.0" y="257.66666666666669" width="320" height="63.333333333333314"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-customer-care-gray" translatesAutoresizingMaskIntoConstraints="NO" id="cFT-aR-CLQ">
-                                                <rect key="frame" x="16" y="27.000000000000028" width="25" height="25"/>
+                                                <rect key="frame" x="16" y="19" width="25" height="25"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="25" id="ZM4-iX-2tR"/>
                                                     <constraint firstAttribute="width" constant="25" id="yEc-Pb-AWW"/>
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HỖ TRỢ KỸ THUẬT" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C3n-2T-B1s">
-                                                <rect key="frame" x="51" y="0.0" width="135.33333333333334" height="79.333333333333329"/>
+                                                <rect key="frame" x="51" y="0.0" width="145.33333333333334" height="63.333333333333336"/>
                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="16"/>
                                                 <color key="textColor" red="0.15686274510000001" green="0.15686274510000001" blue="0.16862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="52D-sL-L0A">
-                                                <rect key="frame" x="0.0" y="0.0" width="320" height="79.333333333333329"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="63.333333333333336"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                 <state key="normal">
                                                     <attributedString key="attributedTitle"/>
@@ -254,7 +302,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bạn có thể lựa chọn đăng nhập bằng ID, Vân tay hoặc FaceID" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ex7-dF-c5d">
-                                                <rect key="frame" x="51" y="24" width="203" height="28.333333333333329"/>
+                                                <rect key="frame" x="51" y="24" width="203" height="28"/>
                                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="12"/>
                                                 <color key="textColor" red="0.65490196078431373" green="0.6588235294117647" blue="0.6705882352941176" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -307,6 +355,7 @@
                 <outlet property="btnChangeLanguage" destination="lUA-m0-vh4" id="TGj-22-xPp"/>
                 <outlet property="btnChangePassword" destination="iev-M1-G6i" id="MkI-ZR-nYV"/>
                 <outlet property="btnChatChannel" destination="52D-sL-L0A" id="2Yh-5V-W1p"/>
+                <outlet property="btnGetTokenLogin" destination="mwS-Ey-yn3" id="Dea-H9-Mph"/>
                 <outlet property="btnUpdateProfile" destination="zVI-OY-JYZ" id="2eb-7U-deo"/>
                 <outlet property="settingSwitch" destination="aFt-RJ-qu4" id="xAD-2G-B0r"/>
             </connections>
@@ -314,6 +363,8 @@
         </tableViewCell>
     </objects>
     <resources>
+        <image name="bitcoinsign.circle" catalog="system" width="128" height="123"/>
+        <image name="chevron.forward" catalog="system" width="97" height="128"/>
         <image name="icon-customer-care-gray" width="24" height="24"/>
         <image name="icon-menu-next" width="22" height="22"/>
         <image name="icon-setting-account" width="24" height="24"/>
@@ -324,7 +375,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGray6Color">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

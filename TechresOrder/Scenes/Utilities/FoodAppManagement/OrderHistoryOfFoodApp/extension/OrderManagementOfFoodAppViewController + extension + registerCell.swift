@@ -11,7 +11,7 @@ import RxSwift
 import RxRelay
 import JonAlert
 //MARK: this extension is used to register cell==
-extension OrderManagementOfFoodAppViewController:UITableViewDelegate{
+extension OrderManagementOfFoodAppViewController:UITableViewDelegate,UIScrollViewDelegate{
     func bindTableViewAndRegisterCell(){
         registerCell()
         bindTableViewData()
@@ -31,8 +31,7 @@ extension OrderManagementOfFoodAppViewController:UITableViewDelegate{
     
     
     @objc func refresh(_ sender: AnyObject) {
-          // Code to refresh table view
-     
+        viewModel.clearDataAndCallAPI()
         refreshControl.endRefreshing()
     }
     
@@ -48,9 +47,36 @@ extension OrderManagementOfFoodAppViewController:UITableViewDelegate{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let order = viewModel.history.value.list[indexPath.row]
-        viewModel.makeOrderHistoryDetailOfFoodAppViewController(order: order)
+        let vc = OrderHistoryDetailOfFoodAppViewController()
+        vc.order = viewModel.history.value.list[indexPath.row]
+        navigationController?.pushViewController(vc, animated: true)
     }
+    
+    
+    func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+        var p = viewModel.pagination.value
+        let tableViewContentHeight = tableView.contentSize.height
+        let tableViewHeight = tableView.frame.size.height
+        let scrollOffset = scrollView.contentOffset.y
+
+        if scrollOffset + tableViewHeight >= tableViewContentHeight {  // scroll downward
+          
+            if(!p.isGetFullData && !p.isAPICalling){
+                p.page += 1
+                p.isAPICalling = true
+                viewModel.pagination.accept(p)
+                getOrderHistoryOfFoodApp()
+                
+            }
+            
+        }else if scrollOffset < -80 { // scroll upward
+
+           
+        }
+    }
+    
+    
+    
 }
 
 
@@ -93,14 +119,14 @@ extension OrderManagementOfFoodAppViewController: ArrayChooseViewControllerDeleg
         switch viewModel.filterType.value{
             case 1:
               
-                history.reportType = viewModel.reportTypeFilter.value.map{$0.key}[pos]
+                history.reportType = viewModel.reportTypeFilter.value.map{$0.0}[pos]
                 history.dateString = Constants.REPORT_TYPE_DICTIONARY[history.reportType] ?? ""
             
-                btn_reportType_filter.setTitle(viewModel.reportTypeFilter.value.map{$0.value}[pos], for: .normal)
+                btn_reportType_filter.setTitle(viewModel.reportTypeFilter.value.map{$0.1}[pos], for: .normal)
             
             
                 let attr:NSAttributedString = Utils.setAttributesForBtn(
-                    content: viewModel.reportTypeFilter.value.map{$0.value}[pos],
+                    content: viewModel.reportTypeFilter.value.map{$0.1}[pos],
                     attributes: [
                         NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .regular),
                         NSAttributedString.Key.foregroundColor: ColorUtils.black()
@@ -130,13 +156,10 @@ extension OrderManagementOfFoodAppViewController: ArrayChooseViewControllerDeleg
             default:
                 return
         }
-        dLog(history.reportType)
-        dLog(history.dateString)
-        dLog(history.partnerId)
-        dLog(history.toJSON())
+
         viewModel.history.accept(history)
         
-        getOrderHistoryOfFoodApp()
+        viewModel.clearDataAndCallAPI()
     }
     
 }

@@ -57,6 +57,14 @@ extension SettingViewModel {
                .mapObject(type: APIResponse.self)
     }
     
+    func confirmChannelOrder(confirm:Bool) -> Observable<APIResponse> {
+        return appServiceProvider.rx.request(.postConfirmChannelOrder(branchId: Constants.branch.id,confirm_when_driver: confirm))
+               .filterSuccessfulStatusCodes()
+               .mapJSON().asObservable()
+               .showAPIErrorToast()
+               .mapObject(type: APIResponse.self)
+    }
+    
     
 }
 

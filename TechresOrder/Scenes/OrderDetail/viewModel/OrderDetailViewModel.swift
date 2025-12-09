@@ -22,6 +22,7 @@ class OrderDetailViewModel: BaseViewModel {
     public var foodsNeedToPrint : BehaviorRelay<[Food]> = BehaviorRelay(value: [])
     
 
+    public var executePayment = BehaviorRelay<Bool>(value: false)
     public var payment = BehaviorRelay<Payment>(value: Payment())
     
     func bind(view: OrderDetailViewController, router: OrderDetailRouter){
@@ -53,6 +54,7 @@ class OrderDetailViewModel: BaseViewModel {
         
 }
 extension OrderDetailViewModel{
+    
     func getOrder() -> Observable<APIResponse> {
         return appServiceProvider.rx.request(.order(order_id: order.value.id, branch_id: branch_id.value))
                .filterSuccessfulStatusCodes()
@@ -111,16 +113,16 @@ extension OrderDetailViewModel{
                .mapObject(type: APIResponse.self)
     }
     
-    func updateFoods() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.updateFoods(
-                branch_id: branch_id.value,
-                order_id: order.value.id,
-                foods: foodsNeedToUpdate.value))
-               .filterSuccessfulStatusCodes()
-               .mapJSON().asObservable()
-               .showAPIErrorToast()
-               .mapObject(type: APIResponse.self)
-    }
+//    func updateFoods() -> Observable<APIResponse> {
+//        return appServiceProvider.rx.request(.updateFoods(
+//                branch_id: branch_id.value,
+//                order_id: order.value.id,
+//                foods: foodsNeedToUpdate.value))
+//               .filterSuccessfulStatusCodes()
+//               .mapJSON().asObservable()
+//               .showAPIErrorToast()
+//               .mapObject(type: APIResponse.self)
+//    }
     
  
     func getFoodsNeedPrint() -> Observable<APIResponse> {
@@ -162,10 +164,10 @@ extension OrderDetailViewModel{
             branch_id: branch_id.value,
             order_id: order.value.id
         ))
-               .filterSuccessfulStatusCodes()
-               .mapJSON().asObservable()
-               .showAPIErrorToast()
-               .mapObject(type: APIResponse.self)
+           .filterSuccessfulStatusCodes()
+           .mapJSON().asObservable()
+           .showAPIErrorToast()
+           .mapObject(type: APIResponse.self)
     }
     
     
@@ -175,10 +177,10 @@ extension OrderDetailViewModel{
             order_id: order.value.id,
             item_ids: itemIds
         ))
-               .filterSuccessfulStatusCodes()
-               .mapJSON().asObservable()
-               .showAPIErrorToast()
-               .mapObject(type: APIResponse.self)
+        .filterSuccessfulStatusCodes()
+        .mapJSON().asObservable()
+        .showAPIErrorToast()
+        .mapObject(type: APIResponse.self)
     }
     
     
@@ -188,12 +190,24 @@ extension OrderDetailViewModel{
             orderId: order.value.id,
             orderItem: item
         ))
-           .filterSuccessfulStatusCodes()
-           .mapJSON().asObservable()
-           .showAPIErrorToast()
-           .mapObject(type: APIResponse.self)
+       .filterSuccessfulStatusCodes()
+       .mapJSON().asObservable()
+       .showAPIErrorToast()
+       .mapObject(type: APIResponse.self)
     }
     
+    
+    func assignCustomerToOrder(orderId:Int,customer:Customer) -> Observable<APIResponse> {
+        return appServiceProvider.rx.request(.postAssignCustomerToOrder(
+            branchId: Constants.branch.id,
+            orderId: orderId,
+            customer: customer)
+        )
+               .filterSuccessfulStatusCodes()
+               .mapJSON().asObservable()
+               .showAPIErrorToast()
+               .mapObject(type: APIResponse.self)
+    }
     
     func unassignCustomerFromOrder(orderId:Int) -> Observable<APIResponse> {
         return appServiceProvider.rx.request(.postUnassignCustomerFromOrder(order_id: orderId))
@@ -220,15 +234,16 @@ extension OrderDetailViewModel{
 //MARK: api get printItem for only GPBH2o1
 extension OrderDetailViewModel{
     
-    func getOrderNeedToPrintForGPBH_2o1() -> Observable<APIResponse> {
+    func getOrderNeedToPrintForGPBH_2o1(print_type:Int) -> Observable<APIResponse> {
         return appServiceProvider.rx.request(.getPrintItem(
-            type_print: 2,
+            type_print: print_type,
             restaurant_id: Constants.restaurant_id,
-            branch_id: Constants.branch.id))
-               .filterSuccessfulStatusCodes()
-               .mapJSON().asObservable()
-               .showAPIErrorToast()
-               .mapObject(type: APIResponse.self)
+            branch_id: Constants.branch.id)
+        )
+       .filterSuccessfulStatusCodes()
+       .mapJSON().asObservable()
+       .showAPIErrorToast()
+       .mapObject(type: APIResponse.self)
         
     }
 
@@ -263,5 +278,18 @@ extension OrderDetailViewModel{
         .showAPIErrorToast()
         .mapObject(type: APIResponse.self)
     }
+    
+    
+    func updateReprintNumber() -> Observable<APIResponse> {
+        return appServiceProvider.rx.request(.postUpdateReprintNumber(order_id: order.value.id))
+        .filterSuccessfulStatusCodes()
+        .mapJSON().asObservable()
+        .showAPIErrorToast()
+        .mapObject(type: APIResponse.self)
+    }
+    
+    
+    
+ 
     
 }

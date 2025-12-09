@@ -11,10 +11,7 @@ import Charts
 import RxRelay
 import ObjectMapper
 class ReportOtherFoodViewController: BaseViewController {
-    
-//    var viewModel = ReportOtherFoodViewModel()
-//    var router = ReportOtherFoodRouter()
-//    public var report_type_food_select:Int = 0
+
     
     @IBOutlet weak var bar_chart: BarChartView!
     @IBOutlet weak var tableView: UITableView!
@@ -23,59 +20,24 @@ class ReportOtherFoodViewController: BaseViewController {
     @IBOutlet weak var lbl_total_amout: UILabel!
 
     @IBOutlet weak var lbl_title_report: UILabel!
-    
-    // MARK: Biến của button filter
-    @IBOutlet weak var btn_today: UIButton!
-    @IBOutlet weak var btn_yesterday: UIButton!
-    @IBOutlet weak var btn_this_week: UIButton!
-    @IBOutlet weak var btn_this_month: UIButton!
-    @IBOutlet weak var btn_last_month: UIButton!
-    @IBOutlet weak var btn_last_three_month: UIButton!
-    @IBOutlet weak var btn_this_year: UIButton!
-    @IBOutlet weak var btn_last_year: UIButton!
-    @IBOutlet weak var btn_last_three_year: UIButton!
-    @IBOutlet weak var btn_all_year: UIButton!
-        
 
     
-    var btnArray:[UIButton] = []
+    // MARK: Biến của button filter
+    @IBOutlet weak var reportFilter: ReportFilter!
+    var datePicker: DatePickerUtils = DatePickerUtils()
     var viewModel: ReportBusinessViewModel?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-         
         registerCellAndBindTableView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        
-        btnArray = [btn_today, btn_yesterday, btn_this_week, btn_this_month, btn_last_month, btn_last_three_month, btn_this_year, btn_last_year, btn_last_three_year, btn_all_year]
-
-        for btn in self.btnArray{
-            btn.rx.tap.asDriver().drive(onNext: { [weak self] in
-                Utils.changeBgBtn(btn: btn, btnArray: self?.btnArray ?? [])
-            }).disposed(by: rxbag)
-            
-            if btn.tag == viewModel?.otherFoodReport.value.reportType{
-                Utils.changeBgBtn(btn: btn, btnArray: self.btnArray)
-            }
-        }
         getReportFoodOther()
     }
 
-    
 
-    @IBAction func actionChooseReportType(_ sender: UIButton) {
-        guard let viewModel = self.viewModel else {return}
-        var report = viewModel.otherFoodReport.value
-        report.reportType = sender.tag
-        report.dateString = Constants.REPORT_TYPE_DICTIONARY[sender.tag] ?? ""
-        viewModel.otherFoodReport.accept(report)
-        getReportFoodOther()
-    }
-    
 }
  
 //MARK: REGISTER CELL TABLE VIEW
@@ -95,8 +57,95 @@ extension ReportOtherFoodViewController {
         tableView.rx.setDelegate(self).disposed(by: rxbag)
     }
     
+    private func handleChooseDate(date:Date,tag:Int){
+        guard let viewModel = self.viewModel else {return}
+        
+        
+        let dateString = TimeUtils.convertDateToString(from: date, format: .dd_mm_yyyy)
+        
+        var report = viewModel.otherFoodReport.value
+     
+        if tag == -2{
+            
+            if TimeUtils.isDateValid(fromDateStr: dateString,toDateStr: report.toDate){
+                self.reportFilter.setFromDateTitle(dateString)
+                report.fromDate = dateString
+                report.reportType = 13
+                viewModel.otherFoodReport.accept(report)
+                self.getReportFoodOther()
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+          
+        }else if tag == -1{
+            
+            if TimeUtils.isDateValid(fromDateStr: report.fromDate,toDateStr: dateString){
+                self.reportFilter.setToDateTitle(dateString)
+                report.toDate = dateString
+                report.reportType = 13
+                viewModel.otherFoodReport.accept(report)
+                self.getReportFoodOther()
+                
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+        }
+        
+    }
+
+    
     private func bindTableView() {
         guard let viewModel = self.viewModel else {return}
+        
+        
+        datePicker.chooseDate = { [weak self] (date,tag) in
+            
+            self?.handleChooseDate(date: date, tag: tag)
+            
+        }
+        
+        reportFilter.defaultReportType = viewModel.otherFoodReport.value.reportType
+        
+        reportFilter.chooseReportType = { [weak self] reportType in
+           var report = viewModel.otherFoodReport.value
+           
+           if reportType == -1{
+               
+               if let view = viewModel.view{
+                   
+                   self?.datePicker.showDatePicker(
+                        view,
+                        date:TimeUtils.convertStringToDate(from: report.toDate, format: .dd_mm_yyyy),
+                        tag:reportType
+                   )
+                
+               }
+            
+           }else if reportType == -2{
+               
+               if let view = viewModel.view{
+                   
+                   self?.datePicker.showDatePicker(
+                        view,
+                        date:TimeUtils.convertStringToDate(from: report.fromDate, format: .dd_mm_yyyy),
+                        tag:reportType
+                   )
+                
+               }
+            
+               
+           }else if reportType > 0{
+ 
+               report.reportType = reportType
+               report.dateString = Constants.REPORT_TYPE_DICTIONARY[reportType] ?? ""
+               viewModel.otherFoodReport.accept(report)
+               self?.getReportFoodOther()
+               
+           }
+           
+       }
+        
+        
         viewModel.otherFoodReport.map{$0.foods}.bind(to: tableView.rx.items(cellIdentifier: "FoodItemReportOtherFoodTableViewCell", cellType: FoodItemReportOtherFoodTableViewCell.self))
            {  (row, data, cell) in
                cell.index = row + 1
@@ -122,6 +171,8 @@ extension ReportOtherFoodViewController {
                     
                     report.reportType = viewModel.otherFoodReport.value.reportType
                     report.dateString = viewModel.otherFoodReport.value.dateString
+                    report.fromDate = viewModel.otherFoodReport.value.fromDate
+                    report.toDate = viewModel.otherFoodReport.value.toDate
                     setupBarChart(data: report.foods, barChart: bar_chart)
                     viewModel.otherFoodReport.accept(report)
                     

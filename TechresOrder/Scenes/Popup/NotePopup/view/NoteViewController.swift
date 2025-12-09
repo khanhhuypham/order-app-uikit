@@ -68,7 +68,6 @@ class NoteViewController: BaseViewController, TagListViewDelegate {
         
         if textview_note.text!.count > 50 {
             textview_note.text = String(textview_note.text.prefix(50))
-            
         }
         
         dismiss(animated: true,completion: {
@@ -79,6 +78,7 @@ class NoteViewController: BaseViewController, TagListViewDelegate {
             )
         })
     }
+    
     @IBAction func actionCanCel(_ sender: Any) {
         dismiss(animated: true)
     }
@@ -99,7 +99,6 @@ class NoteViewController: BaseViewController, TagListViewDelegate {
         if textview_note.text.count > 50 {
             return
         } else {
-
             textview_note.text = notes_str
         }
         
@@ -109,19 +108,15 @@ class NoteViewController: BaseViewController, TagListViewDelegate {
         sender.removeTagView(tagView)
     }
 
-
 }
 extension NoteViewController{
+    
     func notes(){
         viewModel.notes().subscribe(onNext: { (response) in
             if(response.code == RRHTTPStatusCode.ok.rawValue){
-              
                 if let notes  = Mapper<Note>().mapArray(JSONObject: response.data){
-    
                     self.tagListView.addTags(notes.map{$0.content})
-                    
                     self.height_of_tagListView.constant = self.tagListView.intrinsicContentSize.height
-
                 }
             }else{
                 dLog(response.message)
@@ -133,7 +128,6 @@ extension NoteViewController{
     func notesByFood(){
         viewModel.notesByFood().subscribe(onNext: { (response) in
             if(response.code == RRHTTPStatusCode.ok.rawValue){
-             
                 if let notes  = Mapper<Note>().mapArray(JSONObject: response.data){
                     self.tagListView.addTags(notes.map{$0.note})
                     self.height_of_tagListView.constant = self.tagListView.intrinsicContentSize.height

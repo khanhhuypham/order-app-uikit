@@ -11,14 +11,14 @@ import ObjectMapper
 struct FoodRequest: Mappable {
     var id = 0
     var quantity:Float = 0
-    
+    var price: Int = 0
     var note = ""
     var is_use_point = 0
     var customer_order_detail_id = 0
     var discount_percent = 0
     var addition_foods = [FoodAddition]()
     var buy_one_get_one_foods = [FoodAddition]()
-    var food_option_food_ids:[Int] = []
+    var food_option_foods: [[String: Any]] = []
     
     
     init() {}
@@ -27,15 +27,16 @@ struct FoodRequest: Mappable {
  
 
     mutating func mapping(map: Map) {
-        id                                      <- map["id"]
-        quantity                                    <- map["quantity"]
-        note                                  <- map["note"]
-        is_use_point                                    <- map["is_use_point"]
-        customer_order_detail_id                                   <- map["customer_order_detail_id"]
-        addition_foods <- map["addition_foods"]
-        buy_one_get_one_foods                                  <- map["buy_one_get_one_foods"]
-        discount_percent <- map["discount_percent"]
-        food_option_food_ids <- map["food_option_food_ids"]
+        id                                  <- map["id"]
+        quantity                            <- map["quantity"]
+        note                                <- map["note"]
+        price                               <- map["price"]
+        is_use_point                        <- map["is_use_point"]
+        customer_order_detail_id            <- map["customer_order_detail_id"]
+        addition_foods                      <- map["addition_foods"]
+        buy_one_get_one_foods               <- map["buy_one_get_one_foods"]
+        discount_percent                    <- map["discount_percent"]
+        food_option_foods                   <- map["food_option_foods"]
 
     }
     

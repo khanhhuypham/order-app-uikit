@@ -40,7 +40,7 @@ extension OrderDetailViewController:UITableViewDelegate{
                cell.viewModel = self.viewModel
                cell.data = orderDetail
            }.disposed(by: rxbag)
-       }
+    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
@@ -88,11 +88,10 @@ extension OrderDetailViewController:UITableViewDelegate{
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
-        let item = viewModel.order.value.order_details[indexPath.row]
+        var item = viewModel.order.value.order_details[indexPath.row]
      
         // cancelFood action
         let cancelFood = UIContextualAction(style: .normal,title: ""){[weak self] (action, view, completionHandler) in
-            
             self?.handleCancelFood(item: item)
             completionHandler(true)
         }
@@ -111,6 +110,16 @@ extension OrderDetailViewController:UITableViewDelegate{
         }
         splitFood.backgroundColor = ColorUtils.green_600()
         splitFood.image = UIImage(named: "icon-split-food-bg-green")
+        
+        
+        // reprint item action
+        let reprint = UIContextualAction(style: .normal,title: "") {[weak self] (action, view, completionHandler) in
+            self?.presentPreprintPopupViewController(item: item)
+            completionHandler(true)
+        }
+        reprint.backgroundColor = ColorUtils.blue_brand_800()
+        reprint.image = UIImage(named:"icon-reprint-item")
+        
         
         // discount action
         let discount = UIContextualAction(style: .normal, title: "") { [weak self] (action, view, completionHandler) in
@@ -161,11 +170,35 @@ extension OrderDetailViewController:UITableViewDelegate{
                         : self!.presentEditChildrenFoodViewController(orderItem: item)
                         break
                 }
+            
             completionHandler(true)
+            
         }
         
         editItem.backgroundColor = ColorUtils.blue_brand_700()
         editItem.image = UIImage(named: "icon-edit-service-bg-blue")
+        
+        // adjust price
+        let adjustPrice = UIContextualAction(style: .normal,title: "") {[weak self] (action, view, completionHandler) in
+            self?.presentEnterpricePopupViewController(item: item)
+            completionHandler(true)
+        }
+        
+        adjustPrice.backgroundColor = ColorUtils.gray_500()
+        adjustPrice.image = UIImage(named: "icon-adjust-price")
+        
+        
+        // confirm item action
+        let confirm = UIContextualAction(style: .normal,title: "") {[weak self] (action, view, completionHandler) in
+            self?.presentModalDialogConfirm(title:"XÁC NHẬN", content:"Bạn có muốn xác nhận món?", confirmClosure:{
+                item.isChange = ACTIVE
+                item.quantity = item.seafood_tank_quantity
+                self?.customerConfirmFishTank(item: item)
+            })
+            completionHandler(true)
+        }
+        confirm.backgroundColor = ColorUtils.blue_brand_700()
+        confirm.image = UIImage(named:"icon-transfer-confirmation-to-fish-tank")
         
         
         var action:[UIContextualAction] = []
@@ -181,10 +214,20 @@ extension OrderDetailViewController:UITableViewDelegate{
                         ? [cancelFood,splitFood,editItem,noteFood]
                         : [cancelFood,splitFood,noteFood]
                     }else{
-                        action = item.order_detail_additions.count > 0 || item.order_detail_options.count > 0 
-                        ? [cancelFood,splitFood,editItem,discount,noteFood]
-                        : [cancelFood,splitFood,discount,noteFood]
-                    }
+                      
+                        if permissionUtils.adjustPriceForSellByWeightFood && item.is_sell_by_weight == ACTIVE{
+                            
+                            action = item.order_detail_additions.count > 0 || item.order_detail_options.count > 0
+                            ? [cancelFood,splitFood,editItem,adjustPrice,discount,noteFood]
+                            : [cancelFood,splitFood,adjustPrice,discount,noteFood]
+                            
+                        }else{
+                            action = item.order_detail_additions.count > 0 || item.order_detail_options.count > 0
+                            ? [cancelFood,splitFood,editItem,discount,noteFood]
+                            : [cancelFood,splitFood,discount,noteFood]
+                        }
+                        
+                    }	
                 }
             
             case .done,.cooking:
@@ -200,27 +243,42 @@ extension OrderDetailViewController:UITableViewDelegate{
                             action = []
                         }else{
                             action = item.is_gift == ACTIVE || item.is_extra_Charge == ACTIVE
-                            ? [cancelFood,splitFood]
-                            : [cancelFood,discount,splitFood]
+                            ? [cancelFood,reprint,splitFood]
+                            : [cancelFood,discount,reprint,splitFood]
                         }
                     
                     default:
                         if item.buffet_ticket_id > 0{
                             action = [cancelFood]
                         }else{
-                            action = item.is_gift == ACTIVE || item.is_extra_Charge == ACTIVE ? [cancelFood,splitFood] : [cancelFood,discount,splitFood]
+                            action = item.is_gift == ACTIVE || item.is_extra_Charge == ACTIVE ? [cancelFood,reprint,splitFood] : [cancelFood,discount,reprint,splitFood]
                         }
                         
                 }
-                
+                    
+                if permissionUtils.GPBH_2_o_2 || permissionUtils.GPBH_3{
+                    if let i = action.firstIndex(where: {$0 == reprint}){
+                        action.remove(at: i)
+                    }
+                }
+            
             case .cancel,.not_enough:
                 action = []
             
             case .servic_block_stopped,.servic_block_using:
                 action = [cancelFood, splitFood, editItem]
-        
+            
+            case .wait_fish_tank_confirm,.customer_confirmed_seafood:
+                action = item.order_detail_additions.count > 0 || item.order_detail_options.count > 0
+                ? [cancelFood,splitFood,editItem,discount,noteFood]
+                : [cancelFood,splitFood,discount,noteFood]
+                
+            case .wait_customer_confirm_seafood:
+                action = item.order_detail_additions.count > 0 || item.order_detail_options.count > 0
+                ? [cancelFood,splitFood,editItem,confirm,discount,noteFood]
+                : [cancelFood,splitFood,confirm,discount,noteFood]
+
         }
-        
         
         if item.is_booking_item == ACTIVE{ //nếu là món booking
             action = item.category_type == .drink ? [cancelFood,noteFood] : []
@@ -228,8 +286,8 @@ extension OrderDetailViewController:UITableViewDelegate{
         
         let configuration = UISwipeActionsConfiguration(actions: action)
         configuration.performsFirstActionWithFullSwipe = false
- 
-              
+    
         return configuration
     }
 }
+

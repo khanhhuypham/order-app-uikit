@@ -19,10 +19,10 @@ class ReportBusinessAnalyticsViewModel: BaseViewModel {
     var cate_id = BehaviorRelay<Int>(value: 0)
     
     public var restaurant_brand_id : BehaviorRelay<Int> = BehaviorRelay(value: ManageCacheObject.getCurrentBrand().id)
-    public var report_type : BehaviorRelay<Int> = BehaviorRelay(value: 0)
+    public var report_type : BehaviorRelay<Int> = BehaviorRelay(value: REPORT_TYPE_TODAY)
     public var date_string : BehaviorRelay<String> = BehaviorRelay(value: "")
-    public var from_date : BehaviorRelay<String> = BehaviorRelay(value: "")
-    public var to_date : BehaviorRelay<String> = BehaviorRelay(value: "")
+    public var from_date : BehaviorRelay<String> = BehaviorRelay(value: TimeUtils.getToday())
+    public var to_date : BehaviorRelay<String> = BehaviorRelay(value: TimeUtils.getToday())
 
     var category_types = BehaviorRelay<Int>(value: ACTIVE)
     var is_cancelled_food = BehaviorRelay<Int>(value: ALL)

@@ -89,18 +89,7 @@ extension AddFoodViewController{
         }).disposed(by: rxbag)
     }
     
-    
-    func healthCheckForFood(){
-        viewModel.healthCheckDataChangeFromServer().subscribe(onNext: { (response) in
-            if(response.code == RRHTTPStatusCode.ok.rawValue){
-                self.getCategories()
-                dLog("Gọi API health check thành công")
-            }else{
-                dLog(response.message ?? "Có lỗi xảy ra trong quá trình kết nối tới máy chủ.")
-            }
-        }).disposed(by: rxbag)
-    }
-    
+
  
 
     
@@ -117,32 +106,35 @@ extension AddFoodViewController{
                     
                     
                     if let section = self.viewModel.sectionArray.value.first,section.model == .food {
+                        
                         var p = self.viewModel.APIParameter.value
+                        
                         var list = section.items
                         
                         if(data.foods.count > 0 && !p.isGetFullData){
                             //===================== assign selected item ========================================
                             for (i,element) in data.foods.enumerated(){
+                                
                                 if let selectedItem = self.viewModel.selectedFoods.value.first(where: {$0.id == element.id}){
                                     data.foods[i] = selectedItem
                                 }
+                                
                             }
                             //===================================================================================
                             
                             list.append(contentsOf: data.foods)
                         }
 
-                         p.isGetFullData = data.foods.count < p.limit ? true: false
-                         p.isAPICalling = false
+                        p.isGetFullData = data.foods.count < p.limit ? true: false
+                        p.isAPICalling = false
                       
                         self.viewModel.APIParameter.accept(p)
                         
                         self.viewModel.sectionArray.accept(
                             [SectionModel(model: FOOD_CATEGORY.food,items: list)]
                         )
-                        self.view_nodata_order.isHidden = (list.count) > 0 ? true:false // thêm kiểm tra hiển thị icon ko có dữ liệu
                         
-                    
+                        self.view_nodata_order.isHidden = (list.count) > 0 ? true : false // thêm kiểm tra hiển thị icon ko có dữ liệu
                         self.tableView.tableFooterView?.isHidden = true
                         self.tableView.tableHeaderView?.isHidden = true
               
@@ -160,15 +152,10 @@ extension AddFoodViewController{
     }
     
     
- 
-    
-    
-        
-  
-    
     func addFoodsToOrder(items:[FoodRequest]){
         
-        viewModel.addFoods(items:items).subscribe(onNext: { (response) in
+        viewModel.addFoods(items:items).subscribe(onNext: {[weak self] (response) in
+            guard let self = self else { return }
             if(response.code == RRHTTPStatusCode.ok.rawValue){
                 if let data  = Mapper<NewOrder>().map(JSONObject: response.data){
                     var order = self.viewModel.order.value
@@ -184,11 +171,13 @@ extension AddFoodViewController{
                     self.navigationController?.viewControllers.removeAll(where: { (vc) -> Bool in
                         return vc.isKind(of: AddFoodViewController.self) ? true : false
                     })
-                    JonAlert.showSuccess(message: "Thêm món thành công",duration: 2.0)
+                    
+                    self.showSuccessMessage(content: "Thêm món thành công",duration: 1.5)
                 }
                 
             }else{
                 dLog(response.message ?? "Có lỗi xảy ra trong quá trình kết nối tới máy chủ.")
+                self.showErrorMessage(content: response.message ?? "")
             }
          
         }).disposed(by: rxbag)

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -66,418 +66,18 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P2G-ZT-hZO">
                                 <rect key="frame" x="0.0" y="74" width="550" height="60"/>
                                 <subviews>
-                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="05G-oe-4lh">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="olZ-UY-Wn9" customClass="ReportFilter" customModule="TECHRES_ORDER" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="550" height="60"/>
-                                        <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="I28-R3-KIj">
-                                                <rect key="frame" x="16" y="0.0" width="960" height="60"/>
-                                                <subviews>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VZj-7y-e6s" userLabel="Hôm nay">
-                                                        <rect key="frame" x="0.0" y="0.0" width="80" height="60"/>
-                                                        <subviews>
-                                                            <button toolTip="Pham khanh huy" opaque="NO" tag="1" contentMode="scaleToFill" semanticContentAttribute="playback" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zwi-d4-ZqK">
-                                                                <rect key="frame" x="0.0" y="13" width="80" height="34"/>
-                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="34" id="t8w-BJ-xuy"/>
-                                                                </constraints>
-                                                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="12"/>
-                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                                <state key="normal" title="Hôm nay">
-                                                                    <color key="titleColor" red="0.0" green="0.4431372549" blue="0.73333333329999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                </state>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                        <real key="value" value="17"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                        <real key="value" value="1"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                                        <color key="value" red="0.0" green="0.4431372549" blue="0.73333333329999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                                <connections>
-                                                                    <action selector="actionChooseReportType:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="duv-KI-TQd"/>
-                                                                </connections>
-                                                            </button>
-                                                        </subviews>
-                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <constraints>
-                                                            <constraint firstItem="zwi-d4-ZqK" firstAttribute="centerY" secondItem="VZj-7y-e6s" secondAttribute="centerY" id="PFP-rr-deu"/>
-                                                            <constraint firstItem="zwi-d4-ZqK" firstAttribute="leading" secondItem="VZj-7y-e6s" secondAttribute="leading" id="QlH-Tn-s6A"/>
-                                                            <constraint firstAttribute="trailing" secondItem="zwi-d4-ZqK" secondAttribute="trailing" id="b3j-C6-vET"/>
-                                                            <constraint firstAttribute="width" constant="80" id="prU-Oh-dAq"/>
-                                                        </constraints>
-                                                    </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="piA-Em-8h3" userLabel="Hôm qua">
-                                                        <rect key="frame" x="85" y="0.0" width="75" height="60"/>
-                                                        <subviews>
-                                                            <button opaque="NO" tag="9" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E3g-uF-N4F">
-                                                                <rect key="frame" x="0.0" y="12.666666666666671" width="75" height="35"/>
-                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="35" id="zBm-dx-1OG"/>
-                                                                </constraints>
-                                                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="12"/>
-                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                                <state key="normal" title="Hôm qua">
-                                                                    <color key="titleColor" red="0.0" green="0.4431372549" blue="0.73333333329999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                </state>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                        <real key="value" value="17"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                                        <color key="value" red="0.0" green="0.4431372549" blue="0.73333333329999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                        <real key="value" value="1"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                                <connections>
-                                                                    <action selector="actionChooseReportType:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="tL4-9x-JaA"/>
-                                                                </connections>
-                                                            </button>
-                                                        </subviews>
-                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="75" id="1h4-ix-i5N"/>
-                                                            <constraint firstAttribute="trailing" secondItem="E3g-uF-N4F" secondAttribute="trailing" id="edf-rw-XGK"/>
-                                                            <constraint firstItem="E3g-uF-N4F" firstAttribute="leading" secondItem="piA-Em-8h3" secondAttribute="leading" id="n66-4B-ghH"/>
-                                                            <constraint firstItem="E3g-uF-N4F" firstAttribute="centerY" secondItem="piA-Em-8h3" secondAttribute="centerY" id="uNz-EA-Wqg"/>
-                                                        </constraints>
-                                                    </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T7Y-8s-aqQ" userLabel="Tuần này">
-                                                        <rect key="frame" x="165" y="0.0" width="80" height="60"/>
-                                                        <subviews>
-                                                            <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W7L-rS-QHg">
-                                                                <rect key="frame" x="0.0" y="12.666666666666671" width="80" height="35"/>
-                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="35" id="gzm-c6-3fF"/>
-                                                                </constraints>
-                                                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="12"/>
-                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                                <state key="normal" title="Tuần này">
-                                                                    <color key="titleColor" red="0.0" green="0.4431372549" blue="0.73333333329999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                </state>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                        <real key="value" value="17"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                                        <color key="value" red="0.0" green="0.4431372549" blue="0.73333333329999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                        <real key="value" value="1"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                                <connections>
-                                                                    <action selector="actionChooseReportType:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="Ob4-5J-TCR"/>
-                                                                </connections>
-                                                            </button>
-                                                        </subviews>
-                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <constraints>
-                                                            <constraint firstItem="W7L-rS-QHg" firstAttribute="centerY" secondItem="T7Y-8s-aqQ" secondAttribute="centerY" id="9Yc-Hb-9Yy"/>
-                                                            <constraint firstAttribute="width" constant="80" id="O7R-pb-dPI"/>
-                                                            <constraint firstItem="W7L-rS-QHg" firstAttribute="leading" secondItem="T7Y-8s-aqQ" secondAttribute="leading" id="UCt-4w-3uv"/>
-                                                            <constraint firstAttribute="trailing" secondItem="W7L-rS-QHg" secondAttribute="trailing" id="ehW-lx-vUT"/>
-                                                        </constraints>
-                                                    </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EO3-3S-RbD" userLabel="Tháng này">
-                                                        <rect key="frame" x="250" y="0.0" width="80" height="60"/>
-                                                        <subviews>
-                                                            <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Whi-2o-3PD">
-                                                                <rect key="frame" x="0.0" y="12.666666666666671" width="80" height="35"/>
-                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="35" id="Rn7-dh-0eS"/>
-                                                                </constraints>
-                                                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="12"/>
-                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                                <state key="normal" title="Tháng này">
-                                                                    <color key="titleColor" red="0.0" green="0.4431372549" blue="0.73333333329999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                </state>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                        <real key="value" value="17"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                                        <color key="value" red="0.0" green="0.4431372549" blue="0.73333333329999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                        <real key="value" value="1"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                                <connections>
-                                                                    <action selector="actionChooseReportType:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="LBJ-cz-fTq"/>
-                                                                </connections>
-                                                            </button>
-                                                        </subviews>
-                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="80" id="A5g-Fq-HmS"/>
-                                                            <constraint firstAttribute="trailing" secondItem="Whi-2o-3PD" secondAttribute="trailing" id="Xgj-Wy-ESj"/>
-                                                            <constraint firstItem="Whi-2o-3PD" firstAttribute="centerY" secondItem="EO3-3S-RbD" secondAttribute="centerY" id="YrF-YX-CNH"/>
-                                                            <constraint firstItem="Whi-2o-3PD" firstAttribute="leading" secondItem="EO3-3S-RbD" secondAttribute="leading" id="oEd-2W-4AU"/>
-                                                        </constraints>
-                                                    </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TCj-O2-nIP" userLabel="Tháng trước">
-                                                        <rect key="frame" x="335" y="0.0" width="100" height="60"/>
-                                                        <subviews>
-                                                            <button opaque="NO" tag="10" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2LW-CL-9Uf">
-                                                                <rect key="frame" x="0.0" y="12.666666666666671" width="100" height="35"/>
-                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="35" id="uKn-3n-k3P"/>
-                                                                </constraints>
-                                                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="12"/>
-                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                                <state key="normal" title="Tháng trước">
-                                                                    <color key="titleColor" red="0.0" green="0.4431372549" blue="0.73333333329999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                </state>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                        <real key="value" value="17"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                                        <color key="value" red="0.0" green="0.4431372549" blue="0.73333333329999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                        <real key="value" value="1"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                                <connections>
-                                                                    <action selector="actionChooseReportType:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="ylP-9l-RGQ"/>
-                                                                </connections>
-                                                            </button>
-                                                        </subviews>
-                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <constraints>
-                                                            <constraint firstItem="2LW-CL-9Uf" firstAttribute="leading" secondItem="TCj-O2-nIP" secondAttribute="leading" id="aTx-AZ-ujS"/>
-                                                            <constraint firstItem="2LW-CL-9Uf" firstAttribute="centerY" secondItem="TCj-O2-nIP" secondAttribute="centerY" id="nn3-Cy-DD9"/>
-                                                            <constraint firstAttribute="trailing" secondItem="2LW-CL-9Uf" secondAttribute="trailing" id="s6F-5Z-3pR"/>
-                                                            <constraint firstAttribute="width" constant="100" id="sLx-f3-RrE"/>
-                                                        </constraints>
-                                                    </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c5h-nL-WmM" userLabel="3 tháng gần nhất">
-                                                        <rect key="frame" x="440" y="0.0" width="130" height="60"/>
-                                                        <subviews>
-                                                            <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6nU-4w-c26">
-                                                                <rect key="frame" x="0.0" y="12.666666666666671" width="130" height="35"/>
-                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="35" id="1AV-qa-nrM"/>
-                                                                </constraints>
-                                                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="12"/>
-                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                                <state key="normal" title="3 tháng gần nhất">
-                                                                    <color key="titleColor" red="0.0" green="0.4431372549" blue="0.73333333329999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                </state>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                        <real key="value" value="17"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                                        <color key="value" red="0.0" green="0.4431372549" blue="0.73333333329999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                        <real key="value" value="1"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                                <connections>
-                                                                    <action selector="actionChooseReportType:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="dm4-Zq-0RN"/>
-                                                                </connections>
-                                                            </button>
-                                                        </subviews>
-                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="trailing" secondItem="6nU-4w-c26" secondAttribute="trailing" id="LO2-sx-vya"/>
-                                                            <constraint firstItem="6nU-4w-c26" firstAttribute="centerY" secondItem="c5h-nL-WmM" secondAttribute="centerY" id="SWB-h6-OSj"/>
-                                                            <constraint firstAttribute="width" constant="130" id="YTd-xC-YP0"/>
-                                                            <constraint firstItem="6nU-4w-c26" firstAttribute="leading" secondItem="c5h-nL-WmM" secondAttribute="leading" id="o5g-rM-JkP"/>
-                                                        </constraints>
-                                                    </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F1C-aQ-qR5" userLabel="Năm nay">
-                                                        <rect key="frame" x="575" y="0.0" width="80" height="60"/>
-                                                        <subviews>
-                                                            <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UQN-ZN-AgI">
-                                                                <rect key="frame" x="0.0" y="12.666666666666671" width="80" height="35"/>
-                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="35" id="r7y-ZH-2rJ"/>
-                                                                </constraints>
-                                                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="12"/>
-                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                                <state key="normal" title="Năm nay">
-                                                                    <color key="titleColor" red="0.0" green="0.4431372549" blue="0.73333333329999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                </state>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                        <real key="value" value="17"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                                        <color key="value" red="0.0" green="0.4431372549" blue="0.73333333329999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                        <real key="value" value="1"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                                <connections>
-                                                                    <action selector="actionChooseReportType:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="2nN-B9-AiG"/>
-                                                                </connections>
-                                                            </button>
-                                                        </subviews>
-                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="80" id="0DB-5V-7uM"/>
-                                                            <constraint firstItem="UQN-ZN-AgI" firstAttribute="leading" secondItem="F1C-aQ-qR5" secondAttribute="leading" id="YBm-x2-sgi"/>
-                                                            <constraint firstAttribute="trailing" secondItem="UQN-ZN-AgI" secondAttribute="trailing" id="eSR-Hs-fja"/>
-                                                            <constraint firstItem="UQN-ZN-AgI" firstAttribute="centerY" secondItem="F1C-aQ-qR5" secondAttribute="centerY" id="l6w-eR-i7A"/>
-                                                        </constraints>
-                                                    </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4pH-XO-yJ8" userLabel="Năm trước">
-                                                        <rect key="frame" x="660" y="0.0" width="90" height="60"/>
-                                                        <subviews>
-                                                            <button opaque="NO" tag="11" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FZE-NR-bRQ">
-                                                                <rect key="frame" x="0.0" y="12.666666666666671" width="90" height="35"/>
-                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="35" id="X7Y-KR-XOR"/>
-                                                                </constraints>
-                                                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="12"/>
-                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                                <state key="normal" title="Năm trước">
-                                                                    <color key="titleColor" red="0.0" green="0.4431372549" blue="0.73333333329999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                </state>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                        <real key="value" value="17"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                                        <color key="value" red="0.0" green="0.4431372549" blue="0.73333333329999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                        <real key="value" value="1"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                                <connections>
-                                                                    <action selector="actionChooseReportType:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="PdN-5N-EAY"/>
-                                                                </connections>
-                                                            </button>
-                                                        </subviews>
-                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <constraints>
-                                                            <constraint firstItem="FZE-NR-bRQ" firstAttribute="centerY" secondItem="4pH-XO-yJ8" secondAttribute="centerY" id="Owt-f5-1dl"/>
-                                                            <constraint firstItem="FZE-NR-bRQ" firstAttribute="leading" secondItem="4pH-XO-yJ8" secondAttribute="leading" id="ToP-yY-bzz"/>
-                                                            <constraint firstAttribute="width" constant="90" id="cM2-bE-ctL"/>
-                                                            <constraint firstAttribute="trailing" secondItem="FZE-NR-bRQ" secondAttribute="trailing" id="nma-X8-pYJ"/>
-                                                        </constraints>
-                                                    </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ede-SI-3A8" userLabel="3 năm gần nhất">
-                                                        <rect key="frame" x="755" y="0.0" width="110" height="60"/>
-                                                        <subviews>
-                                                            <button opaque="NO" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xg5-Wv-8vZ">
-                                                                <rect key="frame" x="0.0" y="12.666666666666671" width="110" height="35"/>
-                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="35" id="YNx-FD-Hap"/>
-                                                                </constraints>
-                                                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="12"/>
-                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                                <state key="normal" title="3 năm gần nhất">
-                                                                    <color key="titleColor" red="0.0" green="0.4431372549" blue="0.73333333329999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                </state>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                        <real key="value" value="17"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                                        <color key="value" red="0.0" green="0.4431372549" blue="0.73333333329999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                        <real key="value" value="1"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                                <connections>
-                                                                    <action selector="actionChooseReportType:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="CHk-Qg-6jT"/>
-                                                                </connections>
-                                                            </button>
-                                                        </subviews>
-                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <constraints>
-                                                            <constraint firstItem="xg5-Wv-8vZ" firstAttribute="leading" secondItem="Ede-SI-3A8" secondAttribute="leading" id="YZk-Cb-6H7"/>
-                                                            <constraint firstAttribute="width" constant="110" id="jeU-Ao-olT"/>
-                                                            <constraint firstAttribute="trailing" secondItem="xg5-Wv-8vZ" secondAttribute="trailing" id="s2M-gW-wbQ"/>
-                                                            <constraint firstItem="xg5-Wv-8vZ" firstAttribute="centerY" secondItem="Ede-SI-3A8" secondAttribute="centerY" id="seS-Yt-q0k"/>
-                                                        </constraints>
-                                                    </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Uls-he-M4f" userLabel="Tất cả các năm">
-                                                        <rect key="frame" x="850" y="0.0" width="110" height="60"/>
-                                                        <subviews>
-                                                            <button opaque="NO" tag="8" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uiN-7t-78F">
-                                                                <rect key="frame" x="0.0" y="12.666666666666671" width="110" height="35"/>
-                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="35" id="XuA-N8-coT"/>
-                                                                </constraints>
-                                                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="12"/>
-                                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                                <state key="normal" title="Tất cả các năm">
-                                                                    <color key="titleColor" red="0.0" green="0.4431372549" blue="0.73333333329999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                </state>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                        <real key="value" value="17"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                                        <color key="value" red="0.0" green="0.4431372549" blue="0.73333333329999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                        <real key="value" value="1"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                                <connections>
-                                                                    <action selector="actionChooseReportType:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="uqf-Q4-qpC"/>
-                                                                </connections>
-                                                            </button>
-                                                        </subviews>
-                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="110" id="5Yy-eT-ASc"/>
-                                                            <constraint firstAttribute="trailing" secondItem="uiN-7t-78F" secondAttribute="trailing" id="GzJ-K1-Z9n"/>
-                                                            <constraint firstItem="uiN-7t-78F" firstAttribute="leading" secondItem="Uls-he-M4f" secondAttribute="leading" id="NOc-Ch-kPi"/>
-                                                            <constraint firstItem="uiN-7t-78F" firstAttribute="centerY" secondItem="Uls-he-M4f" secondAttribute="centerY" id="lCe-Lk-CLV"/>
-                                                        </constraints>
-                                                    </view>
-                                                </subviews>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="960" id="ooz-Gp-uT0"/>
-                                                </constraints>
-                                            </stackView>
-                                        </subviews>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstItem="I28-R3-KIj" firstAttribute="top" secondItem="aDd-0I-du1" secondAttribute="top" id="1rm-A8-78n"/>
-                                            <constraint firstItem="I28-R3-KIj" firstAttribute="bottom" secondItem="aDd-0I-du1" secondAttribute="bottom" id="2uU-fO-rQ9"/>
-                                            <constraint firstItem="I28-R3-KIj" firstAttribute="leading" secondItem="aDd-0I-du1" secondAttribute="leading" constant="16" id="R9z-pb-ZDR"/>
-                                            <constraint firstItem="I28-R3-KIj" firstAttribute="trailing" secondItem="aDd-0I-du1" secondAttribute="trailing" constant="-16" id="aIj-v6-f0m"/>
-                                            <constraint firstItem="I28-R3-KIj" firstAttribute="height" secondItem="TzE-bT-toX" secondAttribute="height" id="mSv-Uh-x8c"/>
-                                        </constraints>
-                                        <viewLayoutGuide key="contentLayoutGuide" id="aDd-0I-du1"/>
-                                        <viewLayoutGuide key="frameLayoutGuide" id="TzE-bT-toX"/>
-                                    </scrollView>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="05G-oe-4lh" secondAttribute="trailing" id="EQg-Jc-jM2"/>
+                                    <constraint firstItem="olZ-UY-Wn9" firstAttribute="top" secondItem="P2G-ZT-hZO" secondAttribute="top" id="Dnd-fH-whO"/>
+                                    <constraint firstAttribute="bottom" secondItem="olZ-UY-Wn9" secondAttribute="bottom" id="JP6-Y1-3Zr"/>
+                                    <constraint firstItem="olZ-UY-Wn9" firstAttribute="leading" secondItem="P2G-ZT-hZO" secondAttribute="leading" id="LUg-vv-Odx"/>
                                     <constraint firstAttribute="height" constant="60" id="U7a-31-gvq"/>
-                                    <constraint firstItem="05G-oe-4lh" firstAttribute="top" secondItem="P2G-ZT-hZO" secondAttribute="top" id="WdP-aL-51P"/>
-                                    <constraint firstItem="05G-oe-4lh" firstAttribute="leading" secondItem="P2G-ZT-hZO" secondAttribute="leading" id="nSm-VT-rLy"/>
-                                    <constraint firstAttribute="bottom" secondItem="05G-oe-4lh" secondAttribute="bottom" id="qy6-eR-koU"/>
+                                    <constraint firstAttribute="trailing" secondItem="olZ-UY-Wn9" secondAttribute="trailing" id="kAs-AW-Jad"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xrx-LB-Pyn" customClass="LineChartView" customModule="Charts">
@@ -544,18 +144,9 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
-                <outlet property="btn_all_year" destination="uiN-7t-78F" id="L0g-jE-qbk"/>
-                <outlet property="btn_last_month" destination="2LW-CL-9Uf" id="haN-LS-eZ1"/>
-                <outlet property="btn_last_three_month" destination="6nU-4w-c26" id="XlY-ZB-rxO"/>
-                <outlet property="btn_last_three_year" destination="xg5-Wv-8vZ" id="7BR-kI-lz0"/>
-                <outlet property="btn_last_year" destination="FZE-NR-bRQ" id="3Gs-eN-2e1"/>
-                <outlet property="btn_this_month" destination="Whi-2o-3PD" id="NOb-Wx-ihZ"/>
-                <outlet property="btn_this_week" destination="W7L-rS-QHg" id="WqC-NP-jZQ"/>
-                <outlet property="btn_this_year" destination="UQN-ZN-AgI" id="vw7-HJ-4Vt"/>
-                <outlet property="btn_today" destination="zwi-d4-ZqK" id="6WP-gL-43z"/>
-                <outlet property="btn_yesterday" destination="E3g-uF-N4F" id="qac-CE-EgK"/>
                 <outlet property="lbl_total_amount" destination="Mti-e9-dbc" id="uxh-A9-dWF"/>
                 <outlet property="line_chart_view" destination="xrx-LB-Pyn" id="YTW-qb-hpR"/>
+                <outlet property="reportFilter" destination="olZ-UY-Wn9" id="asQ-cm-Zuq"/>
                 <outlet property="root_view_empty_data" destination="wdM-gC-Ny8" id="Efv-B4-wcs"/>
             </connections>
             <point key="canvasLocation" x="303.81679389312978" y="27.816901408450704"/>
@@ -568,7 +159,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGray6Color">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

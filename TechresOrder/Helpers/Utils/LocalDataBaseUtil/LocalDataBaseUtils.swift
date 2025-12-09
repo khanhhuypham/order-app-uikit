@@ -12,10 +12,38 @@ import RealmSwift
 
 class LocalDataBaseUtils: NSObject {
     
+    static let shared: LocalDataBaseUtils = {
+        let util = LocalDataBaseUtils()
+        return util
+    }()
+    
+    private override init() {}
 
-    static func removeAllQueuedItem() {
+    // MARK: - Shared Realm Configuration
+    private let config: Realm.Configuration = {
+       var config = Realm.Configuration(
+           schemaVersion: 2,     // <--- Change this when adding new fields
+           migrationBlock: { migration, oldSchemaVersion in
+               if oldSchemaVersion < 2 {
+                   // Handle changes here
+                   // migration.renameProperty(...)
+                   // migration.enumerateObjects(...)
+               }
+           }
+       )
+       return config
+    }()
+
+    // Always get Realm using this config
+    func realmInstance() throws -> Realm {
+       return try Realm(configuration: config)
+    }
+    
+    
+
+    func removeAllQueuedItem() {
         do {
-            let realm = try Realm()
+            let realm = try realmInstance()
             
             try realm.write {
                 // Delete all instances of Dog from the realm.
@@ -28,9 +56,8 @@ class LocalDataBaseUtils: NSObject {
         }
         
         
-        
         do {
-            let realm = try Realm()
+            let realm = try realmInstance()
             
             try realm.write {
                 // Delete all instances of Dog from the realm.
@@ -46,9 +73,9 @@ class LocalDataBaseUtils: NSObject {
     }
     
     
-    static func CheckFinishedQueuedItem() {
+    func CheckFinishedQueuedItem() {
         do {
-            let realm = try Realm()
+            let realm = try realmInstance()
 
             let queue = realm.objects(WIFIQueuedItemObject.self)
             

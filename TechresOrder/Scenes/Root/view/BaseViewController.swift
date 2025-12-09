@@ -13,8 +13,7 @@ import JonAlert
 class BaseViewController: UIViewController {
     var viewModels = BaseViewModel()
     var window: UIWindow?
-//    var mySceneDelegate: RestartApp?
- 
+
  
     
     let rxbag = DisposeBag()
@@ -29,37 +28,30 @@ class BaseViewController: UIViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
                 
-        view.backgroundColor = ColorUtils.white()
+//        view.backgroundColor = ColorUtils.white()
                 
-        setNeedsStatusBarAppearanceUpdate()
+//        setNeedsStatusBarAppearanceUpdate()
         
-        modalPresentationStyle = .fullScreen
+//        modalPresentationStyle = .fullScreen
         
-        view.tintAdjustmentMode = .normal
+//        view.tintAdjustmentMode = .normal
     
         self.navigationController?.isNavigationBarHidden = true
         
         NotificationCenter.default.addObserver(self,selector:#selector(sceneChange(_:)),name:NSNotification.Name("SCENE_CHANGE"),object: nil)
     }
     
-
+//    open override var preferredStatusBarStyle: UIStatusBarStyle {
+//        return .lightContent
+//    }
     
-
-    open override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
-    
-   
     open override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-    
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        
         timer?.invalidate()
         timer = nil
         timer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { [weak self] _ in
@@ -88,10 +80,7 @@ class BaseViewController: UIViewController {
         SocketIOManager.shared().socketRealTimeOfLogin?.disconnect()
     }
     
-//    func navigatorToRootViewController(){
-//        let viewController = CustomTabBarController()
-//        self.navigationController?.pushViewController(viewController, animated: true)
-//    }
+
    
     
 
@@ -103,30 +92,26 @@ class BaseViewController: UIViewController {
     
     
     
-    func showSuccessMessage(content:String){
+    func showSuccessMessage(content:String,duration:Double? = nil){
         if(!viewModels.isMessageShowing.value){
-            JonAlert.show(message: content ,
-                          andIcon: UIImage(named: "icon-check-success"),
-                          duration: 2.0)
+            JonAlert.show(message: content,andIcon: UIImage(named: "icon-check-success"),duration: duration ?? 2.0)
             viewModels.isMessageShowing.accept(true)
         }
         
     }
 
     
-    func showWarningMessage(content:String){
+    func showWarningMessage(content:String,duration:Double? = nil){
         if(!viewModels.isMessageShowing.value){
-            JonAlert.show(message: content ,
-                          andIcon: UIImage(named: "icon-warning"),
-                          duration: 2.0)
+            JonAlert.show(message: content,andIcon: UIImage(named: "icon-warning"),duration:duration ?? 2.0)
             viewModels.isMessageShowing.accept(true)
         }
     }
     
     
-    func showErrorMessage(content:String){
+    func showErrorMessage(content:String,duration:Double? = nil){
         if(!viewModels.isMessageShowing.value){
-            JonAlert.showError(message: content, duration: 2.0)
+            JonAlert.show(message: content,andIcon: UIImage(named: "icon-cancel"), duration:duration ?? 2.0)
             viewModels.isMessageShowing.accept(true)
         }
         
@@ -194,13 +179,10 @@ extension BaseViewController{
         
    }
     func clearCache(){
-        ManageCacheObject.saveCurrentPoint(NextPoint()!)
-        ManageCacheObject.saveCurrentBrand(Brand())
-        ManageCacheObject.saveCurrentBranch(Branch())
-        ManageCacheObject.setSetting(Setting()!)
-        ManageCacheObject.saveCurrentUser(Account())
-        ManageCacheObject.setConfig(Config()!)
+        Utils.resetConfig()
         FoodAppPrintUtils.shared.stopPrintOrderForFoodAppOnBackground()
+        LocalDataBaseUtils.shared.removeAllQueuedItem()
+        PrinterUtils.shared.clearWorkItemUnderBackGround()
     }
         
     func logout(){
@@ -223,9 +205,9 @@ extension BaseViewController{
         
     }
     
-    func getWindow() -> UIWindow? {
-       return UIApplication.shared.keyWindow
-   }
+//    func getWindow() -> UIWindow? {
+//       return UIApplication.shared.keyWindow
+//   }
     
     
     private func setupSocketIOForKickOutAccount() {

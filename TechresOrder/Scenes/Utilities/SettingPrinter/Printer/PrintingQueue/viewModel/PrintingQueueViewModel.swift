@@ -17,28 +17,19 @@ final class PrintingQueueViewModel {
     enum Action {
         case reloadData
     }
-    
-    enum itemType {
-        case wifi
-        case tsc
-    }
 
     private var notificationToken: NotificationToken?
     weak var delegate: PrintingQueueViewModelDelegate?
     
     var itemArray:[(type:itemType,item:Any)] = []
-    
-//    var wifiQueuedItems: [WIFIQueuedItemObject] = []
-//    
-//    var tscQueuedItems: [TSCQueuedItemObject] = []
-//    
+ 
     
     private(set) weak var view: PrintingQueueViewController?
     
-    
-    
+
     func setupObserve() {
         let realm = try! Realm()
+        
         notificationToken = realm.objects(WIFIQueuedItemObject.self).observe({ (change) in
             self.delegate?.viewModel(self, needperfomAction: .reloadData)
         })
@@ -139,4 +130,6 @@ final class PrintingQueueViewModel {
     func bind(view:PrintingQueueViewController){
         self.view = view
     }
+    
+    
 }

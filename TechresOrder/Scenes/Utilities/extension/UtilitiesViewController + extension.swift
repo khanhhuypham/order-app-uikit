@@ -25,10 +25,10 @@ extension UtilitiesViewController {
     }
     
     
-    func presentModalChooseBranch() {
+    func presentModalChooseBranch(brand:Brand) {
         let vc = BranchViewController()
         vc.delegate = self
-        vc.brand_id = ManageCacheObject.getCurrentBrand().id
+        vc.brand = brand
         vc.modalPresentationStyle = .pageSheet
         // 2
         if #available(iOS 15.0, *) {
@@ -54,9 +54,7 @@ extension UtilitiesViewController {
 }
 extension UtilitiesViewController:BrandDelegate, BranchDelegate {
     func callBackChooseBrand(brand: Brand) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            self.presentModalChooseBranch()
-        }
+        self.presentModalChooseBranch(brand: brand)
     }
     
     func callBackChooseBranch(branch: Branch) {

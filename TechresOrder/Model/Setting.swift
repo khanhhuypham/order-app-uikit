@@ -25,7 +25,7 @@ struct Setting: Mappable {
     var service_restaurant_level_id = 0
     var service_restaurant_level_type = 0
     var hour_to_take_report: Int = 3
-    var is_have_take_away = DEACTIVE
+//    var is_have_take_away = DEACTIVE
     var is_enable_membership_card = 0
     var is_hide_total_amount_before_complete_bill: Int = 0
     var is_require_update_customer_slot_in_order = 0
@@ -41,8 +41,7 @@ struct Setting: Mappable {
     
     init?(map: Map) {}
 
-    init?() {
-    }
+    init() {}
 
     mutating func mapping(map: Map) {
         branch_type       <- map["branch_type"]
@@ -50,7 +49,7 @@ struct Setting: Mappable {
         service_restaurant_level_id <- map["service_restaurant_level_id"]
         service_restaurant_level_type <- map["service_restaurant_level_type"]
         
-        is_have_take_away <- map["is_have_take_away"]
+//        is_have_take_away <- map["is_have_take_away"]
         is_enable_membership_card <- map["is_enable_membership_card"]
         is_hide_total_amount_before_complete_bill <- map["is_hide_total_amount_before_complete_bill"]
         

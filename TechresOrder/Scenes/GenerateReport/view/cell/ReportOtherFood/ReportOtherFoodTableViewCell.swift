@@ -16,20 +16,12 @@ class ReportOtherFoodTableViewCell: UITableViewCell {
     @IBOutlet weak var root_view_empty_data: UIView!
     
     // MARK: Biến của button filter
-    @IBOutlet weak var btn_today: UIButton!
-    @IBOutlet weak var btn_yesterday: UIButton!
-    @IBOutlet weak var btn_this_week: UIButton!
-    @IBOutlet weak var btn_this_month: UIButton!
-    @IBOutlet weak var btn_last_month: UIButton!
-    @IBOutlet weak var btn_last_three_month: UIButton!
-    @IBOutlet weak var btn_this_year: UIButton!
-    @IBOutlet weak var btn_last_year: UIButton!
-    @IBOutlet weak var btn_last_three_year: UIButton!
-    @IBOutlet weak var btn_all_year: UIButton!
+    @IBOutlet weak var reportFilter: ReportFilter!
+    var datePicker: DatePickerUtils = DatePickerUtils()
     
     @IBOutlet weak var lbl_total_amount: UILabel!
     
-    var btnArray:[UIButton] = []
+
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -58,6 +50,36 @@ class ReportOtherFoodTableViewCell: UITableViewCell {
         viewModel.view?.getReportFoodOther()
     }
     
+    private func handleChooseDate(date:Date,tag:Int){
+        guard let viewModel = self.viewModel else {return}
+        let dateString = TimeUtils.convertDateToString(from: date, format: .dd_mm_yyyy)
+        var report = viewModel.otherFoodReport.value
+     
+        if tag == -2{
+            if TimeUtils.isDateValid(fromDateStr: dateString,toDateStr: report.toDate){
+                self.reportFilter.setFromDateTitle(dateString)
+                report.fromDate = dateString
+                report.reportType = 13
+                viewModel.otherFoodReport.accept(report)
+                viewModel.view?.getReportFoodOther()
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+          
+        }else if tag == -1{
+            if TimeUtils.isDateValid(fromDateStr: report.fromDate,toDateStr: dateString){
+                self.reportFilter.setToDateTitle(dateString)
+                report.toDate = dateString
+                report.reportType = 13
+                viewModel.otherFoodReport.accept(report)
+                viewModel.view?.getReportFoodOther()
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+        }
+        
+    }
+    
    
     
     
@@ -65,18 +87,50 @@ class ReportOtherFoodTableViewCell: UITableViewCell {
         didSet {
             guard let viewModel = self.viewModel else {return}
             
-       
-            btnArray = [btn_today, btn_yesterday, btn_this_week, btn_this_month, btn_last_month, btn_last_three_month, btn_this_year, btn_last_year, btn_last_three_year, btn_all_year]
-            Utils.changeBgBtn(btn: btn_this_month, btnArray: btnArray)
-            for btn in self.btnArray{
+            
+            datePicker.chooseDate = { [weak self] (date,tag) in
+                self?.handleChooseDate(date: date, tag: tag)
+            }
+
+            reportFilter.defaultReportType = viewModel.otherFoodReport.value.reportType
+            
+            reportFilter.chooseReportType = { [weak self] reportType in
                 
-                btn.rx.tap.asDriver().drive(onNext: { [weak self] in
-                    Utils.changeBgBtn(btn: btn, btnArray: self?.btnArray ?? [])
-                }).disposed(by: disposeBag)
-                
-                if btn.tag == viewModel.otherFoodReport.value.reportType {
-                    Utils.changeBgBtn(btn: btn, btnArray: btnArray)
-                }
+              var report = viewModel.otherFoodReport.value
+              
+              if reportType == -1{
+                  
+                  if let view = viewModel.view{
+                      
+                      self?.datePicker.showDatePicker(
+                           view,
+                           date:TimeUtils.convertStringToDate(from: report.toDate, format: .dd_mm_yyyy),
+                           tag:reportType
+                      )
+                   
+                  }
+               
+              }else if reportType == -2{
+                  
+                  if let view = viewModel.view{
+                      
+                      self?.datePicker.showDatePicker(
+                           view,
+                           date:TimeUtils.convertStringToDate(from: report.fromDate, format: .dd_mm_yyyy),
+                           tag:reportType
+                      )
+                   
+                  }
+               
+                  
+              }else if reportType > 0{
+                  report.foods = []
+                  report.reportType = reportType
+                  report.dateString = Constants.REPORT_TYPE_DICTIONARY[reportType] ?? ""
+                  viewModel.otherFoodReport.accept(report)
+                  viewModel.view?.getReportFoodOther()
+              }
+              
             }
         
             viewModel.otherFoodReport.subscribe( // Thực hiện subscribe Observable data
@@ -102,6 +156,7 @@ extension ReportOtherFoodTableViewCell {
             chartView: bar_chart,
             barChartItems: data.enumerated().map{(i,value) in BarChartDataEntry(x: Double(i), y: Double(value.total_amount))},
             xLabel: data.map{String($0.food_name.count <= 15 ? $0.food_name : $0.food_name.prefix(15) + "...")}
+            
         )
         
         bar_chart.isUserInteractionEnabled = true

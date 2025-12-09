@@ -17,20 +17,12 @@ class ReportDiscountTableViewCell: UITableViewCell {
     @IBOutlet weak var root_view_empty_data: UIView!
     @IBOutlet weak var lbl_food_total_amount: UILabel!
 
-    @IBOutlet weak var btn_today: UIButton!
-    @IBOutlet weak var btn_yesterday: UIButton!
-    @IBOutlet weak var btn_this_week: UIButton!
-    @IBOutlet weak var btn_this_month: UIButton!
-    @IBOutlet weak var btn_last_month: UIButton!
-    @IBOutlet weak var btn_last_three_month: UIButton!
-    @IBOutlet weak var btn_this_year: UIButton!
-    @IBOutlet weak var btn_last_year: UIButton!
-    @IBOutlet weak var btn_last_three_year: UIButton!
-    @IBOutlet weak var btn_all_year: UIButton!
+
     
-    
+    @IBOutlet weak var reportFilter: ReportFilter!
+    var datePicker: DatePickerUtils = DatePickerUtils()
     var lineChartItems = [ChartDataEntry]()
-    var btnArray:[UIButton] = []
+
     
     private(set) var disposeBag = DisposeBag()
     override func prepareForReuse() {
@@ -46,34 +38,84 @@ class ReportDiscountTableViewCell: UITableViewCell {
         super.setSelected(false, animated: false)
     }
     
+
     
-    @IBAction func actionChooseReportType(_ sender: UIButton) {
+    private func handleChooseDate(date:Date,tag:Int){
         guard let viewModel = self.viewModel else {return}
-        var discountReport = viewModel.discountReport.value
-        discountReport.discountReportData = []
-        discountReport.reportType = sender.tag
-        discountReport.dateString = Constants.REPORT_TYPE_DICTIONARY[sender.tag] ?? ""
-        viewModel.discountReport.accept(discountReport)
-        viewModel.view?.getdiscountReport()
+        let dateString = TimeUtils.convertDateToString(from: date, format: .dd_mm_yyyy)
+        var report = viewModel.discountReport.value
+     
+        if tag == -2{
+            if TimeUtils.isDateValid(fromDateStr: dateString,toDateStr: report.toDate){
+                self.reportFilter.setFromDateTitle(dateString)
+                report.fromDate = dateString
+                report.reportType = 13
+                viewModel.discountReport.accept(report)
+                viewModel.view?.getdiscountReport()
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+          
+        }else if tag == -1{
+            if TimeUtils.isDateValid(fromDateStr: report.fromDate,toDateStr: dateString){
+                self.reportFilter.setToDateTitle(dateString)
+                report.toDate = dateString
+                report.reportType = 13
+                viewModel.discountReport.accept(report)
+                viewModel.view?.getdiscountReport()
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+        }
     }
-    
   
     
     var viewModel: GenerateReportViewModel? = nil{
         didSet {
             guard let viewModel = self.viewModel else {return}
-            btnArray = [btn_today, btn_yesterday, btn_this_week, btn_this_month, btn_last_month, btn_last_three_month, btn_this_year, btn_last_year, btn_last_three_year, btn_all_year]
-       
-            for btn in self.btnArray{
-                btn.rx.tap.asDriver().drive(onNext: { [weak self] in
-                    Utils.changeBgBtn(btn: btn, btnArray: self?.btnArray ?? [])
-                }).disposed(by: disposeBag)
-                
-                if btn.tag == viewModel.discountReport.value.reportType {
-                    Utils.changeBgBtn(btn: btn, btnArray: btnArray)
-                }
-
+            datePicker.chooseDate = { [weak self] (date,tag) in
+               self?.handleChooseDate(date: date, tag: tag)
             }
+
+            reportFilter.defaultReportType = viewModel.discountReport.value.reportType
+            reportFilter.chooseReportType = { [weak self] reportType in
+              var report = viewModel.discountReport.value
+              
+              if reportType == -1{
+                  
+                  if let view = viewModel.view{
+                      
+                      self?.datePicker.showDatePicker(
+                           view,
+                           date:TimeUtils.convertStringToDate(from: report.toDate, format: .dd_mm_yyyy),
+                           tag:reportType
+                      )
+                   
+                  }
+               
+              }else if reportType == -2{
+                  
+                  if let view = viewModel.view{
+                      
+                      self?.datePicker.showDatePicker(
+                           view,
+                           date:TimeUtils.convertStringToDate(from: report.fromDate, format: .dd_mm_yyyy),
+                           tag:reportType
+                      )
+                   
+                  }
+               
+                  
+              }else if reportType > 0{
+                  report.discountReportData = []
+                  report.reportType = reportType
+                  report.dateString = Constants.REPORT_TYPE_DICTIONARY[reportType] ?? ""
+                  viewModel.discountReport.accept(report)
+                  viewModel.view?.getdiscountReport()
+              }
+              
+            }
+
             viewModel.discountReport.subscribe(onNext: { [self] report in
                 lbl_food_total_amount.text = Utils.stringVietnameseMoneyFormatWithNumberInt(amount: report.total_amount)
                 if report.discountReportData.count > 0{setupLineChart(dataChart: report.discountReportData,reportType: report.reportType)}
@@ -91,6 +133,7 @@ class ReportDiscountTableViewCell: UITableViewCell {
 
 //MARK: CHART HANDLER....
 extension ReportDiscountTableViewCell{
+    
     func setupLineChart(dataChart:[DiscountReportData],reportType:Int) {
         lineChartItems.removeAll()
         lineChartItems = dataChart.enumerated().map{(i,value) in ChartDataEntry(x: Double(i), y: Double(value.total_amount))}
@@ -99,10 +142,12 @@ extension ReportDiscountTableViewCell{
             chartView: line_chart_view,
             entries: lineChartItems,
             x_label: x_label,
-            labelCount: ChartUtils.setLabelCountForChart(reportType: reportType, totalDataPoint: dataChart.count)
+            labelCount: ChartUtils.setLabelCountForChart(reportType: reportType, totalDataPoint: dataChart.count),
+            horizontalScroll: reportType == REPORT_TYPE_OPTION_DAY ? true : false
         )
         line_chart_view.extraTopOffset = 30.0 // Adjust the value as per your requirement
-
     }
+    
+    
 }
 

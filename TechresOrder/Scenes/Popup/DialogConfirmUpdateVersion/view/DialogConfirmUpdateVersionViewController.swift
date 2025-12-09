@@ -27,7 +27,6 @@ class DialogConfirmUpdateVersionViewController: UIViewController {
     
     @IBAction func actionCancel(_ sender: Any) {
         if(is_require_update == 1){
-//            exit(0)
             self.dismiss(animated: true, completion: nil)
         }else{
              self.dismiss(animated: true, completion: nil)

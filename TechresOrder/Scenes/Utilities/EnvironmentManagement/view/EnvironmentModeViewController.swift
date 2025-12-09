@@ -50,20 +50,20 @@ class EnvironmentModeViewController: UIViewController {
             }
             action.state = action.title == list[pos] ? .on : .off
         }
-        
-        switch pos{
-            case 0:
-                environmentMode = .develop
-                break
-            case 1:
-                environmentMode = .staging
-                break
-            case 2:
-                environmentMode = .production
-                break
-            default:
-                break
-        }
+//        
+//        switch pos{
+//            case 0:
+//                environmentMode = .develop(domain: "https://beta.api.gateway.overate-vntech.com")
+//                break
+//            case 1:
+//                environmentMode = .staging(domain: "https://staging.api.gateway.overate-vntech.com")
+//                break
+//            case 2:
+//                environmentMode = .production(domain: "https://api.gateway.overate-vntech.com")
+//                break
+//            default:
+//                break
+//        }
         return menu
     }
 }

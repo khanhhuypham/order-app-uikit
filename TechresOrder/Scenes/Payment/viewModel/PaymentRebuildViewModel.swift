@@ -35,7 +35,7 @@ class PaymentRebuildViewModel: NSObject {
      }
      
     func makeOrderHistoryViewController(){
-        var order = Order()!
+        var order = Order()
         order.id = self.order.value.id
         router?.navigateToOrderHistoryViewController(order: order)
     }
@@ -71,7 +71,7 @@ extension PaymentRebuildViewModel{
                .mapObject(type: APIResponse.self)
     }
     
-    func getOrderDetail() -> Observable<APIResponse> {
+    func getOrder() -> Observable<APIResponse> {
         let is_print_bill = ACTIVE
         let food_status = String(format: "%d,%d,%d",FOOD_STATUS.pending.rawValue, FOOD_STATUS.cooking.rawValue, FOOD_STATUS.done.rawValue)
         return appServiceProvider.rx.request(.getOrderDetail(order_id: order.value.id, branch_id: branch_id.value, is_print_bill:is_print_bill, food_status:food_status))
@@ -89,28 +89,6 @@ extension PaymentRebuildViewModel{
                .mapObject(type: APIResponse.self)
        }
     
-    func requestPayment(paymentMethod:Int) -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.requestPayment(branch_id: branch_id.value, order_id: order.value.id, payment_method:paymentMethod, is_include_vat:order.value.is_apply_vat))
-               .filterSuccessfulStatusCodes()
-               .mapJSON().asObservable()
-               .showAPIErrorToast()
-               .mapObject(type: APIResponse.self)
-    }
-    
-    func completedPayment() -> Observable<APIResponse> {    
-        return appServiceProvider.rx.request(.completedPayment(
-            branch_id: branch_id.value,
-            order_id: order.value.id,
-            cash_amount: payment.value.cash_amount,
-            bank_amount: payment.value.bank_amount,
-            transfer_amount:payment.value.transfer_amount,
-            payment_method_id:payment.value.payment_method,
-            tip_amount:payment.value.tip_amount))
-               .filterSuccessfulStatusCodes()   
-               .mapJSON().asObservable()
-               .showAPIErrorToast()
-               .mapObject(type: APIResponse.self)
-    }
     
     func applyVAT(applyVAT:Int) -> Observable<APIResponse> {
         return appServiceProvider.rx.request(.applyVAT(branch_id: branch_id.value, order_id: order.value.id, is_apply_vat:applyVAT))
@@ -119,6 +97,122 @@ extension PaymentRebuildViewModel{
                .showAPIErrorToast()
                .mapObject(type: APIResponse.self)
     }
+  
+    func getFoodsNeedReview() -> Observable<APIResponse> {
+        return appServiceProvider.rx.request(.getFoodsNeedReview(branch_id:branch_id.value,order_id: order.value.id))
+               .filterSuccessfulStatusCodes()
+               .mapJSON().asObservable()
+               .showAPIErrorToast()
+               .mapObject(type: APIResponse.self)
+    }
+    
+    func unassignCustomerFromOrder(orderId:Int) -> Observable<APIResponse> {
+        return appServiceProvider.rx.request(.postUnassignCustomerFromOrder(order_id: orderId))
+           .filterSuccessfulStatusCodes()
+           .mapJSON().asObservable()
+           .showAPIErrorToast()
+           .mapObject(type: APIResponse.self)
+    }
+    
+    
+    func updateCustomer(orderId:Int,customer:Customer) -> Observable<APIResponse> {
+        return appServiceProvider.rx.request(.postCreateNewCustomer(orderId: orderId,customer:customer))
+               .filterSuccessfulStatusCodes()
+               .mapJSON().asObservable()
+               .showAPIErrorToast()
+               .mapObject(type: APIResponse.self)
+    }
+
+    
+
+}
+
+
+
+
+//MARK: API payment
+extension PaymentRebuildViewModel{
+    
+    func requestPayment(paymentMethod:Int) -> Observable<APIResponse> {
+        return appServiceProvider.rx.request(.requestPayment(branch_id: branch_id.value, order_id: order.value.id, payment_method:paymentMethod, is_include_vat:order.value.is_apply_vat))
+               .filterSuccessfulStatusCodes()
+               .mapJSON().asObservable()
+               .showAPIErrorToast()
+               .mapObject(type: APIResponse.self)
+    }
+    
+    func completedPayment() -> Observable<APIResponse> {
+        return appServiceProvider.rx.request(.completedPayment(
+            branch_id: branch_id.value,
+            order_id: order.value.id,
+            cash_amount: payment.value.cash_amount,
+            bank_amount: payment.value.bank_amount,
+            transfer_amount:payment.value.transfer_amount,
+            payment_method_id:payment.value.payment_method,
+            tip_amount:payment.value.tip_amount))
+               .filterSuccessfulStatusCodes()
+               .mapJSON().asObservable()
+               .showAPIErrorToast()
+               .mapObject(type: APIResponse.self)
+    }
+    
+    
+    func getBrandBankAccount() -> Observable<APIResponse> {
+        return appServiceProvider.rx.request(.getBrandBankAccount(
+            order_id: order.value.id,
+            brand_id: Constants.brand.id
+        ))
+        .filterSuccessfulStatusCodes()
+        .mapJSON().asObservable()
+        .showAPIErrorToast()
+        .mapObject(type: APIResponse.self)
+    }
+    
+    
+  
+}
+
+//MARK: API Print food
+extension PaymentRebuildViewModel{
+    func getOrderNeedToPrintForGPBH_2o1(print_type:Int) -> Observable<APIResponse> {
+        return appServiceProvider.rx.request(.getPrintItem(
+            type_print: print_type,
+            restaurant_id: Constants.restaurant_id,
+            branch_id: Constants.branch.id))
+               .filterSuccessfulStatusCodes()
+               .mapJSON().asObservable()
+               .showAPIErrorToast()
+               .mapObject(type: APIResponse.self)
+        
+    }
+    
+    
+    
+    func getSendToKitchen() -> Observable<APIResponse> {
+        return appServiceProvider.rx.request(.getSendToKitchen(
+            branch_id: branch_id.value,
+            order_id: order.value.id
+        ))
+               .filterSuccessfulStatusCodes()
+               .mapJSON().asObservable()
+               .showAPIErrorToast()
+               .mapObject(type: APIResponse.self)
+    }
+    
+    
+    func sendToKitchen(itemIds:[Int]) -> Observable<APIResponse> {
+        return appServiceProvider.rx.request(.postSendToKitchen(
+            branch_id: branch_id.value,
+            order_id: order.value.id,
+            item_ids: itemIds
+        ))
+           .filterSuccessfulStatusCodes()
+           .mapJSON().asObservable()
+           .showAPIErrorToast()
+           .mapObject(type: APIResponse.self)
+    }
+    
+    
     //MARK: API lấy danh sách món in
     func getFoodsNeedPrint() -> Observable<APIResponse> {
         return appServiceProvider.rx.request(.foodsNeedPrint(order_id: order.value.id))
@@ -146,71 +240,14 @@ extension PaymentRebuildViewModel{
                .mapObject(type: APIResponse.self)
     }
     
-    func getFoodsNeedReview() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.getFoodsNeedReview(branch_id:branch_id.value,order_id: order.value.id))
-               .filterSuccessfulStatusCodes()
-               .mapJSON().asObservable()
-               .showAPIErrorToast()
-               .mapObject(type: APIResponse.self)
-       }
     
-    
-    
-    
-    func getSendToKitchen() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.getSendToKitchen(
-            branch_id: branch_id.value,
-            order_id: order.value.id
-        ))
-               .filterSuccessfulStatusCodes()
-               .mapJSON().asObservable()
-               .showAPIErrorToast()
-               .mapObject(type: APIResponse.self)
-    }
-    
-    
-    func sendToKitchen(itemIds:[Int]) -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.postSendToKitchen(
-            branch_id: branch_id.value,
-            order_id: order.value.id,
-            item_ids: itemIds
-        ))
-               .filterSuccessfulStatusCodes()
-               .mapJSON().asObservable()
-               .showAPIErrorToast()
-               .mapObject(type: APIResponse.self)
-    }
-    
-    
-    
-    func getBrandBankAccount() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.getBrandBankAccount(
-            order_id: order.value.id,
-            brand_id: Constants.brand.id
-        ))
+    func updateReprintNumber() -> Observable<APIResponse> {
+        return appServiceProvider.rx.request(.postUpdateReprintNumber(order_id: order.value.id))
         .filterSuccessfulStatusCodes()
         .mapJSON().asObservable()
         .showAPIErrorToast()
         .mapObject(type: APIResponse.self)
     }
-}
-
-
-
-
-//MARK: api get printItem for only GPBH2o1
-extension PaymentRebuildViewModel{
     
-    func getOrderNeedToPrintForGPBH_2o1() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.getPrintItem(
-            type_print: 2,
-            restaurant_id: Constants.restaurant_id,
-            branch_id: Constants.branch.id))
-               .filterSuccessfulStatusCodes()
-               .mapJSON().asObservable()
-               .showAPIErrorToast()
-               .mapObject(type: APIResponse.self)
-        
-    }
-
 }
+    

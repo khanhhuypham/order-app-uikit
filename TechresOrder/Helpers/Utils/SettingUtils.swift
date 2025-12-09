@@ -91,7 +91,7 @@ class SettingUtils {
                                API getEmployeeSetting, từ GPBH_2 trở lên ta cần phải gọi API fetchBranch
                                để lấy chi nhánh đầu tiên không phải là chi nhánh văn phòng và gọi lại API employeeSetting của chỉ nhánh đó, nên mới chia thành 2 bước
                                 (bước 1 & 2)
-                           */
+                        */
                        
                        var setting = ManageCacheObject.getSetting()
                        setting.template_bill_printer_type = brandSetting.template_bill_printer_type
@@ -124,8 +124,7 @@ class SettingUtils {
             branch.banner = setting.branch_info.banner_image_url
             ManageCacheObject.saveCurrentBranch(branch)
        
-   
-            
+
             self.getPrinters(branchId: branchId)
             self.getPrivateBranchSetting(branchId: branchId)
             self.getBrandSetting(brandId: Constants.brand.id)
@@ -192,12 +191,7 @@ class SettingUtils {
                             getBrands(id: branch.restaurant_brand_id)
                             self.getEmployeeSetting(step:2,branchId: branch.id)
                         }else{
-                            ManageCacheObject.saveCurrentPoint(NextPoint()!)
-                            ManageCacheObject.saveCurrentBrand(Brand())
-                            ManageCacheObject.saveCurrentBranch(Branch())
-                            ManageCacheObject.setSetting(Setting()!)
-                            ManageCacheObject.saveCurrentUser(Account())
-                            ManageCacheObject.setConfig(Config()!)
+                            Utils.resetConfig()
                             JonAlert.showError(message: "Bạn không có quyền truy cập ứng dụng này!", duration: 2.0)
                         }
                     }
@@ -220,28 +214,10 @@ class SettingUtils {
                 if(response.code == RRHTTPStatusCode.ok.rawValue){
                    if var printers = Mapper<Printer>().mapArray(JSONObject: response.data) {
                        if(printers.count > 0){
-                  
-//                           let receipt_printer = printers.filter{$0.type == .cashier ||  $0.type == .cashier_of_food_app}
-//                           let stamp_printer = printers.filter{$0.type == .stamp || $0.type == .stamp_of_food_app }
-//                           let chef_bar_printer = printers.filter{$0.type == .bar || $0.type == .chef}
-                           
-//                           if permissionUtils.GPBH_1 || permissionUtils.GPBH_2_o_1{
-                               
-//                               if Constants.foodAppPrinters.isEmpty{
-//                                   var foodAppPrinter:[Printer] = []
-//                                   foodAppPrinter.append(Printer(id:1, name:"Thu ngân Food App",printerName: "Food App's receipt printer",type:.cashier,isFoodAppPrinter: true))
-//                                   foodAppPrinter.append(Printer(id:2, name: "Stamp Food App",printerName: "Food App's stamp printer",type:.stamp,paperSize: 30,isFoodAppPrinter: true))
-//                                   ManageCacheObject.SaveAppFoodPrinter(foodAppPrinter, cache_key: KEY_FOOD_APP_PRINTER)
-//                               }
-//                                
-//                           printers += Constants.foodAppPrinters
-                           
-//                           }
-                           
-                           ManageCacheObject.setPrinters(printers, cache_key: KEY_CHEF_BARS)
-//                           ManageCacheObject.savePrinterBill(receipt_printer.first ?? Printer(), cache_key: KEY_PRINTER_BILL)
-                           
-                           LocalDataBaseUtils.savePrinters(printersArray: printers)
+
+                           ManageCacheObject.setPrinters(printers, cache_key: KEY_PRINTERS)
+
+                           LocalDataBaseUtils.shared.savePrinters(printersArray: printers)
                        }
                    }
                 }else{
@@ -250,55 +226,71 @@ class SettingUtils {
             }).disposed(by: rxbag)
     }
     
-    
     static private func getPrivateBranchSetting(branchId:Int) {
         appServiceProvider.rx.request(.getApplyOnlyCashAmount(branchId: branchId))
-               .filterSuccessfulStatusCodes()
-               .mapJSON().asObservable()
-               .showAPIErrorToast()
-               .mapObject(type: APIResponse.self)
-               .take(1)
-               .subscribe(onNext: { (response) in
-                   if(response.code == RRHTTPStatusCode.ok.rawValue){
-                       
-                       
-                       if let branchSetting = Mapper<BranchSetting>().map(JSONObject: response.data) {
-                           //branch-setting
-                           var branch = ManageCacheObject.getCurrentBranch()
-                           branch.setting = branchSetting
-                           ManageCacheObject.saveCurrentBranch(branch)
-                       }
-                       
-                    
-                       if let method = Mapper<PaymentMethod>().map(JSONObject: response.data){
-                           //general-setting
-                           var setting = ManageCacheObject.getSetting()
-                           setting.is_show_vat_on_items_in_bill = method.is_show_vat_on_items_in_bill
-                           setting.is_hidden_payment_detail_in_bill = method.is_hidden_payment_detail_in_bill
-                           setting.vat_content_on_bill = method.vat_content_on_bill
-                           setting.greeting_content_on_bill = method.greeting_content_on_bill
-                           ManageCacheObject.setSetting(setting)
+       .filterSuccessfulStatusCodes()
+       .mapJSON().asObservable()
+       .showAPIErrorToast()
+       .mapObject(type: APIResponse.self)
+       .take(1)
+       .subscribe(onNext: { (response) in
+           if(response.code == RRHTTPStatusCode.ok.rawValue){
                
-                           
-                           //-----------------------------------------
-                           ManageCacheObject.setPaymentMethod(method)
-                           
-                           if method.is_enable_food_court == ACTIVE {
-                               if Utils.checkRoleCancelFoodCompleted(permission: ManageCacheObject.getCurrentUser().permissions) || permissionUtils.Owner{
-                                   (self.completion ?? {})()
-                               }else{
-                                   (self.closureForFoodCourt ?? {})()
-                               }
-                           }else {
+               if let branchSetting = Mapper<BranchSetting>().map(JSONObject: response.data) {
+                   //branch-setting
+                   var branch = ManageCacheObject.getCurrentBranch()
+                   branch.setting = branchSetting
+                   ManageCacheObject.saveCurrentBranch(branch)
+               }
+               
+               if let method = Mapper<PaymentMethod>().map(JSONObject: response.data){
+                   //general-setting
+                   var setting = ManageCacheObject.getSetting()
+                   setting.is_show_vat_on_items_in_bill = method.is_show_vat_on_items_in_bill
+                   setting.is_hidden_payment_detail_in_bill = method.is_hidden_payment_detail_in_bill
+                   setting.vat_content_on_bill = method.vat_content_on_bill
+                   setting.greeting_content_on_bill = method.greeting_content_on_bill
+                   
+                   ManageCacheObject.setSetting(setting)
+                   //-----------------------------------------
+                   ManageCacheObject.setPaymentMethod(method)
+                   
+                   let innerCompletion:(()->Void) = {
+                       if method.is_enable_food_court == ACTIVE {
+                           if Utils.checkRoleCancelFoodCompleted(permission: ManageCacheObject.getCurrentUser().permissions) || permissionUtils.Owner{
                                (self.completion ?? {})()
+                           }else{
+                               (self.closureForFoodCourt ?? {})()
                            }
- 
+                       }else {
+                           (self.completion ?? {})()
                        }
+                   }
+                   
+                   if environmentMode == .offline && Constants.branch.setting.is_offline_mode == ACTIVE{
+                       
+                       innerCompletion()
+                       
+                   }else if environmentMode == .online && Constants.branch.setting.is_offline_mode == DEACTIVE{
+                       
+                       innerCompletion()
+                       
                    }else{
-                       dLog(response.message ?? "Có lỗi xảy ra trong quá trình kết nối tới máy chủ. Vui lòng thử lại.")
+                       
+                        JonAlert.show(
+                            message: String(format: "Vui lòng chuyển sang chế độ làm việc %@ để đồng bộ với máy thu ngân",Constants.branch.setting.is_offline_mode == ACTIVE ? "offline" : "online"),
+                            andIcon: UIImage(named: "icon-cancel"),
+                            duration: 2.0
+                        )
                        (self.incompletion ?? {})()
                    }
-               }).disposed(by: rxbag)
+                   
+               }
+           }else{
+               dLog(response.message ?? "Có lỗi xảy ra trong quá trình kết nối tới máy chủ. Vui lòng thử lại.")
+               (self.incompletion ?? {})()
+           }
+       }).disposed(by: rxbag)
     }
     
 }

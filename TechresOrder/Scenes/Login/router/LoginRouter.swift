@@ -24,10 +24,6 @@ class LoginRouter {
         self.sourceView = view
     }
     
-    
-    func navigateToResetPasswordViewController(){
-        let resetPasswordViewController = ResetPasswordRouter().viewController as! ResetPasswordViewController
-        sourceView?.navigationController?.pushViewController(resetPasswordViewController, animated: true)
-    }
+
     
 }

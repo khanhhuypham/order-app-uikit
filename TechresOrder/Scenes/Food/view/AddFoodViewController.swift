@@ -10,12 +10,10 @@ import RxRelay
 import RxSwift
 import RxDataSources
 
-
 class AddFoodViewController: BaseViewController {
     var viewModel = AddFoodViewModel()
     var router = AddFoodRouter()
     var order:OrderDetail = OrderDetail.init()
-
     var is_gift = -1 // 0 = gọi món bình thường | 1 = Tặng món vào hoá đơn| -1 Cả hai
     let refreshControl = UIRefreshControl()
     
@@ -59,11 +57,8 @@ class AddFoodViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-    
         viewModel.bind(view: self, router: router)
         viewModel.order.accept(order)
-        
-
         registerCellAndBindTableView()
         bindViewModel()
     }
@@ -72,7 +67,6 @@ class AddFoodViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         firstSetup()
-
     }
     
     
@@ -151,8 +145,8 @@ class AddFoodViewController: BaseViewController {
                                 getBuffetTickets()
                             
                             default:
-                                  self.getCategories()
-//                                healthCheckForFood()
+                                getCategories()
+
                         }
 
         }).disposed(by: rxbag)
@@ -183,14 +177,12 @@ class AddFoodViewController: BaseViewController {
     
         textfield_search.text = APIParameter.key_word
         viewModel.clearData()
-        
-//        healthCheckForFood()
+
         self.getCategories()
     }
     
     
     @IBAction func actionFilterDetailOFBuffetTicket(_ sender: UIButton) {
-        
         guard let buffet = order.buffet else {
             return
         }
@@ -217,13 +209,11 @@ class AddFoodViewController: BaseViewController {
         textfield_search.text = APIParameter.key_word
         view_category.isHidden = false
         viewModel.clearData()
-//        healthCheckForFood()
-        self.getCategories()
+        getCategories()
        
     }
     
     @IBAction func actionFilterFood(_ sender: UIButton) {
-        
         var APIParameter = viewModel.APIParameter.value
         APIParameter.category_type = .food
         APIParameter.is_out_stock = ALL
@@ -234,10 +224,7 @@ class AddFoodViewController: BaseViewController {
         textfield_search.text = APIParameter.key_word
         view_category.isHidden = false
         viewModel.clearData()
-//        healthCheckForFood()
-        self.getCategories()
-
-
+        getCategories()
     }
     
     
@@ -245,7 +232,6 @@ class AddFoodViewController: BaseViewController {
     
    
     @IBAction func actionFilterDrink(_ sender: UIButton) {
-        
         var APIParameter = viewModel.APIParameter.value
         APIParameter.category_type = .drink
         APIParameter.is_out_stock = ALL
@@ -255,10 +241,8 @@ class AddFoodViewController: BaseViewController {
         addUnderLineView(btn: sender)
         textfield_search.text = APIParameter.key_word
         view_category.isHidden = false
-        self.viewModel.clearData()
-//        healthCheckForFood()
-        self.getCategories()
-    
+        viewModel.clearData()
+        getCategories()
     }
     
     
@@ -272,9 +256,8 @@ class AddFoodViewController: BaseViewController {
         viewModel.APIParameter.accept(APIParameter)
         addUnderLineView(btn: sender)
         textfield_search.text = APIParameter.key_word
-        self.viewModel.clearData()
-//        healthCheckForFood()
-        self.getCategories()
+        viewModel.clearData()
+        getCategories()
         view_category.isHidden = false
     }
 
@@ -288,9 +271,8 @@ class AddFoodViewController: BaseViewController {
         viewModel.APIParameter.accept(APIParameter)
         addUnderLineView(btn: sender)
         textfield_search.text = APIParameter.key_word
-        self.viewModel.clearData()
-//        healthCheckForFood()
-        self.getCategories()
+        viewModel.clearData()
+        getCategories()
         view_category.isHidden = true
     }
     
@@ -300,7 +282,7 @@ class AddFoodViewController: BaseViewController {
         var APIParameter = viewModel.APIParameter.value
         APIParameter.category_type = .buffet_ticket
         viewModel.APIParameter.accept(APIParameter)
-        self.viewModel.clearData()
+        viewModel.clearData()
         addUnderLineView(btn: sender)
         getBuffetTickets()
     }
@@ -337,30 +319,35 @@ class AddFoodViewController: BaseViewController {
         
         if !viewModel.selectedFoods.value.isEmpty{
         
-            let items = viewModel.selectedFoods.value.map{(food) in
+            let items = viewModel.selectedFoods.value.filter{$0.is_selected == ACTIVE}.map{(food) in
                 var food_request = FoodRequest.init()
                 food_request.id = food.id
                 food_request.quantity = food.quantity
                 food_request.note = food.note
                 food_request.discount_percent = food.discount_percent
+
+                food_request.price = food.price_with_temporary
                 //CHECK ADDITION FOOD
                 food_request.addition_foods = food.addition_foods.filter{$0.is_selected == ACTIVE && $0.quantity > 0}
                 // CHECK MUA 1 TANG 1
                 food_request.buy_one_get_one_foods = food.food_list_in_promotion_buy_one_get_one.filter{$0.is_selected == ACTIVE && $0.quantity > 0}
                 
            
-                for option in food.food_options {
-                    for item in option.addition_foods{
-                        if item.is_selected == ACTIVE{
-//                            food_request.order_detail_food_options.append(item.id)
-                            food_request.food_option_food_ids.append(item.id)
-                        }
-                    }
-                }
+                // Compose food options
+                food_request.food_option_foods = food.food_options.flatMap { option in
+                    
+                   option.addition_foods.filter { $0.is_selected == ACTIVE }.map { addition in
+                       [
+                           "id": addition.id,
+                           "quantity": addition.quantity,
+                           "food_option_id": option.id
+                       ]
+                   }
+    
+               }
                 
-                
-
                 return food_request
+                
             }
     
             is_gift == ADD_GIFT ? addGiftFoodsToOrder(items:items) : addFoodsToOrder(items:items)
@@ -368,8 +355,7 @@ class AddFoodViewController: BaseViewController {
         
     }
     
- 
-    
+
     @IBAction func actionCancel(_ sender: Any) {
         viewModel.makePopViewController()
     }

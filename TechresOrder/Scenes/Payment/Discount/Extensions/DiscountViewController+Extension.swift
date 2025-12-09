@@ -84,7 +84,6 @@ extension DiscountViewController{
         viewModel.discount().subscribe(onNext: { (response) in
             if(response.code == RRHTTPStatusCode.ok.rawValue){
 
-                
                 self.dismiss(animated: true,completion: {
                     self.completion()
                 })

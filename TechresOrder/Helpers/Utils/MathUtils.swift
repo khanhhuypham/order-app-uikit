@@ -16,9 +16,6 @@ class MathUtils: NSObject {
         return floor(number) == number
     }
 
-    
- 
-    
     static func convertToMoney(integer:Int? = nil,float:Float? = nil, double:Double? = nil , unit_name :String = "") -> String{
         let number = NumberFormatter()
         number.usesGroupingSeparator = true
@@ -28,8 +25,6 @@ class MathUtils: NSObject {
         
     }
     
-    
-
     
     static func convertStringToDoubleString(str:String) -> String{
         
@@ -60,11 +55,4 @@ class MathUtils: NSObject {
         
         return result
     }
-        
-    
-
-    
-
-    
-    
 }

@@ -183,11 +183,37 @@ extension AddFoodViewController:ChooseOptionViewControllerDelegate{
     }
     
     func presentDialogChooseToppingViewController(item:Food) {
+        self.view.endEditing(true)
         let vc = ChooseOptionViewController()
         vc.item = item
         vc.delegate = self
         vc.view.backgroundColor = ColorUtils.blackTransparent()
         vc.modalPresentationStyle = .pageSheet
-        present(vc, animated: true, completion: nil)
+        present(vc, animated: true, completion:nil)
     }
 }
+
+extension AddFoodViewController:PopupEnterPriceViewControllerDelegate{
+    
+    func callbackToAdjustedPrice(id:Int,price:Int){
+
+        if var item = viewModel.getFood(id: id){
+            item.price_with_temporary = price
+            item.adjustPrice = true
+            viewModel.setElement(element: item, categoryType: .food)
+        }
+    }
+
+    func presentEnterPricePopupViewController(item:Food) {
+        let vc = PopupEnterPriceViewController()
+        vc.delegate = self
+        vc.id = item.id
+        vc.view.backgroundColor = ColorUtils.blackTransparent()
+        vc.modalTransitionStyle = .crossDissolve
+        vc.modalPresentationStyle = .overCurrentContext
+        present(vc, animated: true, completion: nil)
+    }
+    
+    
+}
+

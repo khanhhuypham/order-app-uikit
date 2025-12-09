@@ -12,7 +12,7 @@ class OrderHistoryViewModel: NSObject {
     private(set) weak var view: OrderHistoryViewController?
 
 
-    public var order:BehaviorRelay<Order> = BehaviorRelay(value: Order.init()!)
+    public var order:BehaviorRelay<Order> = BehaviorRelay(value: Order.init())
     public var dataArray:BehaviorRelay<[ActivityLog]> = BehaviorRelay(value: [])
     
     var keySearch = BehaviorRelay<String>(value: "")

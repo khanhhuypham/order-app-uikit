@@ -40,6 +40,15 @@ typedef NS_ENUM(NSInteger, ENCRYPT) {
     ENCRYPT_WP2_TKIP_AES_PSK,
     ENCRYPT_WPA_WPA2_MixedMode
 };
+
+
+typedef NS_ENUM(NSInteger, PRINT_MODE_) {
+    PRINT_BACKGROUND_WITH_RETRY = 0,
+    PRINT_BACKGROUND_WITHOUT_RETRY = 1,
+    PRINT_FOREGROUND = 2,
+};
+
+
 @class Printer;
 
 @interface CustomPOSPrinter:NSObject  <POSBLEManagerDelegate, POSWIFIManagerDelegate, CodePageViewDelegate,NSCopying>
@@ -59,6 +68,8 @@ typedef NS_ENUM(NSInteger, ENCRYPT) {
 @property (assign, nonatomic) ConnectType connectType;
 
 
+@property (nonatomic, assign) PRINT_MODE_ printMode;
+
 // wifi manager
 @property (strong, nonatomic) POSWIFIManager *wifiManager;
 
@@ -72,11 +83,11 @@ typedef NS_ENUM(NSInteger, ENCRYPT) {
 
 -(void)printPicture:(UIImage *)image printedItems:(NSDictionary*)printedItems;
 
+-(void)printPictures:(NSArray<UIImage *> *)images withInfo:(NSDictionary *)info;
 
 -(void)checkPOSPrinterStatus;
 
-
--(void)sendNotifiErr:(NSString *)message printer:(Printer*)printer;
+-(void)sendNotifiErr:(NSError *)error printer:(Printer*)printer;
 
 
 @end

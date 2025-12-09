@@ -17,21 +17,12 @@ class ReportTakeAwayFoodTableViewCell: UITableViewCell {
     @IBOutlet weak var root_view_empty_data: UIView!
     
     // MARK: Biến của button filter
-    @IBOutlet weak var btn_today: UIButton!
-    @IBOutlet weak var btn_yesterday: UIButton!
-    @IBOutlet weak var btn_this_week: UIButton!
-    @IBOutlet weak var btn_this_month: UIButton!
-    @IBOutlet weak var btn_last_month: UIButton!
-    @IBOutlet weak var btn_last_three_month: UIButton!
-    @IBOutlet weak var btn_this_year: UIButton!
-    @IBOutlet weak var btn_last_year: UIButton!
-    @IBOutlet weak var btn_last_three_year: UIButton!
-    @IBOutlet weak var btn_all_year: UIButton!
+    @IBOutlet weak var reportFilter: ReportFilter!
+    var datePicker: DatePickerUtils = DatePickerUtils()
     
     @IBOutlet weak var lbl_total_amount: UILabel!
     
 
-    var btnArray:[UIButton] = []
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -50,16 +41,46 @@ class ReportTakeAwayFoodTableViewCell: UITableViewCell {
         disposeBag = DisposeBag()
     }
     
-
-    @IBAction func actionChooseReportType(_ sender: UIButton) {
-        
+//
+//    @IBAction func actionChooseReportType(_ sender: UIButton) {
+//        
+//        guard let viewModel = self.viewModel else {return}
+//        var report = viewModel.takeAwayFoodReport.value
+//        report.foods = []
+//        report.reportType = sender.tag
+//        report.dateString = Constants.REPORT_TYPE_DICTIONARY[sender.tag] ?? ""
+//        viewModel.takeAwayFoodReport.accept(report)
+//        viewModel.view?.getReportTakeAwayFood()
+//    }
+//    
+    private func handleChooseDate(date:Date,tag:Int){
         guard let viewModel = self.viewModel else {return}
+        let dateString = TimeUtils.convertDateToString(from: date, format: .dd_mm_yyyy)
         var report = viewModel.takeAwayFoodReport.value
-        report.foods = []
-        report.reportType = sender.tag
-        report.dateString = Constants.REPORT_TYPE_DICTIONARY[sender.tag] ?? ""
-        viewModel.takeAwayFoodReport.accept(report)
-        viewModel.view?.getReportTakeAwayFood()
+     
+        if tag == -2{
+            if TimeUtils.isDateValid(fromDateStr: dateString,toDateStr: report.toDate){
+                self.reportFilter.setFromDateTitle(dateString)
+                report.fromDate = dateString
+                report.reportType = 13
+                viewModel.takeAwayFoodReport.accept(report)
+                viewModel.view?.getReportTakeAwayFood()
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+          
+        }else if tag == -1{
+            if TimeUtils.isDateValid(fromDateStr: report.fromDate,toDateStr: dateString){
+                self.reportFilter.setToDateTitle(dateString)
+                report.toDate = dateString
+                report.reportType = 13
+                viewModel.takeAwayFoodReport.accept(report)
+                viewModel.view?.getReportTakeAwayFood()
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+        }
+        
     }
     
 
@@ -67,15 +88,53 @@ class ReportTakeAwayFoodTableViewCell: UITableViewCell {
     var viewModel: GenerateReportViewModel? {
            didSet {
                guard let viewModel = self.viewModel else {return}
-               btnArray = [btn_today, btn_yesterday, btn_this_week, btn_this_month, btn_last_month, btn_last_three_month, btn_this_year, btn_last_year, btn_last_three_year, btn_all_year]
-               Utils.changeBgBtn(btn: btn_this_month, btnArray: btnArray)
-               for btn in self.btnArray{
-                   btn.rx.tap.asDriver().drive(onNext: { [weak self] in
-                       Utils.changeBgBtn(btn: btn, btnArray: self?.btnArray ?? [])
-                   }).disposed(by: disposeBag)
-
+               
+               
+               datePicker.chooseDate = { [weak self] (date,tag) in
+                   self?.handleChooseDate(date: date, tag: tag)
                }
-
+               
+               reportFilter.defaultReportType = viewModel.takeAwayFoodReport.value.reportType
+               
+               reportFilter.chooseReportType = { [weak self] reportType in
+                   
+                  var report = viewModel.takeAwayFoodReport.value
+                  
+                  if reportType == -1{
+                      
+                      if let view = viewModel.view{
+                          
+                          self?.datePicker.showDatePicker(
+                               view,
+                               date:TimeUtils.convertStringToDate(from: report.toDate, format: .dd_mm_yyyy),
+                               tag:reportType
+                          )
+                       
+                      }
+                   
+                  }else if reportType == -2{
+                      
+                      if let view = viewModel.view{
+                          
+                          self?.datePicker.showDatePicker(
+                               view,
+                               date:TimeUtils.convertStringToDate(from: report.fromDate, format: .dd_mm_yyyy),
+                               tag:reportType
+                          )
+                       
+                      }
+                   
+                      
+                  }else if reportType > 0{
+                   
+                      report.reportType = reportType
+                      report.dateString = Constants.REPORT_TYPE_DICTIONARY[reportType] ?? ""
+                      viewModel.takeAwayFoodReport.accept(report)
+                      viewModel.view?.getReportTakeAwayFood()
+                  }
+                  
+              }
+               
                viewModel.takeAwayFoodReport.subscribe( // Thực hiện subscribe Observable data
                    onNext: { [weak self] report in
                        self!.lbl_total_amount.text = report.total_amount.toString

@@ -23,10 +23,10 @@ extension PaymentRebuildViewController {
             if(order.total_amount > 1000){
                 lbl_total_payment.text = Utils.hideTotalAmount(amount: Float(order.total_final_amount))
             }else{
-                lbl_total_payment.text = Utils.stringVietnameseMoneyFormatWithNumberDouble(amount: order.total_final_amount)
+                lbl_total_payment.text =  order.total_final_amount.toString
             }
         }else{
-            lbl_total_payment.text = Utils.stringVietnameseMoneyFormatWithNumberDouble(amount: order.total_final_amount)
+            lbl_total_payment.text = order.total_final_amount.toString
         }
         
         //========================================= map dữ liệu cho label: mã đơn hàng, sớ khách, ngày tạo, nhân viên=========================
@@ -37,42 +37,20 @@ extension PaymentRebuildViewController {
         
         lbl_customer_name.text = order.customer_name
         lbl_customer_phone.text = order.customer_phone
-        lbl_customer_address.text =  order.customer_address
-        
-        view_of_customer_phone.isHidden = order.customer_name.count > 0 ? false : true
-        view_of_customer_name.isHidden =  order.customer_phone.count > 0 ? false : true
-        view_of_customer_address.isHidden =  order.customer_address.count > 0 ? false : true
-        
-        // when table is take way. we have to make sure that customer information always present
-        if order.table_id == 0  {
-            view_of_customer_phone.isHidden = false
-            view_of_customer_name.isHidden =  false
-            view_of_customer_address.isHidden =  false
-            
-            lbl_customer_name.text = order.shipping_receiver_name
-            lbl_customer_phone.text =  order.shipping_phone
-            lbl_customer_address.text =  order.shipping_address
-            if order.customer_id > 0{
-                lbl_customer_name.text = order.customer_name
-                lbl_customer_phone.text =  order.customer_phone
-                lbl_customer_address.text =  order.customer_address
-            }
-                
-        }
-        
-        
-
-        
+        lbl_address.text = order.order_method == .TAKE_AWAY ? order.shipping_address : order.customer_address
+        view_customer_phone.isHidden = order.customer_name.count > 0 ? false : true
+        view_customer_name.isHidden =  order.customer_phone.count > 0 ? false : true
+        view_address.isHidden = (lbl_address.text ?? "").isEmpty
         //========================================= map dữ liệu cho tổng ước tính==================================
         if(ManageCacheObject.getSetting().is_hide_total_amount_before_complete_bill == ACTIVE && !Utils.checkRoleOwnerAndGeneralManager(permission: ManageCacheObject.getCurrentUser().permissions)){
         
             if(order.amount > 1000){
                 lbl_total_temp_payment.text = Utils.hideTotalAmount(amount: Float(order.amount))
             }else{
-                lbl_total_temp_payment.text = Utils.stringVietnameseMoneyFormatWithNumberDouble(amount: order.amount)
+                lbl_total_temp_payment.text = order.amount.toString
             }
         }else{
-            lbl_total_temp_payment.text = Utils.stringVietnameseMoneyFormatWithNumberDouble(amount: order.amount)
+            lbl_total_temp_payment.text = order.amount.toString
         }
         
         
@@ -95,6 +73,7 @@ extension PaymentRebuildViewController {
     
         checkStatusOfDiscountView(order: order)
       
+        checkStatusOfCouponView(order: order)
 
         if(order.status == ORDER_STATUS_COMPLETE || order.status == ORDER_STATUS_DEBT_COMPLETE){
             /*
@@ -123,34 +102,33 @@ extension PaymentRebuildViewController {
         lbl_membership_alo_point_used_amount.text = Utils.stringVietnameseMoneyFormatWithNumberInt(amount: order.membership_alo_point_used_amount)
         
         
-        /* += chiều cao của cell, để heightOfTable hiển thị hết tất các cell (khi tất cả các cell của table được hiển thị).
-                thì khi đó tableView.cellForRow(at: IndexPath(row: i, section: 0)) != nil
-                và ta có thể lấy được chiều caò của từng cell
-                note: sau khi += cell?.frame.height ?? 0 thì nhớ chạy  tableView.layoutIfNeeded() để dàn layout lại
-         */
-        
-        if order.order_details.count > 0{
-            height_of_table.constant = 200
-            for i in (0...order.order_details.count - 1){
-                let cell = tableView.cellForRow(at: IndexPath(row: i, section: 0))
-                height_of_table.constant += CGFloat(cell?.frame.height ?? 0)
-                tableView.layoutIfNeeded()
-            }
-            height_of_table.constant -= 200
-        }else{
-            height_of_table.constant = 0
-        }
-        
+//        /* += chiều cao của cell, để heightOfTable hiển thị hết tất các cell (khi tất cả các cell của table được hiển thị).
+//                thì khi đó tableView.cellForRow(at: IndexPath(row: i, section: 0)) != nil
+//                và ta có thể lấy được chiều caò của từng cell
+//                note: sau khi += cell?.frame.height ?? 0 thì nhớ chạy  tableView.layoutIfNeeded() để dàn layout lại
+//         */
+//        
+//        if order.order_details.count > 0{
+//            height_of_table.constant = 200
+//            for i in (0...order.order_details.count - 1){
+//                let cell = tableView.cellForRow(at: IndexPath(row: i, section: 0))
+//                height_of_table.constant += CGFloat(cell?.frame.height ?? 0)
+//                tableView.layoutIfNeeded()
+//            }
+//            height_of_table.constant -= 200
+//        }else{
+//            height_of_table.constant = 0
+//        }
+//        
     }
         
     private func checkLevel(order:OrderDetail){
         let billPrinter:Printer = Constants.printers.filter{$0.type == .cashier}.first ?? Printer()
 
-
-        if order.status == ORDER_STATUS_COMPLETE || order.status == ORDER_STATUS_DEBT_COMPLETE || order.status == ORDER_STATUS_CANCEL {
-            //Màn hình chi tiết hóa đơn chỉ hiển thị nút in hóa đơn đối với gpbh1o3
-            permissionUtils.GPBH_1 || permissionUtils.GPBH_2_o_1 ? showView(view: view_print) : showView(view: UIView())
-            btn_print_receipt.isHidden = permissionUtils.GPBH_1_o_3 || permissionUtils.GPBH_2_o_1 ? false : true
+        if orderHistoryScreen {
+            //Màn hình chi tiết hóa đơn chỉ hiển thị nút in hóa đơn đối với gpbh1o3 || gpbh2
+            permissionUtils.GPBH_1 || permissionUtils.GPBH_2 ? showView(view: view_print) : showView(view: UIView())
+            btn_print_receipt.isHidden = permissionUtils.GPBH_1_o_3 || permissionUtils.GPBH_2 ? false : true
          
         }else{
             /*
@@ -187,10 +165,14 @@ extension PaymentRebuildViewController {
                     : changeBtn(type: 1)
                 }
             }else if permissionUtils.GPBH_2 {
-                changeBtn(type: 3)
+                
                 if permissionUtils.GPBH_2_o_1{
                     permissionUtils.OwnerOrCashier ? changeBtn(type: 2) : changeBtn(type: 3)
+                }else{
+                    changeBtn(type: 3)
                 }
+           
+                
             }else if permissionUtils.GPBH_3{
                 changeBtn(type: 3)
             }
@@ -264,8 +246,7 @@ extension PaymentRebuildViewController {
         }
         
         //nếu bàn booking đã set up chờ nhận khách thì unable nut1 check VAT và giảm giá
-        if(order.booking_status == STATUS_BOOKING_SET_UP
-        || !Utils.checkRoleDiscountGifFood(permission: ManageCacheObject.getCurrentUser().permissions)){
+        if order.booking_status == STATUS_BOOKING_SET_UP || !permissionUtils.discountOrderItem{
             icon_checkbox_of_extra_charge.image = UIImage(named: "icon-check-disable")
             btn_checkbox_of_extra_charge.isUserInteractionEnabled = false
         }
@@ -288,8 +269,7 @@ extension PaymentRebuildViewController {
         }
         
         //nếu bàn booking đã set up chờ nhận khách thì unable nut1 check VAT và giảm giá
-        if(order.booking_status == STATUS_BOOKING_SET_UP
-        || !Utils.checkRoleDiscountGifFood(permission: ManageCacheObject.getCurrentUser().permissions)){
+        if order.booking_status == STATUS_BOOKING_SET_UP || !permissionUtils.discountOrderItem{
             image_checkbox_vat.image = UIImage(named: "icon-check-disable")
             btn_checkbox_vat.isUserInteractionEnabled = false
         }
@@ -316,8 +296,8 @@ extension PaymentRebuildViewController {
            
             btn_show_discount_detail.isHidden = true
         }else if order.food_discount_amount > 0 || order.drink_discount_amount > 0{
-            lbl_discount_percent_of_food.text = String(format:"%@ (%d%%)", Utils.stringVietnameseMoneyFormatWithNumberInt(amount: order.food_discount_amount),order.food_discount_percent)
-            lbl_discount_percent_of_drink.text = String(format:"%@ (%d%%)", Utils.stringVietnameseMoneyFormatWithNumberInt(amount: order.drink_discount_amount),order.drink_discount_percent)
+            lbl_discount_percent_of_food.text = String(format:"%@ (%d%%)", order.food_discount_amount.toString, order.food_discount_percent)
+            lbl_discount_percent_of_drink.text = String(format:"%@ (%d%%)", order.drink_discount_amount.toString, order.drink_discount_percent)
             lbl_discount_percent.text = "(Theo loại món)"
             btn_show_discount_detail.isHidden = false
         }else{
@@ -354,13 +334,26 @@ extension PaymentRebuildViewController {
         
         
         //nếu bàn booking đã set up chờ nhận khách thì unable nut1 check VAT và giảm giá
-        if(order.booking_status == STATUS_BOOKING_SET_UP
-        || !Utils.checkRoleDiscountGifFood(permission: ManageCacheObject.getCurrentUser().permissions)){
+        if order.booking_status == STATUS_BOOKING_SET_UP || !permissionUtils.discountOrderItem{
             image_checkbox_discount.image = UIImage(named: "icon-check-disable")
             btn_checkbox_discount.isUserInteractionEnabled = false
         }
     }
     
+    private func checkStatusOfCouponView(order: OrderDetail){
+        /*
+            hàm này được sử dụng để thay đổi image của btn và màu chữ trong ExtraCharge view
+         */
+        lbl_total_coupon_amount.text = String(format: order.coupon_percent > 0 ? "%@ (%d%%)" : "%@",order.coupon_amount.toString, order.coupon_percent)
+        
+        image_checkbox_coupon.image = UIImage(named: order.coupon_amount > 0 || order.coupon_percent > 0 ? "check" : "icon-check-enable")
     
-    
+        if(order.status == ORDER_STATUS_COMPLETE || order.status == ORDER_STATUS_DEBT_COMPLETE){
+            btn_checkbox_coupon.isUserInteractionEnabled = false
+            image_checkbox_coupon.image = UIImage(named: order.coupon_amount > 0 || order.coupon_percent > 0 ? "icon-sticked-checkbox-gray" : "icon-check-disable")
+            icon_coupon.image = UIImage(named: "icon-discount-green")
+            lbl_coupon_text.textColor = ColorUtils.green_600()
+            lbl_total_coupon_amount.textColor = ColorUtils.green_600()
+        }
+    }
 }

@@ -90,9 +90,6 @@ class TimeUtils: NSObject {
         }
     
     
-
-    
-    
     static func getDateTimeNow() -> String{
         // Lấy ngày hiện tại
         let date = Date()
@@ -101,7 +98,13 @@ class TimeUtils: NSObject {
         return dateFormatter.hh_mm_ss.value.string(from: date)
     }
     
-//    static func getToday() -> String{}
+    static func getToday() -> String{
+        // Lấy ngày hiện tại
+        let date = Date()
+        let month = calendar.component(.month, from: date)
+        let year = calendar.component(.year, from: date)
+        return dateFormatter.dd_mm_yyyy.value.string(from: date)
+    }
     
     static func getYesterday() -> String{
         return dateFormatter.dd_mm_yyyy.value.string(from: calendar.date(byAdding: .day, value: -1, to: Date()) ?? Date())
@@ -253,6 +256,20 @@ class TimeUtils: NSObject {
     static func convertDateToString(from date: Date,format:dateFormatter) -> String{
         return format.value.string(from: date ?? Date())
     }
+    
+    
+    static func getRemainingSeconds(from dateString: String) -> Int {
+        let formatter = dateFormatter.dd_mm_yyyy_hh_mm.value
+
+        guard let targetDate = formatter.date(from: dateString) else {
+            return 0 // invalid date string
+        }
+
+        let now = Date()
+        let seconds = Int(targetDate.timeIntervalSince(now))
+        
+        return seconds 
+    }
 
 }
 
@@ -314,7 +331,11 @@ class DatePickerUtils: NSObject,UIGestureRecognizerDelegate {
     }()
 
     var delegate: dateTimePickerDelegate?
+    var chooseDate:((Date,Int) -> Void)? = nil
+    var generalReportDelegate: dateTimePickerOfGeneralReportDelegate?
+    
     var parentView:UIView = UIView()
+    var tag:Int = 0
     
     var datePicker = {
     
@@ -336,14 +357,19 @@ class DatePickerUtils: NSObject,UIGestureRecognizerDelegate {
         return datePicker
     }()
     
-    func showDatePicker(_ vc:UIViewController,date:Date = Date()) {
+    func showDatePicker(_ vc:UIViewController,date:Date = Date(),tag:Int?=nil) {
     
         
         self.datePicker.setDate(date, animated: true)
         
         self.delegate = vc as? any dateTimePickerDelegate
+        
         if parentView != nil {
             parentView.removeFromSuperview()
+        }
+        
+        if let tag = tag{
+            self.tag = tag
         }
 
         // Give the background Blur Effect
@@ -472,7 +498,7 @@ class DatePickerUtils: NSObject,UIGestureRecognizerDelegate {
 
     @objc func handler(sender: UIDatePicker) {
         let strDate = dateFormatter.dd_mm_yyyy_hh_mm.value.string(from: sender.date)
-        dLog(strDate)
+
     }
     
     
@@ -482,8 +508,10 @@ class DatePickerUtils: NSObject,UIGestureRecognizerDelegate {
     
     
     @objc func pressed() {
-        
+     
         delegate?.callbackToGetDateTime(didSelectDate:datePicker.date)
+//        generalReportDelegate?.callbackToGetDateTime(didSelectDate: datePicker.date, title: title, key: key)
+        chooseDate?(datePicker.date,tag)
         parentView.removeFromSuperview()
 
     }

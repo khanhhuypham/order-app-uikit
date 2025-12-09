@@ -13,6 +13,7 @@ extension ChooseOptionViewController:  UITableViewDelegate {
     func registerCellAndBindTableView(){
         registerCell()
         bindTableViewData()
+        tableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
     }
 
     private func registerCell() {
@@ -24,6 +25,16 @@ extension ChooseOptionViewController:  UITableViewDelegate {
         tableView.delegate = self
         
     }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "contentSize" {
+            if let newValue = change?[.newKey] as? NSValue {
+                let newSize = newValue.cgSizeValue
+                self.height_of_table.constant = newSize.height
+            }
+        }
+    }
+    
     
     
     private func bindTableViewData() {
@@ -45,7 +56,6 @@ extension ChooseOptionViewController:  UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-
         return renderHeader(section: viewModel.sectionArray.value[section].model)
     }
     
@@ -60,7 +70,6 @@ extension ChooseOptionViewController:  UITableViewDelegate {
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         titleLabel.textColor = .darkGray
         titleLabel.text = section.name
-
 
 
         if section.max_items_allowed > 1 {

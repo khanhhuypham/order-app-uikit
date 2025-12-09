@@ -70,7 +70,7 @@ class EditChildrenFoodViewController: BaseViewController {
             updateItem.quantity = item.is_sell_by_weight == ACTIVE ? 0.01 : 1
         }
         
-        
+        updateItem.price = item.price
         updateItem.note = item.note
         updateItems.append(updateItem)
         

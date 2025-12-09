@@ -21,42 +21,104 @@ class RevenueDetailViewController: BaseViewController {
     @IBOutlet weak var lbl_branch_address: UILabel!
     @IBOutlet weak var avatar_branch: UIImageView!
     
-    // MARK: Biến của button filter
-    @IBOutlet weak var btn_today: UIButton!
-    @IBOutlet weak var btn_yesterday: UIButton!
-    @IBOutlet weak var btn_this_week: UIButton!
-    @IBOutlet weak var btn_this_month: UIButton!
-    @IBOutlet weak var btn_last_month: UIButton!
-    @IBOutlet weak var btn_last_three_month: UIButton!
-    @IBOutlet weak var btn_this_year: UIButton!
-    @IBOutlet weak var btn_last_year: UIButton!
-    @IBOutlet weak var btn_last_three_year: UIButton!
-    @IBOutlet weak var btn_all_year: UIButton!
-    
     @IBOutlet weak var lbl_total_revenue: UILabel!
     
+    @IBOutlet weak var reportFilter: ReportFilter!
+    var datePicker: DatePickerUtils = DatePickerUtils()
 
     var lineChartItems = [ChartDataEntry]()
-    var btnArray:[UIButton] = []
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         viewModel.bind(view: self, router: router)
         viewModel.saleReport.accept(saleReport)
-    
-        
-        btnArray = [btn_today, btn_yesterday, btn_this_week, btn_this_month, btn_last_month, btn_last_three_month, btn_this_year, btn_last_year, btn_last_three_year, btn_all_year]
-        
-        
-        for btn in self.btnArray{
-            if btn.tag == viewModel.saleReport.value.reportType{
-                actionChooseReportType(btn)
-            }
-        }
+
 
         registerCell()
         bindTableView()
+        
+        
+        datePicker.chooseDate = { [weak self] (date,tag) in
+            self?.handleChooseDate(date: date, tag: tag)
+        }
+        
+        reportFilter.defaultReportType = viewModel.saleReport.value.reportType
+        
+        reportFilter.chooseReportType = { [weak self] reportType in
+            guard let self = self else { return }
+            var report = self.viewModel.saleReport.value
+           
+            if reportType == -1{
+               
+               
+               self.datePicker.showDatePicker(
+                    self,
+                    date:TimeUtils.convertStringToDate(from: report.fromDate, format: .dd_mm_yyyy),
+                    tag:reportType
+               )
+                
+                
+
+            }else if reportType == -2{
+               
+               self.datePicker.showDatePicker(
+                    self,
+                    date:TimeUtils.convertStringToDate(from: report.toDate, format: .dd_mm_yyyy),
+                    tag:reportType
+               )
+
+               
+            }else if reportType > 0{
+                report.saleReportData = []
+                report.reportType = reportType
+                report.dateString = Constants.REPORT_TYPE_DICTIONARY[reportType] ?? ""
+                viewModel.saleReport.accept(report)
+                reportRevenueByTime()
+                
+                
+                switch reportType{
+                    case REPORT_TYPE_TODAY:
+                        lbl_revenue_title.text = String(format: "DOANH THU %@ | %@", "HÔM NAY",report.dateString)
+                    
+                    case REPORT_TYPE_YESTERDAY:
+                        lbl_revenue_title.text = String(format: "DOANH THU %@ | %@", "HÔM QUA",report.dateString)
+                    
+                    case REPORT_TYPE_THIS_WEEK:
+                        lbl_revenue_title.text = String(format: "DOANH THU %@ | %@", "TUẦN NÀY",report.dateString)
+                    
+                    case REPORT_TYPE_LAST_MONTH:
+                        lbl_revenue_title.text = String(format: "DOANH THU %@ | %@", "THÁNG TRƯỚC",report.dateString)
+                    
+                    case REPORT_TYPE_THIS_MONTH:
+                        lbl_revenue_title.text = String(format: "DOANH THU %@ | %@", "THÁNG NÀY",report.dateString)
+                    
+                    case REPORT_TYPE_THREE_MONTHS:
+                        lbl_revenue_title.text = "DOANH THU 3 THÁNG TRƯỚC"
+                    
+                    case REPORT_TYPE_LAST_YEAR:
+                        lbl_revenue_title.text = String(format: "DOANH THU %@ | %@", "NĂM TRƯỚC",report.dateString)
+                    
+                    case REPORT_TYPE_THIS_YEAR:
+                        lbl_revenue_title.text = String(format: "DOANH THU %@ | %@", "NĂM NAY",report.dateString)
+                     
+                    case REPORT_TYPE_THREE_YEAR:
+                        lbl_revenue_title.text = "DOANH THU 3 NĂM TRƯỚC"
+                    
+                    case REPORT_TYPE_ALL_YEAR:
+                        lbl_revenue_title.text = "DOANH THU TẤT CẢ CÁC NĂM"
+                    
+                    default:
+                        break
+                }
+
+                
+            }
+           
+       }
+        
+        
         
     }
 
@@ -71,23 +133,39 @@ class RevenueDetailViewController: BaseViewController {
         reportRevenueByTime()
     }
     
-    @IBAction func actionChooseReportType(_ sender: UIButton) {
-        var report = viewModel.saleReport.value
-        report.reportType = sender.tag
-        report.dateString = Constants.REPORT_TYPE_DICTIONARY[sender.tag] ?? ""
-        report.saleReportData = []
-        viewModel.saleReport.accept(report)
-        reportRevenueByTime()
-       
-        if sender.tag == REPORT_TYPE_ALL_YEAR || sender.tag == REPORT_TYPE_THREE_MONTHS || sender.tag == REPORT_TYPE_THREE_YEAR{
-            lbl_revenue_title.text = String(format: "DOANH THU %@", sender.titleLabel?.text?.uppercased() ?? "" )
-        }else{
-            lbl_revenue_title.text = String(format: "DOANH THU %@ | %@", sender.titleLabel?.text?.uppercased() ?? "",report.dateString)
-        }
-        Utils.changeBgBtn(btn: sender, btnArray: btnArray)
-    }
-    
+
+
     @IBAction func actionBack(_ sender: Any) {
         viewModel.makePopViewController()
+    }
+    
+    private func handleChooseDate(date:Date,tag:Int){
+      
+        let dateString = TimeUtils.convertDateToString(from: date, format: .dd_mm_yyyy)
+        var report = viewModel.saleReport.value
+     
+        if tag == -2{
+            if TimeUtils.isDateValid(fromDateStr: dateString,toDateStr: report.toDate){
+                self.reportFilter.setFromDateTitle(dateString)
+                report.fromDate = dateString
+                report.reportType = 13
+                viewModel.saleReport.accept(report)
+                reportRevenueByTime()
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+            
+        }else if tag == -1{
+            if TimeUtils.isDateValid(fromDateStr: report.fromDate,toDateStr: dateString){
+                self.reportFilter.setToDateTitle(dateString)
+                report.toDate = dateString
+                report.reportType = 13
+                viewModel.saleReport.accept(report)
+                reportRevenueByTime()
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+        }
+        lbl_revenue_title.text = String(format: "DOANH THU %@ - %@",report.fromDate,report.toDate)
     }
 }

@@ -10,7 +10,7 @@ target 'TECHRES-ORDER' do
 
     pod 'RxSwift'
     pod 'RxCocoa'
-    pod "RxGesture"
+    pod 'RxGesture'
     pod 'SnapKit'
     pod 'Kingfisher'
     pod 'SocketRocket'
@@ -30,16 +30,12 @@ target 'TECHRES-ORDER' do
     pod 'TagListView'
     pod 'JonAlert', :git => 'https://github.com/jonSurrey/JonAlert.git', :branch => 'master'
     pod 'RxSwiftExt'
-#    pod 'lottie-ios'
     pod 'RealmSwift'
-    # Pods for Example
     pod 'Wormholy'
-    pod 'HXPhotoPicker', :git => 'https://github.com/SilenceLove/HXPhotoPicker.git'
+    pod 'HXPhotoPicker'
 
-    
-    pod 'Firebase/Core'
-    pod 'Firebase/Messaging'
-    
+    pod 'Firebase/Core', '~> 10.0'
+    pod 'Firebase/Messaging', '~> 10.0'
     
     
 end

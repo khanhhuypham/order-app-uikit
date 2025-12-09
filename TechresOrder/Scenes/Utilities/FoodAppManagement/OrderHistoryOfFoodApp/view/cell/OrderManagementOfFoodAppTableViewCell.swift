@@ -31,18 +31,27 @@ class OrderManagementOfFoodAppTableViewCell: UITableViewCell {
     
     
     // MARK: - Variable -
-    public var data: FoodAppOrder? = nil {
+    public var data: OrderHistoryOfFoodApp? = nil {
        didSet {
            mapData(data: data!)
        }
     }
     
-    private func mapData(data: FoodAppOrder){
+    private func mapData(data: OrderHistoryOfFoodApp){
         lbl_partner.text = data.channel_order_food_name
-        lbl_display_id.text = String(format: "%@-%@", data.channel_order_food_code,data.display_id)
+     
+        if data.channel_order_food_code == "GRF"{
+            
+            lbl_display_id.text = String(format: "%@",data.display_id)
+            
+        }else{
+            
+            lbl_display_id.text = String(format: "%@-%@", data.channel_order_food_code,data.display_id)
+            
+        }
+        
         lbl_order_created_at.text = data.order_created_at
        
-        
         switch data.is_completed{
             case .cancel:
                 lbl_status.text = "HUỶ"
@@ -56,7 +65,7 @@ class OrderManagementOfFoodAppTableViewCell: UITableViewCell {
                 lbl_status.textColor = ColorUtils.gray_600()
         }
         
-        lbl_total_amount.text =  Utils.stringVietnameseMoneyFormatWithNumber(amount: data.total_amount)
+        lbl_total_amount.text =  data.total_amount.toString
     }
     
     

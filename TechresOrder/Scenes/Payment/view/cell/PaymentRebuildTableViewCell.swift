@@ -58,7 +58,7 @@ class PaymentRebuildTableViewCell: UITableViewCell {
     
     private func mapData(data: OrderItem){
         guard let viewModel = viewModel else {return}
-        let totalPrice = Utils.stringVietnameseMoneyFormatWithNumberDouble(amount:data.order_detail_additions.count > 0 ? data.total_price_include_addition_foods : data.total_price)
+        let totalPrice = !data.order_detail_additions.isEmpty || !data.order_detail_options.isEmpty ? data.total_price_include_addition_foods : data.total_price
         let discountedPrice = Utils.stringVietnameseMoneyFormatWithNumberInt(amount:data.discount_price)
         var minute = data.service_time_used
         var second = TimeUtils.getSecondSFromDateString(dateString: data.service_end_time)
@@ -96,13 +96,13 @@ class PaymentRebuildTableViewCell: UITableViewCell {
                 lbl_discount_price.attributedText = Utils.setAttributesForLabel(
                     label:lbl_discount_price,
                     attributes: [
-                        (str: totalPrice,properties:[color:ColorUtils.gray_600(),crossLineKey:crossLineValue])
+                        (str: totalPrice.toString,properties:[color:ColorUtils.gray_600(),crossLineKey:crossLineValue])
                     ]
                 )
                 
                 
             }else{
-                lbl_amount.text = totalPrice
+                lbl_amount.text = totalPrice.toString
             }
             
             
@@ -250,13 +250,27 @@ class PaymentRebuildTableViewCell: UITableViewCell {
                 value.food_option_foods.filter{$0.status == ACTIVE}.enumerated().forEach{(j,opt) in
                     
                     if opt.price > 0 {
-                        let total_amount = (opt.price * Int(data.quantity)).toString
-                        attr.append((str:String(format:"+ %@ ",opt.food_name),properties:[color:ColorUtils.gray_600()]))
-                        attr.append((str:String(format:"x %.0f",data.quantity),properties:[color:ColorUtils.orange_brand_900()]))
-                        attr.append((str:String(format: " = %@\n" ,total_amount),properties:[color:ColorUtils.gray_600()]))
+                        
+                        if opt.quantity >= 1{
+                            
+                            attr.append((str:String(format:"+ %@ ",opt.food_name),properties:[color:ColorUtils.gray_600()]))
+                            attr.append((str:String(format:"x %.0f",opt.quantity),properties:[color:ColorUtils.orange_brand_900()]))
+                            attr.append((str:String(format: " = %@\n",(opt.price * Int(opt.quantity)).toString),properties:[color:ColorUtils.gray_600()]))
+                        }else{
+                            attr.append((str:String(format:"+ %@\n",opt.food_name),properties:[color:ColorUtils.gray_600()]))
+                        }
+                        
                     }else{
-                        attr.append((str:String(format:"+ %@\n",opt.food_name),properties:[color:ColorUtils.gray_600()]))
+
+                        if opt.quantity >= 1{
+                            attr.append((str:String(format:"+ %@ ",opt.food_name),properties:[color:ColorUtils.gray_600()]))
+                            attr.append((str:String(format:"x %.0f\n",opt.quantity),properties:[color:ColorUtils.orange_brand_900()]))
+                        }else{
+                            attr.append((str:String(format:"+ %@\n",opt.food_name),properties:[color:ColorUtils.gray_600()]))
+                        }
+    
                     }
+                    
                 }
             }
         }

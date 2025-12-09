@@ -12,6 +12,7 @@ extension PaymentRebuildViewController {
     func bindTableViewAndRegisterCell(){
         registerCell()
         bindTableViewData()
+        tableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
     }
     
     private func registerCell() {
@@ -29,6 +30,16 @@ extension PaymentRebuildViewController {
                 cell.data = orderDetail
            }.disposed(by: rxbag)
     }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "contentSize" {
+            if let newValue = change?[.newKey] as? NSValue {
+                let newSize = newValue.cgSizeValue
+                self.height_of_table.constant = newSize.height
+            }
+        }
+    }
+
   
 }
 

@@ -12,6 +12,8 @@ struct FoodReportData: Mappable {
     var filterType:Int = 0
     var reportType:Int = 0
     var dateString = ""
+    var fromDate = ""
+    var toDate = ""
     var foods:[FoodReport] = []
     var total_original_amount = 0
     var total_amount:Double = 0
@@ -26,6 +28,14 @@ struct FoodReportData: Mappable {
         self.reportType = reportType
         self.dateString = dateString
     }
+    
+    init(reportType:Int, dateString:String,fromDate:String,toDate:String){
+        self.reportType = reportType
+        self.dateString = dateString
+        self.fromDate = fromDate
+        self.toDate = toDate
+    }
+    
     
     
     mutating func mapping(map: Map) {

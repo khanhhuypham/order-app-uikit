@@ -36,35 +36,107 @@ class GenerateReportViewModel: BaseViewModel {
     
     public var toDayRenueReport = BehaviorRelay<RevenueReport>(value: RevenueReport.init(reportType: REPORT_TYPE_TODAY, dateString: TimeUtils.getCurrentDateTime().dateTimeNow))
     
-    public var saleReport = BehaviorRelay<SaleReport>(value: SaleReport.init(reportType: REPORT_TYPE_THIS_MONTH, dateString: TimeUtils.getCurrentDateTime().thisMonth,fromDate: TimeUtils.getCurrentDateTime().thisMonth))
+    public var saleReport = BehaviorRelay<SaleReport>(value: SaleReport.init(
+        reportType: REPORT_TYPE_THIS_MONTH,
+        dateString: TimeUtils.getCurrentDateTime().thisMonth,
+        fromDate: TimeUtils.getToday(),
+        toDate: TimeUtils.getToday()
+    ))
         
     public var revenueCostProfitReport = BehaviorRelay<RevenueFeeProfitReport>(value: RevenueFeeProfitReport.init(reportType: REPORT_TYPE_THIS_MONTH, dateString: TimeUtils.getCurrentDateTime().thisMonth))
 
-    public var areaRevenueReport = BehaviorRelay<AreaRevenueReport>(value: AreaRevenueReport.init(reportType: REPORT_TYPE_THIS_MONTH, dateString: TimeUtils.getCurrentDateTime().thisMonth))
+    public var areaRevenueReport = BehaviorRelay<AreaRevenueReport>(value: AreaRevenueReport.init(
+        reportType: REPORT_TYPE_THIS_MONTH,
+        dateString: TimeUtils.getCurrentDateTime().thisMonth,
+        fromDate: TimeUtils.getToday(),
+        toDate: TimeUtils.getToday()
+    ))
     
-    public var tableRevenueReport = BehaviorRelay<TableRevenueReport>(value:TableRevenueReport.init(reportType: REPORT_TYPE_THIS_MONTH, dateString: TimeUtils.getCurrentDateTime().thisMonth))
+    public var tableRevenueReport = BehaviorRelay<TableRevenueReport>(value:TableRevenueReport.init(
+        reportType: REPORT_TYPE_THIS_MONTH,
+        dateString: TimeUtils.getCurrentDateTime().thisMonth,
+        fromDate: TimeUtils.getToday(),
+        toDate: TimeUtils.getToday()
+    ))
     
-    public var employeeRevenueReport = BehaviorRelay<EmployeeRevenueReport>(value: EmployeeRevenueReport.init(reportType: REPORT_TYPE_THIS_MONTH, dateString: TimeUtils.getCurrentDateTime().thisMonth))
+    public var employeeRevenueReport = BehaviorRelay<EmployeeRevenueReport>(value: EmployeeRevenueReport.init(
+        reportType: REPORT_TYPE_THIS_MONTH,
+        dateString: TimeUtils.getCurrentDateTime().thisMonth,
+        fromDate: TimeUtils.getToday(),
+        toDate: TimeUtils.getToday()
+    ))
     
-    public var foodReport = BehaviorRelay<FoodReportData>(value: FoodReportData.init(reportType: REPORT_TYPE_THIS_MONTH, dateString: TimeUtils.getCurrentDateTime().thisMonth))
+    public var categoryRevenueReport = BehaviorRelay<RevenueCategoryReport>(value: RevenueCategoryReport.init(
+        reportType: REPORT_TYPE_THIS_MONTH,
+        dateString: TimeUtils.getCurrentDateTime().thisMonth,
+        fromDate: TimeUtils.getToday(),
+        toDate: TimeUtils.getToday()
+    ))
     
-    public var commodityReport = BehaviorRelay<FoodReportData>(value: FoodReportData.init(reportType: REPORT_TYPE_THIS_MONTH, dateString: TimeUtils.getCurrentDateTime().thisMonth))
+    public var foodReport = BehaviorRelay<FoodReportData>(value: FoodReportData.init(
+        reportType: REPORT_TYPE_THIS_MONTH,
+        dateString: TimeUtils.getCurrentDateTime().thisMonth,
+        fromDate: TimeUtils.getToday(),
+        toDate: TimeUtils.getToday()
+    ))
     
-    public var categoryRevenueReport = BehaviorRelay<RevenueCategoryReport>(value: RevenueCategoryReport.init(reportType: REPORT_TYPE_THIS_MONTH, dateString: TimeUtils.getCurrentDateTime().thisMonth))
+    public var commodityReport = BehaviorRelay<FoodReportData>(value: FoodReportData.init(
+        reportType: REPORT_TYPE_THIS_MONTH,
+        dateString: TimeUtils.getCurrentDateTime().thisMonth,
+        fromDate: TimeUtils.getToday(),
+        toDate: TimeUtils.getToday()
+    ))
     
-    public var giftedFoodReport = BehaviorRelay<FoodReportData>(value: FoodReportData.init(reportType: REPORT_TYPE_THIS_MONTH, dateString: TimeUtils.getCurrentDateTime().thisMonth))
+  
     
-    public var otherFoodReport = BehaviorRelay<FoodReportData>(value: FoodReportData.init(reportType: REPORT_TYPE_THIS_MONTH, dateString: TimeUtils.getCurrentDateTime().thisMonth))
+    public var giftedFoodReport = BehaviorRelay<FoodReportData>(value: FoodReportData.init(
+        reportType: REPORT_TYPE_THIS_MONTH,
+        dateString: TimeUtils.getCurrentDateTime().thisMonth,
+        fromDate: TimeUtils.getToday(),
+        toDate: TimeUtils.getToday()
+    ))
     
-    public var cancelFoodReport = BehaviorRelay<FoodReportData>(value: FoodReportData.init(reportType: REPORT_TYPE_THIS_MONTH, dateString: TimeUtils.getCurrentDateTime().thisMonth))
+    public var otherFoodReport = BehaviorRelay<FoodReportData>(value: FoodReportData.init(
+        reportType: REPORT_TYPE_THIS_MONTH,
+        dateString: TimeUtils.getCurrentDateTime().thisMonth,
+        fromDate: TimeUtils.getToday(),
+        toDate: TimeUtils.getToday()
+    ))
     
-    public var takeAwayFoodReport = BehaviorRelay<FoodReportData>(value: FoodReportData.init(reportType: REPORT_TYPE_THIS_MONTH, dateString: TimeUtils.getCurrentDateTime().thisMonth))
+    public var cancelFoodReport = BehaviorRelay<FoodReportData>(value: FoodReportData.init(
+        reportType: REPORT_TYPE_THIS_MONTH,
+        dateString: TimeUtils.getCurrentDateTime().thisMonth,
+        fromDate: TimeUtils.getToday(),
+        toDate: TimeUtils.getToday()
+    ))
     
-    public var vatReport = BehaviorRelay<VATReport>(value: VATReport.init(reportType: REPORT_TYPE_THIS_MONTH, dateString: TimeUtils.getCurrentDateTime().thisMonth))
+    public var takeAwayFoodReport = BehaviorRelay<FoodReportData>(value: FoodReportData.init(
+        reportType: REPORT_TYPE_THIS_MONTH,
+        dateString: TimeUtils.getCurrentDateTime().thisMonth,
+        fromDate: TimeUtils.getToday(),
+        toDate: TimeUtils.getToday()
+    ))
     
-    public var discountReport = BehaviorRelay<DiscountReport>(value: DiscountReport.init(reportType: REPORT_TYPE_THIS_MONTH, dateString: TimeUtils.getCurrentDateTime().thisMonth))
+    public var vatReport = BehaviorRelay<VATReport>(value: VATReport.init(
+        reportType: REPORT_TYPE_THIS_MONTH,
+        dateString: TimeUtils.getCurrentDateTime().thisMonth,
+        fromDate: TimeUtils.getToday(),
+        toDate: TimeUtils.getToday()
+    ))
     
-    public var surchargeReport = BehaviorRelay<SurchargeReport>(value: SurchargeReport.init(reportType: REPORT_TYPE_THIS_MONTH, dateString: TimeUtils.getCurrentDateTime().thisMonth))
+    public var discountReport = BehaviorRelay<DiscountReport>(value: DiscountReport.init(
+        reportType: REPORT_TYPE_THIS_MONTH,
+        dateString: TimeUtils.getCurrentDateTime().thisMonth,
+        fromDate: TimeUtils.getToday(),
+        toDate: TimeUtils.getToday()
+    ))
+    
+    public var surchargeReport = BehaviorRelay<SurchargeReport>(value: SurchargeReport.init(
+        reportType: REPORT_TYPE_THIS_MONTH,
+        dateString: TimeUtils.getCurrentDateTime().thisMonth,
+        fromDate: TimeUtils.getToday(),
+        toDate: TimeUtils.getToday()
+    ))
 
     //======================
 
@@ -155,7 +227,14 @@ class GenerateReportViewModel: BaseViewModel {
 extension GenerateReportViewModel{
     
     func reportRevenueActivities() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.report_revenue_activities_in_day_by_branch(restaurant_brand_id: restaurant_brand_id.value, branch_id: branch_id.value, report_type: dailyOrderReport.value.reportType, date_string: dailyOrderReport.value.dateString, from_date: from_date.value, to_date: to_date.value))
+        return appServiceProvider.rx.request(.report_revenue_activities_in_day_by_branch(
+            restaurant_brand_id: restaurant_brand_id.value,
+            branch_id: branch_id.value,
+            report_type: dailyOrderReport.value.reportType,
+            date_string: dailyOrderReport.value.dateString,
+            from_date: from_date.value,
+            to_date: to_date.value
+        ))
                .filterSuccessfulStatusCodes()
                .mapJSON().asObservable()
                .showAPIErrorToast()
@@ -165,7 +244,7 @@ extension GenerateReportViewModel{
     
     
     func reportOfFoodApp() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.getRevenueSumaryReportOfFoodApp(
+        return appServiceProvider.rx.request(.getDailyRevenueReportOfFoodApp(
             restaurant_id: Constants.restaurant_id,
             restaurant_brand_id: restaurant_brand_id.value,
             branch_id: branch_id.value,
@@ -191,16 +270,32 @@ extension GenerateReportViewModel{
     
     
     func reportRevenueCostProfit() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.report_revenue_fee_profit(restaurant_brand_id: restaurant_brand_id.value, branch_id: branch_id.value, report_type: revenueCostProfitReport.value.reportType, date_string: revenueCostProfitReport.value.dateString, from_date: from_date.value, to_date: to_date.value))
+        
+        return appServiceProvider.rx.request(.report_revenue_fee_profit(
+            restaurant_brand_id: restaurant_brand_id.value,
+            branch_id: branch_id.value,
+            is_count_to_revenue: ACTIVE,
+            report_type: revenueCostProfitReport.value.reportType,
+            date_string: revenueCostProfitReport.value.dateString,
+            from_date: from_date.value,
+            to_date: to_date.value
+        ))
                .filterSuccessfulStatusCodes()
                .mapJSON().asObservable()
                .showAPIErrorToast()
                .mapObject(type: APIResponse.self)
-       }
+    }
     
 
     func reportRevenueByCategory() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.report_revenue_by_category(restaurant_brand_id: restaurant_brand_id.value, branch_id: branch_id.value, report_type: categoryRevenueReport.value.reportType, date_string: categoryRevenueReport.value.dateString, from_date: from_date.value, to_date: to_date.value))
+        return appServiceProvider.rx.request(.report_revenue_by_category(
+            restaurant_brand_id: restaurant_brand_id.value,
+            branch_id: branch_id.value,
+            report_type: categoryRevenueReport.value.reportType,
+            date_string: categoryRevenueReport.value.dateString,
+            from_date: categoryRevenueReport.value.fromDate,
+            to_date: categoryRevenueReport.value.toDate
+        ))
                .filterSuccessfulStatusCodes()
                .mapJSON().asObservable()
                .showAPIErrorToast()
@@ -213,7 +308,14 @@ extension GenerateReportViewModel{
 extension GenerateReportViewModel {
     // Báo cáo doanh thu tổng quan
     func getReportRevenueGenral() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.getReportRevenueGenral(restaurant_brand_id: restaurant_brand_id.value, branch_id: branch_id.value, report_type: saleReport.value.reportType, date_string: saleReport.value.dateString, from_date: "", to_date: to_date.value))
+        return appServiceProvider.rx.request(.getReportRevenueGenral(
+            restaurant_brand_id: restaurant_brand_id.value,
+            branch_id: branch_id.value,
+            report_type: saleReport.value.reportType,
+            date_string: saleReport.value.dateString,
+            from_date: saleReport.value.fromDate,
+            to_date: saleReport.value.toDate
+        ))
                .filterSuccessfulStatusCodes()
                .mapJSON().asObservable()
                .showAPIErrorToast()
@@ -222,11 +324,18 @@ extension GenerateReportViewModel {
     
     //Doanh thu theo khu vực
     func getReportRevenueArea() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.getReportRevenueArea(restaurant_brand_id: restaurant_brand_id.value, branch_id: branch_id.value, report_type: areaRevenueReport.value.reportType, date_string: areaRevenueReport.value.dateString, from_date: from_date.value, to_date: to_date.value))
-               .filterSuccessfulStatusCodes()
-               .mapJSON().asObservable()
-               .showAPIErrorToast()
-               .mapObject(type: APIResponse.self)
+        return appServiceProvider.rx.request(.getReportRevenueArea(
+            restaurant_brand_id: restaurant_brand_id.value,
+            branch_id: branch_id.value,
+            report_type: areaRevenueReport.value.reportType,
+            date_string: areaRevenueReport.value.dateString,
+            from_date: areaRevenueReport.value.fromDate,
+            to_date:  areaRevenueReport.value.toDate
+        ))
+           .filterSuccessfulStatusCodes()
+           .mapJSON().asObservable()
+           .showAPIErrorToast()
+           .mapObject(type: APIResponse.self)
     }
     
     //Doanh thu theo BÀN
@@ -237,13 +346,13 @@ extension GenerateReportViewModel {
                     area_id: -1,
                     report_type: tableRevenueReport.value.reportType,
                     date_string: tableRevenueReport.value.dateString,
-                    from_date:from_date.value,
-                    to_date:to_date.value
-                ))
-               .filterSuccessfulStatusCodes()
-               .mapJSON().asObservable()
-               .showAPIErrorToast()
-               .mapObject(type: APIResponse.self)
+                    from_date: tableRevenueReport.value.fromDate,
+                    to_date:  tableRevenueReport.value.toDate
+        ))
+           .filterSuccessfulStatusCodes()
+           .mapJSON().asObservable()
+           .showAPIErrorToast()
+           .mapObject(type: APIResponse.self)
     }
     
 
@@ -251,7 +360,14 @@ extension GenerateReportViewModel {
 
     // Báo cáo nhân viên
     func getReportEmployee() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.getRenueByEmployeeReport(restaurant_brand_id: restaurant_brand_id.value, branch_id: branch_id.value, report_type: employeeRevenueReport.value.reportType, date_string: employeeRevenueReport.value.dateString, from_date: from_date.value, to_date: to_date.value))
+        return appServiceProvider.rx.request(.getRenueByEmployeeReport(
+            restaurant_brand_id: restaurant_brand_id.value,
+            branch_id: branch_id.value,
+            report_type: employeeRevenueReport.value.reportType,
+            date_string: employeeRevenueReport.value.dateString,
+            from_date: employeeRevenueReport.value.fromDate,
+            to_date: employeeRevenueReport.value.toDate
+        ))
                .filterSuccessfulStatusCodes()
                .mapJSON().asObservable()
                .showAPIErrorToast()
@@ -259,26 +375,83 @@ extension GenerateReportViewModel {
        }
     // Danh thu theo món ăn
     func getRevenueReportByFood() -> Observable<APIResponse>{
-        return appServiceProvider.rx.request(.getReportRevenueProfitFood(restaurant_brand_id: restaurant_brand_id.value, branch_id: branch_id.value, category_types: "", food_id: food_id.value, is_goods: -1, report_type: foodReport.value.reportType, date_string: foodReport.value.dateString, from_date: from_date.value, to_date: to_date.value))
-            .filterSuccessfulStatusCodes()
-            .mapJSON().asObservable()
-            .showAPIErrorToast()
-            .mapObject(type: APIResponse.self)
+
+        
+    
+        return appServiceProvider.rx.request(.report_food(
+                    restaurant_brand_id: restaurant_brand_id.value,
+                    branch_id: branch_id.value,
+                    report_type: foodReport.value.reportType,
+                    date_string: foodReport.value.dateString,
+                    from_date: foodReport.value.fromDate,
+                    to_date: foodReport.value.fromDate,
+                    category_id: ALL,
+                    category_types: "1",
+                    is_combo:ALL,
+                    is_goods:DEACTIVE,
+                    is_cancelled_food:DEACTIVE,
+                    is_gift:DEACTIVE,
+                    is_take_away_food:ALL
+                ))
+               .filterSuccessfulStatusCodes()
+               .mapJSON().asObservable()
+               .showAPIErrorToast()
+               .mapObject(type: APIResponse.self)
         
     }
     
     // Doanh thu theo hàng hoá
     func getRevenueReportCommodity() -> Observable<APIResponse>{
-        return appServiceProvider.rx.request(.getReportRevenueProfitFood(restaurant_brand_id: restaurant_brand_id.value, branch_id: branch_id.value, category_types: category_types_commodity.value, food_id: food_id.value, is_goods: is_goods.value, report_type: commodityReport.value.reportType, date_string: commodityReport.value.dateString, from_date: from_date.value, to_date: to_date.value))
+        return appServiceProvider.rx.request(.getReportRevenueProfitFood(
+            restaurant_brand_id: restaurant_brand_id.value,
+            branch_id: branch_id.value,
+            category_types: category_types_commodity.value,
+            food_id: food_id.value,
+            is_goods: is_goods.value,
+            report_type: commodityReport.value.reportType,
+            date_string: commodityReport.value.dateString,
+            from_date: commodityReport.value.fromDate,
+            to_date: commodityReport.value.fromDate
+        ))
             .filterSuccessfulStatusCodes()
             .mapJSON().asObservable()
             .showAPIErrorToast()
             .mapObject(type: APIResponse.self)
+        
+//        return appServiceProvider.rx.request(.report_food(
+//                    restaurant_brand_id: restaurant_brand_id.value,
+//                    branch_id: branch_id.value,
+//                    report_type: foodReport.value.reportType,
+//                    date_string: foodReport.value.dateString,
+//                    from_date:from_date.value,
+//                    to_date:to_date.value,
+//                    category_id: ALL,
+//                    is_combo:ALL,
+//                    is_goods:DEACTIVE,
+//                    is_cancelled_food:DEACTIVE,
+//                    is_gift:DEACTIVE,
+//                    is_take_away_food:ALL
+//                ))
+//               .filterSuccessfulStatusCodes()
+//               .mapJSON().asObservable()
+//               .showAPIErrorToast()
+//               .mapObject(type: APIResponse.self)
+        
+        
     }
     
     // Báo cáo món tặng
     func getGiftedFoodReport() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.getOrderReportFoodGift(restaurant_brand_id: restaurant_brand_id.value, branch_id: branch_id.value, type_sort: type.value, is_group: 1, report_type: giftedFoodReport.value.reportType, date_string: giftedFoodReport.value.dateString, from_date: from_date.value, to_date: to_date.value))
+        return appServiceProvider.rx.request(.getOrderReportFoodGift(
+            restaurant_brand_id: restaurant_brand_id.value,
+            branch_id: branch_id.value,
+            type_sort: type.value,
+            is_group: 1,
+            report_type: giftedFoodReport.value.reportType,
+            date_string: giftedFoodReport.value.dateString,
+            from_date: giftedFoodReport.value.fromDate,
+            to_date: giftedFoodReport.value.toDate
+        ))
                .filterSuccessfulStatusCodes()
                .mapJSON().asObservable()
                .showAPIErrorToast()
@@ -288,7 +461,17 @@ extension GenerateReportViewModel {
     
     // Báo cáo món ngoài menu
     func getReportFoodOther() -> Observable<APIResponse>{
-        return appServiceProvider.rx.request(.getRestaurantOtherFoodReport(restaurant_brand_id: restaurant_brand_id.value, branch_id: branch_id.value, category_types: category_types.value, food_id: food_id.value, is_goods: is_goods.value, report_type: otherFoodReport.value.reportType, date_string: otherFoodReport.value.dateString, from_date: from_date.value, to_date: to_date.value))
+        return appServiceProvider.rx.request(.getRestaurantOtherFoodReport(
+            restaurant_brand_id: restaurant_brand_id.value,
+            branch_id: branch_id.value,
+            category_types: category_types.value,
+            food_id: food_id.value,
+            is_goods: is_goods.value,
+            report_type: otherFoodReport.value.reportType,
+            date_string: otherFoodReport.value.dateString,
+            from_date: otherFoodReport.value.fromDate,
+            to_date: otherFoodReport.value.toDate
+        ))
             .filterSuccessfulStatusCodes()
             .mapJSON().asObservable()
             .showAPIErrorToast()
@@ -301,7 +484,15 @@ extension GenerateReportViewModel {
     
     // Báo cáo món hủy
     func getReportFoodCancel() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.getOrderReportFoodCancel(restaurant_brand_id: restaurant_brand_id.value, branch_id: branch_id.value, type: type.value, report_type: cancelFoodReport.value.reportType, date_string: cancelFoodReport.value.dateString, from_date: from_date.value, to_date: to_date.value))
+        return appServiceProvider.rx.request(.getOrderReportFoodCancel(
+            restaurant_brand_id: restaurant_brand_id.value,
+            branch_id: branch_id.value,
+            type: type.value,
+            report_type: cancelFoodReport.value.reportType,
+            date_string: cancelFoodReport.value.dateString,
+            from_date: cancelFoodReport.value.fromDate,
+            to_date: cancelFoodReport.value.toDate
+        ))
                .filterSuccessfulStatusCodes()
                .mapJSON().asObservable()
                .showAPIErrorToast()
@@ -311,7 +502,20 @@ extension GenerateReportViewModel {
     
     // Báo cáo món mang về
     func getReportTakeAwayFood() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.getOrderReportTakeAwayFood(restaurant_brand_id: restaurant_brand_id.value, branch_id: branch_id.value, report_type: takeAwayFoodReport.value.reportType, date_string: takeAwayFoodReport.value.dateString, food_id: food_id.value, is_gift: is_gift.value, is_cancel_food: is_cancel_food.value, key_search: "", from_date: from_date.value, to_date: to_date.value, page: 1, limit: 500))
+        return appServiceProvider.rx.request(.getOrderReportTakeAwayFood(
+            restaurant_brand_id: restaurant_brand_id.value,
+            branch_id: branch_id.value,
+            report_type: takeAwayFoodReport.value.reportType,
+            date_string: takeAwayFoodReport.value.dateString,
+            food_id: food_id.value,
+            is_gift: is_gift.value,
+            is_cancel_food: is_cancel_food.value,
+            key_search: "",
+            from_date: takeAwayFoodReport.value.fromDate,
+            to_date: takeAwayFoodReport.value.toDate,
+            page: 1,
+            limit: 500
+        ))
                .filterSuccessfulStatusCodes()
                .mapJSON().asObservable()
                .showAPIErrorToast()
@@ -321,7 +525,14 @@ extension GenerateReportViewModel {
     
     // Báo cáo VAT
     func getReportVAT() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.getRestaurantVATReport(restaurant_brand_id: restaurant_brand_id.value, branch_id: branch_id.value, report_type: vatReport.value.reportType, date_string: vatReport.value.dateString, from_date: from_date.value, to_date: to_date.value))
+        return appServiceProvider.rx.request(.getRestaurantVATReport(
+            restaurant_brand_id: restaurant_brand_id.value,
+            branch_id: branch_id.value,
+            report_type: vatReport.value.reportType,
+            date_string: vatReport.value.dateString,
+            from_date: vatReport.value.fromDate,
+            to_date: vatReport.value.toDate
+        ))
                .filterSuccessfulStatusCodes()
                .mapJSON().asObservable()
                .showAPIErrorToast()
@@ -332,7 +543,14 @@ extension GenerateReportViewModel {
     
     // Báo cáo giảm giá
     func getdiscountReport() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.getReportOrderRestaurantDiscountFromOrder(restaurant_brand_id: restaurant_brand_id.value, branch_id: branch_id.value, report_type: discountReport.value.reportType, date_string: discountReport.value.dateString, from_date: from_date.value, to_date: to_date.value))
+        return appServiceProvider.rx.request(.getReportOrderRestaurantDiscountFromOrder(
+            restaurant_brand_id: restaurant_brand_id.value,
+            branch_id: branch_id.value,
+            report_type: discountReport.value.reportType,
+            date_string: discountReport.value.dateString,
+            from_date: discountReport.value.fromDate,
+            to_date: discountReport.value.toDate
+        ))
                .filterSuccessfulStatusCodes()
                .mapJSON().asObservable()
                .showAPIErrorToast()
@@ -341,7 +559,14 @@ extension GenerateReportViewModel {
 
     //Báo cáo Phụ thu
     func getReportSurcharge() -> Observable<APIResponse> {
-        return appServiceProvider.rx.request(.getReportSurcharge(restaurant_brand_id: restaurant_brand_id.value, branch_id: branch_id.value, report_type: surchargeReport.value.reportType, date_string: surchargeReport.value.dateString, from_date: from_date.value, to_date: to_date.value))
+        return appServiceProvider.rx.request(.getReportSurcharge(
+            restaurant_brand_id: restaurant_brand_id.value,
+            branch_id: branch_id.value,
+            report_type: surchargeReport.value.reportType,
+            date_string: surchargeReport.value.dateString,
+            from_date: surchargeReport.value.fromDate,
+            to_date: surchargeReport.value.toDate
+        ))
                .filterSuccessfulStatusCodes()
                .mapJSON().asObservable()
                .showAPIErrorToast()

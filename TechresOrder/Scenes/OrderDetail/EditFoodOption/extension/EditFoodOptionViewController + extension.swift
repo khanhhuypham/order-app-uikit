@@ -28,8 +28,6 @@ extension EditFoodOptionViewController{
 // MARK: - UITableViewDataSource and UITableViewDelegate
 extension EditFoodOptionViewController: UITextViewDelegate {
     
-
-
     func firstSetup(item:OrderItem) {
 
         var sections:[SectionModel<OptionOfDetailItem,OptionItem>] = []
@@ -54,8 +52,7 @@ extension EditFoodOptionViewController: UITextViewDelegate {
                 if let i = option.food_option_foods.firstIndex(where: {$0.status == ACTIVE}){
                     
                     items[i].status = ACTIVE
-                    items[i].quantity = 1
-                    
+
                 }else{
                     
                     if (option.min_items_allowed > 0){
@@ -84,13 +81,39 @@ extension EditFoodOptionViewController: UITextViewDelegate {
             self.lbl_price.text = self.calculateTotalAmount(
                 item:self.viewModel.orderItem.value,
                 list: item.flatMap{$0.items}
-            ).toString
+            ).rounded(.up).toString
             
         }).disposed(by: rxbag)
         
         
         textfield_quantity.text = item.quantity.toString
+        textfield_quantity.keyboardType = item.is_sell_by_weight == ACTIVE ? .decimalPad : .numberPad
+        textfield_quantity.setMaxValue(maxValue: 999)
+        textfield_quantity.addTarget(self, action: #selector(textFieldEditingDidEnd(_:)), for: .editingChanged)
         tableView.reloadData()
+    }
+    
+    @objc func textFieldEditingDidEnd(_ textField: UITextField) {
+        
+        if var text = textField.text {
+            // Normalize all commas to dots first
+            text = text.replacingOccurrences(of: ",", with: ".")
+
+            // If there's a dot, keep only the first one
+            if let firstDotIndex = text.firstIndex(of: ".") {
+                let prefix = text[..<text.index(after: firstDotIndex)]
+                let suffix = text[text.index(after: firstDotIndex)...].replacingOccurrences(of: ".", with: "").prefix(2).description
+                text = prefix + suffix
+            }
+
+            // Update your model
+            var item = viewModel.orderItem.value
+            item.setQuantity(quantity: Float(text) ?? 0)
+            viewModel.orderItem.accept(item)
+            textfield_quantity.text = text
+        }
+        
+
     }
     
     

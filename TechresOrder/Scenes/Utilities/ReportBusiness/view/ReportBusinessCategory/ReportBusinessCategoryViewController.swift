@@ -14,21 +14,6 @@ import RxCocoa
 class ReportBusinessCategoryViewController: BaseViewController {
     
     
-    // MARK: Biến của button filter
-    @IBOutlet weak var btn_today: UIButton!
-    @IBOutlet weak var btn_yesterday: UIButton!
-    @IBOutlet weak var btn_this_week: UIButton!
-    @IBOutlet weak var btn_this_month: UIButton!
-    @IBOutlet weak var btn_last_month: UIButton!
-    @IBOutlet weak var btn_last_three_month: UIButton!
-    @IBOutlet weak var btn_this_year: UIButton!
-    @IBOutlet weak var btn_last_year: UIButton!
-    @IBOutlet weak var btn_last_three_year: UIButton!
-    @IBOutlet weak var btn_all_year: UIButton!
-    
-    
-    
-
     @IBOutlet weak var pieChartCategory: PieChartView!
     @IBOutlet weak var barChartCategory: BarChartView!
 
@@ -44,8 +29,12 @@ class ReportBusinessCategoryViewController: BaseViewController {
     @IBOutlet weak var No_data_view: UIView!
     
     
-    var btnArray:[UIButton] = []
     var colors = [UIColor]()
+    
+    @IBOutlet weak var reportFilter: ReportFilter!
+    var datePicker: DatePickerUtils = DatePickerUtils()
+    
+    
     var totalAmount = 0.0
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,19 +44,6 @@ class ReportBusinessCategoryViewController: BaseViewController {
         registerCell()
         bindTableView()
         
-        
-        btnArray = [btn_today, btn_yesterday, btn_this_week, btn_this_month, btn_last_month, btn_last_three_month, btn_this_year, btn_last_year, btn_last_three_year, btn_all_year]
-        changeBgBtn(btn: btn_this_month)
-        for btn in self.btnArray{
-            btn.rx.tap.asDriver().drive(onNext: { [weak self] in
-                self?.changeBgBtn(btn: btn)
-            }).disposed(by: rxbag)
-            
-            if btn.tag == viewModel?.categoryReport.value.reportType{
-                changeBgBtn(btn: btn)
-            }
-        }
-       
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -76,31 +52,6 @@ class ReportBusinessCategoryViewController: BaseViewController {
     }
     
     
-    
-    @IBAction func actionChooseReportType(_ sender: UIButton) {
-        guard let viewModel = self.viewModel else {return}
-        var report = viewModel.categoryReport.value
-        report.reportType = sender.tag
-        report.dateString = Constants.REPORT_TYPE_DICTIONARY[sender.tag] ?? ""
-        viewModel.categoryReport.accept(report)
-        reportRevenueByCategory()
-    }
-    
-    func changeBgBtn(btn:UIButton){
-        for button in self.btnArray{
-            button.backgroundColor = ColorUtils.white()
-            button.setTitleColor(ColorUtils.orange_brand_900(),for: .normal)
-            
-            let btnTxt = NSMutableAttributedString(string: button.titleLabel?.text ?? "",attributes: [NSAttributedString.Key.font :UIFont.systemFont(ofSize: 12, weight: .semibold)])
-        
-            button.setAttributedTitle(btnTxt,for: .normal)
-            button.borderWidth = 1
-            button.borderColor = ColorUtils.orange_brand_900()
-        }
-        btn.borderWidth = 0
-        btn.backgroundColor = ColorUtils.orange_brand_900()
-        btn.setTitleColor(ColorUtils.white(),for: .normal)
-    }
         
     var viewModel: ReportBusinessViewModel?
 
@@ -114,10 +65,94 @@ class ReportBusinessCategoryViewController: BaseViewController {
     }
     
     
+    private func handleChooseDate(date:Date,tag:Int){
+        guard let viewModel = self.viewModel else {return}
+        
+        
+        let dateString = TimeUtils.convertDateToString(from: date, format: .dd_mm_yyyy)
+        var report = viewModel.categoryReport.value
+     
+        if tag == -2{
+            
+            if TimeUtils.isDateValid(fromDateStr: dateString,toDateStr: report.toDate){
+                self.reportFilter.setFromDateTitle(dateString)
+                report.fromDate = dateString
+                report.reportType = 13
+                viewModel.categoryReport.accept(report)
+                self.reportRevenueByCategory()
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+          
+        }else if tag == -1{
+            
+            if TimeUtils.isDateValid(fromDateStr: report.fromDate,toDateStr: dateString){
+                self.reportFilter.setToDateTitle(dateString)
+                report.toDate = dateString
+                report.reportType = 13
+                viewModel.categoryReport.accept(report)
+                self.reportRevenueByCategory()
+                
+            }else{
+                viewModel.view?.showWarningMessage(content: "Ngày bắt đầu không được lớn hơn ngày kết thúc")
+            }
+        }
+        
+    }
+    
+    
     func bindTableView(){
         
         
         if let viewModel = viewModel{
+            
+            datePicker.chooseDate = { [weak self] (date,tag) in
+                self?.handleChooseDate(date: date, tag: tag)
+            }
+            
+            reportFilter.defaultReportType = viewModel.categoryReport.value.reportType
+            
+            reportFilter.chooseReportType = { [weak self] reportType in
+               var report = viewModel.categoryReport.value
+               
+               if reportType == -1{
+                   
+                   if let view = viewModel.view{
+                       
+                       self?.datePicker.showDatePicker(
+                            view,
+                            date:TimeUtils.convertStringToDate(from: report.toDate, format: .dd_mm_yyyy),
+                            tag:reportType
+                       )
+                    
+                   }
+                
+               }else if reportType == -2{
+                   
+                   if let view = viewModel.view{
+                       
+                       self?.datePicker.showDatePicker(
+                            view,
+                            date:TimeUtils.convertStringToDate(from: report.fromDate, format: .dd_mm_yyyy),
+                            tag:reportType
+                       )
+                    
+                   }
+                
+                   
+               }else if reportType > 0{
+                
+                   report.reportType = reportType
+                   report.dateString = Constants.REPORT_TYPE_DICTIONARY[reportType] ?? ""
+                   viewModel.categoryReport.accept(report)
+                   self?.reportRevenueByCategory()
+                   
+               }
+               
+           }
+            
+            
+            
             
             viewModel.categoryReport.subscribe(onNext: { [self] report in
                 lbl_total_revenue.text = Utils.stringVietnameseMoneyFormatWithNumberInt(amount: report.total_amount)
@@ -128,21 +163,7 @@ class ReportBusinessCategoryViewController: BaseViewController {
                 setupPieChart(data: report.revenuesData,pieChart: pieChartCategory)
                 setupBarChart(data: report.revenuesData,barChart: barChartCategory)
                 
-
-//                if report.revenuesData.count > 0{
-//                    tableViewHeight.constant = 200
-//                    for i in (0...report.revenuesData.count - 1){
-//                        let cell = tableView.cellForRow(at: IndexPath(row: i, section: 0))
-//                        tableViewHeight.constant += CGFloat(cell?.frame.height ?? 0)
-//                        tableView.layoutIfNeeded()
-//                    }
-//                    tableViewHeight.constant -= 200
-//                }else{
-//                    tableViewHeight.constant = 0
-//                }
-//                
-                
-                
+ 
             }).disposed(by: rxbag)
   
             
@@ -170,6 +191,8 @@ class ReportBusinessCategoryViewController: BaseViewController {
                 if var report = Mapper<RevenueCategoryReport>().map(JSONObject: response.data) {
                     report.dateString = viewModel.categoryReport.value.dateString
                     report.reportType = viewModel.categoryReport.value.reportType
+                    report.fromDate = viewModel.categoryReport.value.fromDate
+                    report.toDate = viewModel.categoryReport.value.toDate
                     viewModel.categoryReport.accept(report)
                 }
             }else{
@@ -206,9 +229,7 @@ extension ReportBusinessCategoryViewController{
         )
         
         
-        
-   
-        
+    
         // calculate the required height for the chart based on the number of labels and their rotated height
         let labelHeight = barChart.xAxis.labelRotatedHeight // use the rotated label height
         let labelRotationAngle = CGFloat(barChart.xAxis.labelRotationAngle) * .pi / 180 // convert the rotation angle to radians

@@ -15,7 +15,7 @@ extension DialogChooseTableViewController{
         viewModel.getAreas().subscribe(onNext: { (response) in
             if(response.code == RRHTTPStatusCode.ok.rawValue){
         
-                if var data  = Mapper<Area>().mapArray(JSONObject: response.data){
+                if let data  = Mapper<Area>().mapArray(JSONObject: response.data){
 
                     var areaArray = data
                     var allArea = Area.init()
@@ -38,9 +38,10 @@ extension DialogChooseTableViewController{
         viewModel.getTables(areaId: areaId).subscribe(onNext: { (response) in
             if(response.code == RRHTTPStatusCode.ok.rawValue){
                 if let tables = Mapper<Table>().mapArray(JSONObject: response.data){
-                    dLog(tables.toJSON())
+
                     self.viewModel.table_array.accept(tables.filter({$0.status != 1 && $0.status != 3 && $0.order_status != 1 && $0.order_status != 4}))
                     self.view_no_data.isHidden = tables.count > 0 ? true : false
+                    
                 }
             }
         }).disposed(by: rxbag)

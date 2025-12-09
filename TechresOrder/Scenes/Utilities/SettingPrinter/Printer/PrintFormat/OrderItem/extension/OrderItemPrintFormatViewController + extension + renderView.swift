@@ -10,31 +10,29 @@ import RealmSwift
 
 extension OrderItemPrintFormatViewController {
     
-    func renderSreen(printer:Printer,order:OrderDetail,printItems:[Food]) -> UIImage{
-        view_of_print_food.isHidden = true
-        view_of_print_stamp.isHidden = true
-        
-        switch printer.type{
-            case .stamp:
-                view_of_print_stamp.isHidden = false
-            
-                if printer.printer_paper_size == 50{
-                    view_of_stamp_2.removeFromSuperview()
-                }
-
-                mapDataForStampPrint(printer:printer,order:order,printItems:printItems)
-                break
-            
-            default:
-                view_of_print_food.isHidden = false
-                mapDataForFoodPrint(printer:printer,order:order,printItems:printItems)
-                break
-        }
-        
-        view.layoutIfNeeded()
-
+    func renderKitchenTicket(printer:Printer,order:OrderDetail,printItems:[Food]) -> UIImage{
+        view_of_print_food.isHidden = false
+        view_of_single_stamp.isHidden = true
+        view_of_double_stamp.isHidden = true
+        drawKitchenTicket(printer:printer,order:order,printItems:printItems)
         return MediaUtils.captureViewScreenshot(viewToCapture: generalView) ?? UIImage()
     }
+    
+    func renderDoubleStamp(printer:Printer,order:OrderDetail,printItems:[Food]) -> UIImage{
+        view_of_print_food.isHidden = true
+        view_of_double_stamp.isHidden = false
+        view_of_single_stamp.isHidden = true
+        drawDoubleStamp(printer:printer,order:order,printItems:printItems)
+        return MediaUtils.captureViewScreenshot(viewToCapture: generalView) ?? UIImage()
+    }
+    
+    func renderSingleStamp(printer:Printer,item:Food,order:String) -> [UIImage]{
+        view_of_print_food.isHidden = true
+        view_of_double_stamp.isHidden = true
+        view_of_single_stamp.isHidden = false
+        return drawSingleStamp(printer:printer,item: item,order:order)
+    }
+    
     
 }
 

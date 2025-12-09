@@ -19,8 +19,8 @@ struct OrderItem: Mappable {
     var quantity:Float = 0
     var return_quantity_for_drink:Float = 0
     var printed_quantity:Float = 0
-    var total_price_inlcude_addition_foods:Float = 0
-    var total_price:Double = 0
+//    var total_price_inlcude_addition_foods:Float = 0
+    var total_price:Float = 0
     var status:FOOD_STATUS = .pending
     var category_type:FOOD_CATEGORY = .food
     var is_gift = 0
@@ -42,9 +42,8 @@ struct OrderItem: Mappable {
     var buffet_ticket_id:Int = 0 // this variable's only used for buffet Item. if Item is buffet, this variable != nil, otherwise this variable == nil.
     
     var rateInfo = ReviewFoodData()
-    var total_price_include_addition_foods: Double = 0
+    var total_price_include_addition_foods: Float = 0
     var is_combo = 0
-    var food_in_combo_wait_print_quantity = 0
     var cancel_reason = ""
     var service_start_time = ""
     var service_end_time = ""
@@ -59,11 +58,14 @@ struct OrderItem: Mappable {
     var discount_price = 0
     var is_only_use_printer:Int = DEACTIVE
     
+    var seafood_tank_quantity:Float = 0
+    var seafood_tank_note = ""
+    
     init?(map: Map) {}
     
     init() {}
     
-    init(name:String,price:Int,quantity:Float,total_price:Double,discount_percent:Int = 0,discount_amount:Int = 0,discount_price:Int = 0){
+    init(name:String,price:Int,quantity:Float,total_price:Float,discount_percent:Int = 0,discount_amount:Int = 0,discount_price:Int = 0){
         self.name = name
         self.price = price
         self.quantity = quantity
@@ -74,9 +76,9 @@ struct OrderItem: Mappable {
     }
 
     mutating func mapping(map: Map) {
-        order_id <- map["order_id"]
+        order_id                                <- map["order_id"]
         id                                      <- map["id"]
-        food_avatar <- map["food_avatar"]
+        food_avatar                             <- map["food_avatar"]
         food_id                                 <- map["food_id"]
         name                                    <- map["name"]
         price                                   <- map["price"]
@@ -90,46 +92,45 @@ struct OrderItem: Mappable {
         enable_return_beer                      <- map["enable_return_beer"]
         note                                    <- map["note"]
         is_bbq                                  <- map["is_bbq"]
-        is_extra_Charge                        <- map["is_extra_charge"]
+        is_extra_Charge                         <- map["is_extra_charge"]
         isChange                                <- map["isChange"]
         is_sell_by_weight                       <- map["is_sell_by_weight"]
         review_score                            <- map["review_score"]
         order_detail_additions                  <- map["order_detail_additions"]
-        order_detail_combo                  <- map["order_detail_combo"]
-        order_detail_promotion_foods <- map["order_detail_restaurant_promotion_campaign_foods"]
-        order_detail_options <- map["order_detail_options"]
+        order_detail_combo                      <- map["order_detail_combo"]
+        order_detail_promotion_foods            <- map["order_detail_restaurant_promotion_campaign_foods"]
+        order_detail_options                    <- map["order_detail_options"]
         
-        
-        total_price_inlcude_addition_foods      <- map["total_price_inlcude_addition_foods"]
-        total_price_include_addition_foods <- map["total_price_include_addition_foods"]
-        is_allow_print_stamp <- map["is_allow_print_stamp"]
+
+        total_price_include_addition_foods      <- map["total_price_include_addition_foods"]
+        is_allow_print_stamp                    <- map["is_allow_print_stamp"]
     
-        is_combo <- map["is_combo"]
-        food_in_combo_wait_print_quantity <- map["food_in_combo_wait_print_quantity"]
-        cancel_reason <- map["cancel_reason"]
-        food_avatar <- map["food_avatar"]
-        is_only_use_printer <- map["is_only_use_printer"]
+        is_combo                                <- map["is_combo"]
+
+        cancel_reason                           <- map["cancel_reason"]
+        food_avatar                             <- map["food_avatar"]
+        is_only_use_printer                     <- map["is_only_use_printer"]
         
         //-------------------------- service --------------------
-        service_start_time <- map["service_start_time"]
-        service_end_time <- map["service_end_time"]
-        service_time_used <- map["service_time_used"]
+        service_start_time                      <- map["service_start_time"]
+        service_end_time                        <- map["service_end_time"]
+        service_time_used                       <- map["service_time_used"]
         //-------------------------- buffet--------------------
-        buffet_ticket_id <- map["order_buffet_ticket_id"]
+        buffet_ticket_id                        <- map["order_buffet_ticket_id"]
         
-        block_price <- map["block_price"]
-        time_per_block <- map["time_per_block"]
-        time_block_price <- map["time_block_price"]
-        is_enable_block <- map["is_enable_block"]
+        block_price                             <- map["block_price"]
+        time_per_block                          <- map["time_per_block"]
+        time_block_price                        <- map["time_block_price"]
+        is_enable_block                         <- map["is_enable_block"]
         
         //-------------------------- discount-food--------------------
-        discount_percent <- map["discount_percent"]
-        discount_amount <- map["discount_amount"]
-        discount_price <- map["discount_price"]
+        discount_percent                        <- map["discount_percent"]
+        discount_amount                         <- map["discount_amount"]
+        discount_price                          <- map["discount_price"]
         
-        
-        
-       
+        //-------------------------- seafood_tank--------------------
+        seafood_tank_quantity                   <- map["seafood_tank_quantity"]
+        seafood_tank_note                       <- map["seafood_tank_note"]
    }
     
 
