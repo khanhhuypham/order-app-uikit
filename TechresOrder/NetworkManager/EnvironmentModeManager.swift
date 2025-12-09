@@ -2,17 +2,17 @@
 var environmentMode = ManageCacheObject.getEnvironment()
 
 //MARK: =========================== beta =============================
-//let onlineBaseUrl = "https://beta.api.gateway.overate-vntech.com"
-//let onlineRealTimeUrl = "https://beta.realtime.order.techres.vn"
-//let onlineRealTimeChatUrl = "https://beta.realtime.chat.techres.vn"
+let onlineBaseUrl = "https://beta.api.gateway.overate-vntech.com"
+let onlineRealTimeUrl = "https://beta.realtime.order.techres.vn"
+let onlineRealTimeChatUrl = "https://beta.realtime.chat.techres.vn"
 //MARK: =========================== staging =============================
 //let onlineBaseUrl = "https://staging.api.gateway.overate-vntech.com"
 //let onlineRealTimeUrl = ManageCacheObject.getConfig().realtime_domain
 //let onlineRealTimeChatUrl = "https://staging.realtime.chat.techres.vn"
 //MARK: =========================== production =============================
-let onlineBaseUrl = "https://api-gateway.techres.vn"
-let onlineRealTimeUrl = "https://realtime.order.techres.vn"
-let onlineRealTimeChatUrl = "https://realtime.chat.techres.vn"
+//let onlineBaseUrl = "https://api-gateway.techres.vn"
+//let onlineRealTimeUrl = "https://realtime.order.techres.vn"
+//let onlineRealTimeChatUrl = "https://realtime.chat.techres.vn"
 
 
 enum EnvironmentMode {

@@ -1004,7 +1004,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "154"
             endingLineNumber = "154"
-            landmarkName = "-printWithData:ids:"
+            landmarkName = "-wifiDisconnect"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1068,7 +1068,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "218"
             endingLineNumber = "218"
-            landmarkName = "-TSCwifiConnectedToHost:port:"
+            landmarkName = "-printPicture:ids:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1084,7 +1084,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "236"
             endingLineNumber = "236"
-            landmarkName = "-TSCwifiDisconnectWithError:"
+            landmarkName = "-printPictures:withInfo:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1100,7 +1100,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "272"
             endingLineNumber = "272"
-            landmarkName = "-TSCwifiWriteValueWithTag:"
+            landmarkName = "-POSbleDisconnectPeripheral:error:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1148,7 +1148,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "144"
             endingLineNumber = "144"
-            landmarkName = "-wifiDisconnect"
+            landmarkName = "-wifiConnect:Id:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
